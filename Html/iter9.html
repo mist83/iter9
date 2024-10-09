@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iter9</title>
+    <style>
+        body {
+            margin: 4px;
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            height: 100vh;
+            background-color: #0d0d0d;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .quadrant {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            align-items: stretch;
+            justify-items: stretch;
+            overflow: hidden;
+            border: 2px solid #333;
+        }
+
+        textarea {
+            background-color: #000;
+            display: grid;
+            resize: none;
+            border: none;
+            outline: none;
+            margin: 10px;
+            margin-top: 0px;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            color: inherit;
+        }
+
+        #deployLog {
+            background-color: #000;
+            display: grid;
+            grid-template: auto / auto;
+            align-content: start;
+            margin: 10px;
+            margin-top: 0px;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            color: inherit;
+        }
+
+        .yellow {
+            background-color: #ffc107;
+            color: #ffc107;
+        }
+
+        .lime {
+            background-color: #8bc34a;
+            color: #8bc34a;
+        }
+
+        .fuchsia {
+            background-color: #e91e63;
+            color: #e91e63;
+        }
+
+        .gray {
+            background-color: #616161;
+            color: #ffffff;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            background-color: #555;
+            color: #fff;
+            border: 2px solid #444;
+            border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+            z-index: 1;
+            justify-self: stretch;
+        }
+
+            button.yellow {
+                background-color: #ffc107;
+                color: black;
+            }
+
+            button.lime {
+                background-color: #8bc34a;
+                color: black;
+            }
+
+            button.fuchsia {
+                background-color: #e91e63;
+                color: black;
+            }
+
+            button.gray {
+                background-color: #666666;
+                color: black;
+            }
+
+            button.yellow:hover {
+                background-color: #666666;
+                color: #ffc107;
+                font-weight: bold;
+            }
+
+            button.lime:hover {
+                background-color: #666666;
+                color: #8bc34a;
+                font-weight: bold;
+            }
+
+            button.fuchsia:hover {
+                background-color: #666666;
+                color: #e91e63;
+                font-weight: bold;
+            }
+
+            button.gray:hover {
+                background-color: #999999;
+                color: #ffffff;
+                font-weight: bold;
+            }
+
+        a {
+            color: #999999;
+        }
+
+            a:hover {
+                color: white
+            }
+
+        /* Ensure mobile-friendliness */
+        @media (max-width: 600px) {
+            body {
+                grid-template-rows: repeat(4, 1fr);
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="quadrant yellow">
+        <button class="yellow" onclick="pasteInto('html')">Paste HTML</button>
+        <textarea id="html" readonly></textarea>
+    </div>
+    <div class="quadrant lime">
+        <button class="lime" onclick="pasteInto('css')">Paste CSS</button>
+        <textarea id="css" readonly></textarea>
+    </div>
+    <div class="quadrant fuchsia">
+        <button class="fuchsia" onclick="pasteInto('js')">Paste JavaScript</button>
+        <textarea id="js" readonly></textarea>
+    </div>
+    <div class="quadrant gray">
+        <button class="gray" onclick="deploy()">Deploy</button>
+        <div id="deployLog" readonly></div>
+    </div>
+
+    <script>
+        async function pasteInto(id) {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById(id).value = text;
+            } catch (err) {
+                console.error('Failed to read clipboard contents: ', err);
+            }
+        }
+
+        async function deploy() {
+            const slug = "iter9_example";
+            const htmlContent = document.getElementById('html').value;
+            const cssContent = document.getElementById('css').value;
+            const jsContent = document.getElementById('js').value;
+
+            // Building the snapshot model with arrays for each file type
+            const snapshotModel = {
+                slug: slug,
+                files: {
+                    html: [htmlContent],
+                    css: [cssContent],
+                    js: [jsContent]
+                }
+            };
+
+            try {
+                const url = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9/snapshot";
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(snapshotModel),
+                });
+
+                if (response.ok) {
+                    const { url } = await response.json();
+                    const deployLog = document.getElementById('deployLog');
+
+                    // Prepend the new URL to the deployment log
+                    deployLog.innerHTML = `<a href="${url}" target="blank">${url}</a>\n` + deployLog.innerHTML;
+                } else {
+                    console.error('Deployment failed: ', response.statusText);
+                }
+            } catch (err) {
+                console.error('Error during deployment: ', err);
+            }
+        }
+
+        function setDefaultContent() {
+
+            const defaultHtml = `<h1>Hello, World!</h1>`;
+            const defaultCss = `h1 { color: #61dafb; }`;
+            const defaultJs = `document.addEventListener('DOMContentLoaded', () => { alert('Welcome to the default page!'); });`;
+
+            // Set the default content in the text areas
+            document.getElementById('html').value = defaultHtml;
+            document.getElementById('css').value = defaultCss;
+            document.getElementById('js').value = defaultJs;
+        }
+
+
+        // Example usage: Call this function in the browser console (F12)
+        setDefaultContent();
+    </script>
+</body>
+
+</html>

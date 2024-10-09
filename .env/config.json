@@ -1,0 +1,12 @@
+{
+  "profile": "", // will inherit lambda context, no need to provide
+  "region": "us-west-2",
+  "configuration": "Debug",
+  "function-runtime": "dotnet6",
+  "function-memory-size": 2048,
+  "function-timeout": 10, // 10 seconds
+  "function-handler": "Iter9",
+  "function-name": "iter9", // the AWS function name 
+  "environment-variables": "S3_BUCKET=iter9-scratch",
+  "function-url-enable": true // this gets resolved to:  https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/
+}
