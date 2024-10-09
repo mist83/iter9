@@ -6,8 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iter9</title>
     <style>
+        * {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            outline: 0;
+        }
+
         body {
-            margin: 4px;
             display: grid;
             grid-template-rows: 1fr 1fr;
             grid-template-columns: 1fr 1fr;
@@ -20,21 +26,32 @@
 
         .quadrant {
             display: grid;
-            grid-template-rows: auto 1fr;
+            grid-template: auto 1fr / 1fr 1fr;
+            gap: 4px;
+            padding: 4px;
             align-items: stretch;
             justify-items: stretch;
             overflow: hidden;
             border: 2px solid #333;
         }
 
+        input {
+            background-color: #000;
+            display: grid;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-family: 'Courier New', Courier, monospace;
+            color: inherit;
+        }
+
         textarea {
             background-color: #000;
             display: grid;
+            grid-area: 2 / 1 / 3 / 3;
             resize: none;
             border: none;
             outline: none;
-            margin: 10px;
-            margin-top: 0px;
             padding: 10px;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
@@ -44,10 +61,8 @@
         #deployLog {
             background-color: #000;
             display: grid;
-            grid-template: auto / auto;
+            grid-area: 2 / 1 / 3 / 3;
             align-content: start;
-            margin: 10px;
-            margin-top: 0px;
             padding: 10px;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
@@ -75,8 +90,9 @@
         }
 
         button {
+            display: grid;
             padding: 10px;
-            margin: 10px;
+            margin-right: 0px;
             cursor: pointer;
             font-size: 1rem;
             background-color: #555;
@@ -152,19 +168,23 @@
 
 <body>
     <div class="quadrant yellow">
-        <button class="yellow" onclick="pasteInto('html')">Paste HTML</button>
+        <button class="yellow" onclick="pasteInto('html')">Paste</button>
+        <input readonly id="htmlName" type="text" value="index.html" />
         <textarea id="html" readonly></textarea>
     </div>
     <div class="quadrant lime">
-        <button class="lime" onclick="pasteInto('css')">Paste CSS</button>
+        <button class="lime" onclick="pasteInto('css')">Paste</button>
+        <input readonly  id="cssName" type="text" value="style.css" />
         <textarea id="css" readonly></textarea>
     </div>
     <div class="quadrant fuchsia">
-        <button class="fuchsia" onclick="pasteInto('js')">Paste JavaScript</button>
+        <button class="fuchsia" onclick="pasteInto('js')">Paste</button>
+        <input readonly id="jsName" type="text" value="script.js" />
         <textarea id="js" readonly></textarea>
     </div>
     <div class="quadrant gray">
-        <button class="gray" onclick="deploy()">Deploy</button>
+        <button id="deployBtn" class="gray" onclick="deploy()">Deploy</button>
+        <input id="slugName" type="text" value="iter9_example" />
         <div id="deployLog" readonly></div>
     </div>
 
@@ -179,7 +199,11 @@
         }
 
         async function deploy() {
-            const slug = "iter9_example";
+            const btn = document.getElementById("deployBtn");
+            btn.innerText = "Deploying...";
+
+            const slug = document.getElementById("slugName").value;
+
             const htmlContent = document.getElementById('html').value;
             const cssContent = document.getElementById('css').value;
             const jsContent = document.getElementById('js').value;
@@ -214,6 +238,8 @@
             } catch (err) {
                 console.error('Error during deployment: ', err);
             }
+
+            btn.innerText = "Deploy";
         }
 
         function setDefaultContent() {

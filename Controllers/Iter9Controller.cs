@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Mime;
 using System.Text;
 
 namespace Iter9.Controllers;
@@ -67,8 +68,30 @@ public class Iter9Controller : ControllerBase
         return Ok(files);
     }
 
-    [HttpGet("{slug}")]
-    public async Task<IActionResult> GetAsync(string slug, [FromQuery] string revision = null)
+    [HttpGet("{slug}/{revision}/{resource}")]
+    public async Task<IActionResult> GetAsync(string slug = "iter9_example", string revision = "2024_10_09-13_03_17", string resource = "index.html")
+    {
+        await Task.CompletedTask;
+
+        var key = string.Join(dataStoreService.PathCharacter, slug, revision, resource);
+
+        var content = await dataStoreService.GetAsync(key);
+
+        string contentType = null;
+
+        if (false) { }
+        else if (resource.ToLower().EndsWith(".html")) contentType = "text/html";
+        else if (resource.ToLower().EndsWith(".css")) contentType = "text/css";
+        else if (resource.ToLower().EndsWith(".js")) contentType = "text/javascript";
+
+        return new ContentResult
+        {
+            Content = content,
+            ContentType = contentType
+        };
+    }
+
+    private async Task<IActionResult> GetOldAsync(string slug, string revision, string file)
     {
         await Task.CompletedTask;
 
@@ -89,9 +112,9 @@ public class Iter9Controller : ControllerBase
         }
 
         var dict = new Dictionary<string, string>();
-        foreach (var file in files)
+        foreach (var file1 in files)
         {
-            dict[file.Split(dataStoreService.PathCharacter).Last()] = await dataStoreService.GetAsync(file);
+            dict[file1.Split(dataStoreService.PathCharacter).Last()] = await dataStoreService.GetAsync(file);
         }
 
         var job = new
