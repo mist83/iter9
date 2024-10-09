@@ -174,7 +174,7 @@
     </div>
     <div class="quadrant lime">
         <button class="lime" onclick="pasteInto('css')">Paste</button>
-        <input readonly  id="cssName" type="text" value="style.css" />
+        <input readonly id="cssName" type="text" value="style.css" />
         <textarea id="css" readonly></textarea>
     </div>
     <div class="quadrant fuchsia">
@@ -220,6 +220,7 @@
 
             try {
                 const url = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9/snapshot";
+                //const url = "https://localhost:7056/api/iter9/snapshot";
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -230,8 +231,10 @@
                     const { url } = await response.json();
                     const deployLog = document.getElementById('deployLog');
 
+                    const url2 = "/api/iter9/" + url;
+
                     // Prepend the new URL to the deployment log
-                    deployLog.innerHTML = `<a href="${url}" target="blank">${url}</a>\n` + deployLog.innerHTML;
+                    deployLog.innerHTML = `<a href="${url2}" target="blank">${slug} (${new Date().toDateString()})</a>\n` + deployLog.innerHTML;
                 } else {
                     console.error('Deployment failed: ', response.statusText);
                 }
@@ -243,8 +246,15 @@
         }
 
         function setDefaultContent() {
+            const defaultHtml = `<html><head>`
+                + `<script type="text/javascript" src="script.js">`
+                + "</scrip" + "t>"
+                + `<link rel="stylesheet" type="text/css" href="styles.css" /> `
+                // like WTF VS lexer, why is this necessary to prevent losing intellisense/color coding?
+                + `</head>`
+                + `<h1>Hello, Iter9!</h1>`
+                + "</html>";
 
-            const defaultHtml = `<h1>Hello, World!</h1>`;
             const defaultCss = `h1 { color: #61dafb; }`;
             const defaultJs = `document.addEventListener('DOMContentLoaded', () => { alert('Welcome to the default page!'); });`;
 

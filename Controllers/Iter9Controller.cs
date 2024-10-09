@@ -68,12 +68,12 @@ public class Iter9Controller : ControllerBase
         return Ok(files);
     }
 
-    [HttpGet("{slug}/{revision}/{resource}")]
+    [HttpGet("snapshots/{slug}/{revision}/{resource}")]
     public async Task<IActionResult> GetAsync(string slug = "iter9_example", string revision = "2024_10_09-13_03_17", string resource = "index.html")
     {
         await Task.CompletedTask;
 
-        var key = string.Join(dataStoreService.PathCharacter, slug, revision, resource);
+        var key = string.Join(dataStoreService.PathCharacter, config.DataPath, slug, revision, resource);
 
         var content = await dataStoreService.GetAsync(key);
 
@@ -139,10 +139,10 @@ public class Iter9Controller : ControllerBase
         UpdateAppSlug(snapshot.Slug);
 
         // Construct the revision subdirectory path based on the current timestamp
-        var revisionPath = string.Join(dataStoreService.PathCharacter.ToString(), snapshot.Slug, DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss"));
+        var revisionPath = string.Join(dataStoreService.PathCharacter.ToString(), config.DataPath, snapshot.Slug, DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss"));
 
         // Path for the "_live" directory which will be reset with each POST
-        var livePath = string.Join(dataStoreService.PathCharacter.ToString(), snapshot.Slug, "_live");
+        var livePath = string.Join(dataStoreService.PathCharacter.ToString(), config.DataPath, snapshot.Slug, "_live");
 
         foreach (var path in new[] { revisionPath, livePath })
         {
@@ -150,7 +150,7 @@ public class Iter9Controller : ControllerBase
                 var file = snapshot.Files.Html.Single();
                 if (file.Trim() == "") continue;
 
-                var fullPath = string.Join(dataStoreService.PathCharacter, config.DataPath, path, "index.html");
+                var fullPath = string.Join(dataStoreService.PathCharacter, path, "index.html");
                 await dataStoreService.SaveAsync(fullPath, file);
             }
 
@@ -158,7 +158,7 @@ public class Iter9Controller : ControllerBase
                 var file = snapshot.Files.Css.Single();
                 if (file.Trim() == "") continue;
 
-                var fullPath = string.Join(dataStoreService.PathCharacter, config.DataPath, path, "style.css");
+                var fullPath = string.Join(dataStoreService.PathCharacter, path, "style.css");
                 await dataStoreService.SaveAsync(fullPath, file);
             }
 
@@ -166,21 +166,23 @@ public class Iter9Controller : ControllerBase
                 var file = snapshot.Files.Js.Single();
                 if (file.Trim() == "") continue;
 
-                var fullPath = string.Join(dataStoreService.PathCharacter, config.DataPath, path, "script.js");
+                var fullPath = string.Join(dataStoreService.PathCharacter, path, "script.js");
                 await dataStoreService.SaveAsync(fullPath, file);
             }
 
             {
-                var fullPath = string.Join(dataStoreService.PathCharacter, config.DataPath, path, "metadata.json");
+                var fullPath = string.Join(dataStoreService.PathCharacter, path, "metadata.json");
                 await dataStoreService.SaveAsync(fullPath, JsonConvert.SerializeObject(new { }));
             }
         }
+
+        var url = string.Join(dataStoreService.PathCharacter, revisionPath, "index.html");
 
         return Ok(new
         {
             Success = true,
             Message = "Files saved successfully.",
-            Url = string.Join(dataStoreService.PathCharacter, revisionPath, "index.html"),
+            Url = url,
             snapshot.Slug,
         });
     }
