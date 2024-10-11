@@ -29,9 +29,9 @@
             border: 3px solid #333;
         }
 
-        .quadrant:hover ::-webkit-scrollbar-thumb:hover {
-            background-color: #777;
-        }
+            .quadrant:hover ::-webkit-scrollbar-thumb:hover {
+                background-color: #777;
+            }
 
         body {
             display: grid;
@@ -267,17 +267,17 @@
         }
 
         function setDefaultContent() {
-            // is Chrome at fault for not rendering this correctly unless I split this apart or am I?
             const defaultHtml = [
-                `<html>`,
+                //`<html>`,
                 `<head>`,
                 `    <link rel="stylesheet" type="text/css" href="style.css" />`,
                 `</head>`,
                 `<body>`,
                 `    <h1>Hello, Iter9!</h1>`,
+                // is Chrome at fault for not rendering this correctly unless I split this apart or am I?
                 `</` + `body>`,
                 `<script type="text/javascript" src="script.js">`,
-                `</html>`
+                //    `</html>`
             ].join('\n')
 
             const defaultCss = `* { display: grid; align-self: center; justify-self: center; background-color: black; color: fuchsia; }`;
