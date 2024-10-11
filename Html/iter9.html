@@ -13,9 +13,16 @@
             outline: 0;
         }
 
-        /* Style scrollbars */
+        /* Hide scrollbars by default */
+        .quadrant ::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+        }
+
+        /* Style scrollbars on hover */
         .quadrant:hover ::-webkit-scrollbar {
             width: 12px;
+            height: 12px;
             cursor: pointer;
         }
 
@@ -29,9 +36,9 @@
             border: 3px solid #333;
         }
 
-            .quadrant:hover ::-webkit-scrollbar-thumb:hover {
-                background-color: #777;
-            }
+        .quadrant:hover ::-webkit-scrollbar-thumb:hover {
+            background-color: #777;
+        }
 
         body {
             display: grid;
