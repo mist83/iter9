@@ -234,7 +234,7 @@
                     const url2 = "/api/iter9/" + url;
 
                     // Prepend the new URL to the deployment log
-                    deployLog.innerHTML = `<a href="${url2}" target="blank">${slug} (${new Date().toDateString()})</a>\n` + deployLog.innerHTML;
+                    deployLog.innerHTML = `<a href="${url2}" target="blank">${slug} (${new Date().toLocaleString()})</a>\n` + deployLog.innerHTML;
                 } else {
                     console.error('Deployment failed: ', response.statusText);
                 }
@@ -246,13 +246,17 @@
         }
 
         function setDefaultContent() {
-            const defaultHtml = `<html><head>`
-                + `<script type="text/javascript" src="script.js">`
-                + "</scrip" + "t>"
-                + `<link rel="stylesheet" type="text/css" href="styles.css" /> `
-                // like WTF VS lexer, why is this necessary to prevent losing intellisense/color coding?
+            const defaultHtml = ``
+                + `<html>`
+                + `<head>`
+                + `    <link rel="stylesheet" type="text/css" href="style.css" />`
                 + `</head>`
-                + `<h1>Hello, Iter9!</h1>`
+                + `</body>`
+                + `    <h1>Hello, Iter9!</h1>`
+                + `</body>`
+                + `<script type="text/javascript" src="script.js">`
+                // like WTF VS lexer, why is this necessary to prevent losing intellisense/color coding?
+                + "</scrip" + "t>"
                 + "</html>";
 
             const defaultCss = `h1 { color: #61dafb; }`;
