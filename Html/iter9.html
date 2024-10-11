@@ -45,14 +45,16 @@
             color: inherit;
         }
 
-        textarea {
+        pre {
             background-color: #000;
             display: grid;
+            align-self: stretch;
             grid-area: 2 / 1 / 3 / 3;
             resize: none;
             border: none;
             outline: none;
             padding: 10px;
+            word-wrap: break-word;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
             color: inherit;
@@ -170,24 +172,23 @@
     <div class="quadrant yellow">
         <button class="yellow" onclick="pasteInto('html')">Paste</button>
         <input readonly id="htmlName" type="text" value="index.html" />
-        <textarea id="html" readonly></textarea>
+        <pre id="html" contenteditable="true"></pre>
     </div>
     <div class="quadrant lime">
         <button class="lime" onclick="pasteInto('css')">Paste</button>
         <input readonly id="cssName" type="text" value="style.css" />
-        <textarea id="css" readonly></textarea>
+        <pre id="css" contenteditable="true"></pre>
     </div>
     <div class="quadrant fuchsia">
         <button class="fuchsia" onclick="pasteInto('js')">Paste</button>
         <input readonly id="jsName" type="text" value="script.js" />
-        <textarea id="js" readonly></textarea>
+        <pre id="js" contenteditable="true"></pre>
     </div>
     <div class="quadrant gray">
         <button id="deployBtn" class="gray" onclick="deploy()">Deploy</button>
         <input id="slugName" type="text" value="iter9_example" />
-        <div id="deployLog" readonly></div>
+        <div id="deployLog"></div>
     </div>
-
     <script>
         async function pasteInto(id) {
             try {
@@ -204,9 +205,9 @@
 
             const slug = document.getElementById("slugName").value;
 
-            const htmlContent = document.getElementById('html').value;
-            const cssContent = document.getElementById('css').value;
-            const jsContent = document.getElementById('js').value;
+            const htmlContent = document.getElementById('html').innerText;
+            const cssContent = document.getElementById('css').innerText;
+            const jsContent = document.getElementById('js').innerText;
 
             // Building the snapshot model with arrays for each file type
             const snapshotModel = {
@@ -246,30 +247,28 @@
         }
 
         function setDefaultContent() {
-            const defaultHtml = ``
-                + `<html>`
-                + `<head>`
-                + `    <link rel="stylesheet" type="text/css" href="style.css" />`
-                + `</head>`
-                + `</body>`
-                + `    <h1>Hello, Iter9!</h1>`
-                + `</body>`
-                + `<script type="text/javascript" src="script.js">`
-                // like WTF VS lexer, why is this necessary to prevent losing intellisense/color coding?
-                + "</scrip" + "t>"
-                + "</html>";
+            // is Chrome at fault for not rendering this correctly unless I split this apart or am I?
+            const defaultHtml = [
+                `<html>`,
+                `<head>`,
+                `    <link rel="stylesheet" type="text/css" href="style.css" />`,
+                `</head>`,
+                `<body>`,
+                `    <h1>Hello, Iter9!</h1>`,
+                `</` + `body>`,
+                `<script type="text/javascript" src="script.js">`,
+                `</html>`
+            ].join('\n')
 
-            const defaultCss = `h1 { color: #61dafb; }`;
+            const defaultCss = `* { display: grid; align-self: center; justify-self: center; background-color: black; color: fuchsia; }`;
             const defaultJs = `document.addEventListener('DOMContentLoaded', () => { alert('Welcome to the default page!'); });`;
 
             // Set the default content in the text areas
-            document.getElementById('html').value = defaultHtml;
-            document.getElementById('css').value = defaultCss;
-            document.getElementById('js').value = defaultJs;
+            document.getElementById('html').innerText = defaultHtml;
+            document.getElementById('css').innerText = defaultCss;
+            document.getElementById('js').innerText = defaultJs;
         }
 
-
-        // Example usage: Call this function in the browser console (F12)
         setDefaultContent();
     </script>
 </body>
