@@ -21,19 +21,21 @@
 
         /* Style scrollbars on hover */
         .quadrant:hover ::-webkit-scrollbar {
-            width: 12px;
-            height: 12px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
         }
 
         .quadrant:hover ::-webkit-scrollbar-track {
             background: #333;
+            cursor: pointer;
         }
 
         .quadrant:hover ::-webkit-scrollbar-thumb {
             background-color: #555;
             border-radius: 10px;
             border: 3px solid #333;
+            cursor: pointer;
         }
 
         .quadrant:hover ::-webkit-scrollbar-thumb:hover {
@@ -287,7 +289,7 @@
                 //    `</html>`
             ].join('\n')
 
-            const defaultCss = `* { display: grid; align-self: center; justify-self: center; background-color: black; color: fuchsia; }`;
+            const defaultCss = `* { display: grid; align-self: center; justify-self: center; background-color: black; color: dodgerblue; font-size: 144px; font-family: 'Comic Sans MS' }`;
             const defaultJs = `document.addEventListener('DOMContentLoaded', () => { alert('Welcome to the default page!'); });`;
 
             // Set the default content in the text areas
