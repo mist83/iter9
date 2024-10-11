@@ -38,9 +38,9 @@
             cursor: pointer;
         }
 
-        .quadrant:hover ::-webkit-scrollbar-thumb:hover {
-            background-color: #777;
-        }
+            .quadrant:hover ::-webkit-scrollbar-thumb:hover {
+                background-color: #777;
+            }
 
         body {
             display: grid;
@@ -56,6 +56,17 @@
         .quadrant {
             display: grid;
             grid-template: auto 1fr / 1fr 1fr;
+            gap: 4px;
+            padding: 4px;
+            align-items: stretch;
+            justify-items: stretch;
+            overflow: hidden;
+            border: 2px solid #333;
+        }
+
+        .deploy {
+            display: grid;
+            grid-template: auto 1fr / 1fr 1fr 1fr;
             gap: 4px;
             padding: 4px;
             align-items: stretch;
@@ -92,7 +103,7 @@
         #deployLog {
             background-color: #000;
             display: grid;
-            grid-area: 2 / 1 / 3 / 3;
+            grid-area: 2 / 1 / 3 / 4;
             align-content: start;
             padding: 10px;
             overflow-y: auto;
@@ -156,25 +167,25 @@
             }
 
             button.yellow:hover {
-                background-color: #666666;
+                background-color: black;
                 color: #ffc107;
                 font-weight: bold;
             }
 
             button.lime:hover {
-                background-color: #666666;
+                background-color: black;
                 color: #8bc34a;
                 font-weight: bold;
             }
 
             button.fuchsia:hover {
-                background-color: #666666;
+                background-color: black;
                 color: #e91e63;
                 font-weight: bold;
             }
 
             button.gray:hover {
-                background-color: #999999;
+                background-color: black;
                 color: #ffffff;
                 font-weight: bold;
             }
@@ -213,7 +224,8 @@
         <input readonly id="jsName" type="text" value="script.js" />
         <pre id="js" contenteditable="true"></pre>
     </div>
-    <div class="quadrant gray">
+    <div class="deploy gray">
+        <button class="gray" onclick="list()">Load</button>
         <button id="deployBtn" class="gray" onclick="deploy()">Deploy</button>
         <input id="slugName" type="text" value="iter9_example" />
         <div id="deployLog"></div>
@@ -226,6 +238,18 @@
             } catch (err) {
                 console.error('Failed to read clipboard contents: ', err);
             }
+        }
+
+        async function list() {
+            //const url = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9/list";
+            const url = "https://localhost:7056/api/iter9/list";
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            const json = await response.json();
+            document.getElementById("deployLog").innerHTML = json;
         }
 
         async function deploy() {
@@ -277,20 +301,20 @@
 
         function setDefaultContent() {
             const defaultHtml = [
-                //`<html>`,
+                `<html>`,
                 `<head>`,
                 `    <link rel="stylesheet" type="text/css" href="style.css" />`,
                 `</head>`,
                 `<body>`,
-                `    <h1>Hello, Iter9!</h1>`,
+                `    <span id="iter"><span>`,
                 // is Chrome at fault for not rendering this correctly unless I split this apart or am I?
                 `</` + `body>`,
-                `<script type="text/javascript" src="script.js">`,
-                //    `</html>`
+                `<script type="text/javascript" src="script.js"></scrip` + `t>`,
+                `</` + `html>`
             ].join('\n')
 
-            const defaultCss = `* { display: grid; align-self: center; justify-self: center; background-color: black; color: dodgerblue; font-size: 144px; font-family: 'Comic Sans MS' }`;
-            const defaultJs = `document.addEventListener('DOMContentLoaded', () => { alert('Welcome to the default page!'); });`;
+            const defaultCss = `* { display: grid; align-self: stretch; justify-self: center; background-color: black; color: dodgerblue; font-family: 'Comic Sans MS'; transition: all 200ms ease-in-out; } span { font-size: 144px; }`;
+            const defaultJs = `let iter = 8; document.addEventListener('DOMContentLoaded', () => { setInterval(() => { document.getElementById('iter').innerText = "Hello Iter" + (++iter); document.getElementById('iter').style.fontSize = [48, 64, 72, 96, 112, 128, 144, 172, 196][Math.floor(Math.random() * 9)] + "px";}, 1000); });`;
 
             // Set the default content in the text areas
             document.getElementById('html').innerText = defaultHtml;
