@@ -83,7 +83,11 @@ public class S3ResourceService : IDataStoreService
     public async Task<List<string>> ListAsync(string substring = "")
     {
         var keys = await GetKeysFromS3Async();
-        return keys.Where(key => key.Contains(substring)).ToList();
+        var list = keys.Where(key => key.Contains(substring)).ToList();
+
+        list = list.OrderByDescending(x => x).ToList();
+
+        return list;
     }
 
     private async Task<List<string>> GetKeysFromS3Async()

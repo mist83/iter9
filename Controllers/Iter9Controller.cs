@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
 using System.Net.Mime;
 using System.Text;
 
@@ -63,14 +64,19 @@ public class Iter9Controller : ControllerBase
 
         if (string.IsNullOrWhiteSpace(revision))
         {
-            files = files.Where(x => x.Contains("_live")).ToList();
+            var snapshots = files.Where(x => x.Split('/').Length >= 3).Select(x => $"{x.Split('/')[1]} ({x.Split('/')[2]})").Distinct().ToArray();
+            snapshots = snapshots.Take(10).ToArray();
+
+            return Ok(snapshots);
+
+            //files = files.Where(x => x.Contains("_live")).ToList();
         }
         else if (revision != "*")
         {
             files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{revision}{dataStoreService.PathCharacter}")).ToList();
         }
 
-        files = files.Where(x => x.EndsWith("/index.html")).ToList();
+        ////files = files.Where(x => x.EndsWith("/index.html")).ToList();
 
         return Ok(files);
     }

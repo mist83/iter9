@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
     <title>Iter9</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <style>
         * {
             padding: 0;
@@ -13,13 +14,37 @@
             outline: 0;
         }
 
-        /* Hide scrollbars by default */
+        :root {
+            --background: #222;
+            --html: yellow;
+            --css: lime;
+            --js: #FF00FF;
+            --deploy: cyan;
+        }
+
+        /*        :root {
+                    --background: black;
+                    --html: white;
+                    --css: white;
+                    --js: white;
+                    --deploy: white;
+                }
+        */
+        body {
+            display: grid;
+            /*gap: 4px;*/
+            height: 100vh;
+            background-color: var(--background);
+            font-family: Arial, sans-serif;
+            color: #fff;
+            transition: all 500ms ease-in-out;
+        }
+
         .quadrant ::-webkit-scrollbar {
             width: 0;
             height: 0;
         }
 
-        /* Style scrollbars on hover */
         .quadrant:hover ::-webkit-scrollbar {
             width: 20px;
             height: 20px;
@@ -41,16 +66,6 @@
             .quadrant:hover ::-webkit-scrollbar-thumb:hover {
                 background-color: #777;
             }
-
-        body {
-            display: grid;
-            gap: 4px;
-            height: 100vh;
-            background-color: #0d0d0d;
-            font-family: Arial, sans-serif;
-            color: #fff;
-            transition: all 500ms ease-in-out;
-        }
 
         .focus-normal {
             grid-template: 1fr 1fr / 1fr 1fr;
@@ -75,12 +90,11 @@
         .quadrant {
             display: grid;
             grid-template: auto 1fr / 1fr 120px;
-            gap: 4px;
+            gap: 2px;
             padding: 4px;
             align-items: stretch;
             justify-items: stretch;
             overflow: hidden;
-            border: 2px solid #333;
         }
 
         input {
@@ -95,7 +109,7 @@
         }
 
         pre {
-            background-color: #000;
+            background-color: black;
             display: grid;
             grid-area: 2 / 1 / 3 / 3;
             text-wrap: wrap;
@@ -110,44 +124,48 @@
         }
 
         #deployLog {
-            background-color: #000;
             display: grid;
             grid-area: 2 / 1 / 3 / 3;
             align-content: start;
             padding: 10px;
+            background-color: black;
             overflow-y: auto;
         }
 
-        .yellow {
-            background-color: #ffc107;
-            color: #ffc107;
+            #deployLog::-webkit-scrollbar {
+                width: 20px;
+                height: 20px;
+            }
+
+        .deploy-log-row {
+            display: grid;
+            grid-template: 1fr / auto auto auto 1fr auto;
         }
 
-        .lime {
-            background-color: #8bc34a;
-            color: #8bc34a;
+        .html {
+            color: var(--html);
+            background-color: var(--html);
         }
 
-        .fuchsia {
-            background-color: #e91e63;
-            color: #e91e63;
+        .css {
+            color: var(--css);
+            background-color: var(--css);
         }
 
-        .gray {
-            background-color: #616161;
-            color: #ffffff;
+        .js {
+            color: var(--js);
+            background-color: var(--js);
+        }
+
+        .deploy {
+            color: var(--deploy);
+            background-color: var(--deploy);
         }
 
         .button {
             display: grid;
             padding: 10px;
-            margin-right: 0px;
             cursor: pointer;
-            font-size: 1rem;
-            background-color: #555;
-            color: #fff;
-            border: 2px solid #444;
-            border-radius: 5px;
             transition: all 0.3s ease-in-out;
             z-index: 1;
             justify-self: stretch;
@@ -156,77 +174,64 @@
             user-select: none;
         }
 
-            .button.yellow {
+            .button.html {
                 background-color: black;
-                color: #ffc107;
+                color: var(--html);
             }
 
-            .button.lime {
+            .button.css {
                 background-color: black;
-                color: #8bc34a;
+                color: var(--css);
             }
 
-            .button.fuchsia {
+            .button.js {
                 background-color: black;
-                color: #e91e63;
+                color: var(--js);
             }
 
-            .button.gray {
+            .button.deploy {
                 background-color: black;
-                color: #666666;
+                color: var(--deploy);
             }
 
-            .button.yellow:hover {
-                background-color: #ffc107;
+            .button.delete {
+                background-color: black;
+                color: red;
+            }
+
+            .button:hover {
                 color: black;
                 font-weight: bold;
             }
 
-            .button.lime:hover {
-                background-color: #8bc34a;
-                color: black;
-                font-weight: bold;
+            .button.html:hover {
+                background-color: var(--html);
             }
 
-            .button.fuchsia:hover {
-                background-color: #e91e63;
-                color: black;
-                font-weight: bold;
+            .button.css:hover {
+                background-color: var(--css);
             }
 
-            .button.gray:hover {
-                background-color: #666666;
-                color: black;
-                font-weight: bold;
+            .button.js:hover {
+                background-color: var(--js);
+            }
+
+            .button.deploy:hover {
+                background-color: var(--deploy);
+            }
+
+            .button.delete:hover {
+                background-color: red;
             }
 
         a {
             font-size: 20px;
-            color: #999999;
-        }
-
-            a:hover {
-                color: cyan;
-            }
-
-        .deploy-log-button {
-            display: grid;
-            align-self: stretch;
-            align-content: center;
-            justify-content: center;
-            padding: 12px;
-            margin: 4px;
-            border: 2px solid rebeccapurple;
-            background-color: black;
-            color: cyan;
             text-decoration: none;
         }
 
-            .deploy-log-button:hover {
-                cursor: pointer;
-                background-color: darkcyan;
-                color: black;
-            }
+        i {
+            font-size: 36px !important;
+        }
 
         /* Ensure mobile-friendliness */
         @media (max-width: 600px) {
@@ -239,34 +244,35 @@
 </head>
 
 <body class="focus-normal">
-    <div class="quadrant yellow">
+    <div class="quadrant html">
         <input readonly id="htmlName" type="text" value="index.html" />
-        <div class="button yellow" onclick="pasteInto('html')">Paste</div>
+        <div class="button html" onclick="pasteInto('html')">Paste</div>
         <pre id="html" contenteditable="true" onfocus="setFocusedQuadrant('html')"></pre>
     </div>
-    <div class="quadrant lime">
+    <div class="quadrant css">
         <input readonly id="cssName" type="text" value="style.css" />
-        <div class="button lime" onclick="pasteInto('css')">Paste</div>
+        <div class="button css" onclick="pasteInto('css')">Paste</div>
         <pre id="css" contenteditable="true" onfocus="setFocusedQuadrant('css')"></pre>
     </div>
-    <div class="quadrant fuchsia">
+    <div class="quadrant js">
         <input readonly id="jsName" type="text" value="script.js" />
-        <div class="button fuchsia" onclick="pasteInto('js')">Paste</div>
+        <div class="button js" onclick="pasteInto('js')">Paste</div>
         <pre id="js" contenteditable="true" onfocus="setFocusedQuadrant('js')"></pre>
     </div>
-    <div class="quadrant gray">
+    <div class="quadrant deploy">
         <input id="slugName" type="text" value="iter9_example" />
-        <div id="deploy" class="button gray" onclick="deploy()">Deploy</div>
+        <div id="deploy" class="button deploy" onclick="deploy()">Deploy</div>
         <div id="deployLog" onkeydown="setFocusedQuadrant('deploy')"></div>
     </div>
     <script>
         const baseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9`;
         //const url = "https://localhost:7056/api/iter9/list?${slug}";
 
-        async function replaceContent(id) {
+        async function replaceContent(id, content) {
             const btn = document.getElementById(id);
+            //const content = document.getElementById(id).innerText
 
-            btn.innerText = `=== NEW STUB CONTENT (todo: load from record) ===`;
+            btn.innerText = `=== TODO: load ${content}) ===`;
         }
 
         async function pasteInto(id) {
@@ -314,8 +320,9 @@
         async function list() {
             const slug = document.getElementById("slugName").value;
 
-            const url = `${baseUrl}/list?slug=${slug}`;
-            //const url = "https://localhost:7056/api/iter9/list?${slug}";
+            //const url = `${baseUrl}/list`;
+            //const url = `${baseUrl}/list?slug=${slug}`;
+            const url = "https://localhost:7056/api/iter9/list";
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
@@ -327,11 +334,11 @@
 
             for (let i = 0; i < list.length; i++) {
                 const fullUrl = "/api/iter9/" + list[i];
-
-                // Prepend the new URL to the deployment log
-                log.innerHTML += `<a href="${fullUrl}" target="blank">${list[i]}</a>\n` + deployLog.innerHTML;
+                addActionRow(list[i], fullUrl);
             }
         }
+
+        list();
 
         async function deploy() {
             const btn = document.getElementById("deploy");
@@ -361,23 +368,35 @@
             });
 
             const { returnUrl } = await response.json();
-            const deployLog = document.getElementById('deployLog');
 
             const fullUrl = "/api/iter9/" + returnUrl;
-
-            // Prepend the new URL to the deployment log
-            let actionRow = `
-                     <div style="display: grid; grid-template: 1fr / auto auto auto 1fr auto;">
-                         <div class="button yellow" onclick="replaceContent('html')">HTML</div>
-                         <div class="button lime" onclick="replaceContent('css')">CSS</div>
-                         <div class="button fuchsia" onclick="replaceContent('js')">JS</div>
-                         <a class="deploy-log-button" style="width: unset;" href="${fullUrl}" target="blank">${slug} (${new Date().toLocaleString()})</a>
-                         <div class="deploy-log-button" onclick="removeAsync(this);">Delete</div>
-                     </div>`.trim();
-
-            deployLog.innerHTML = `${actionRow}\n${deployLog.innerHTML}`;
+            const name = `${slug} (${new Date().toLocaleString()})`;
+            addActionRow(name, fullUrl);
 
             btn.innerText = "Deploy";
+        }
+
+        async function addActionRow(name, fullUrl) {
+            const deployLog = document.getElementById('deployLog');
+
+            const actionRow = `` +
+                `<div class="deploy-log-row">` +
+                `    <div class="button html" onclick="replaceContent('html', '${name}')">` +
+                `        <i class="ti ti-file-type-html"></i>` +
+                `    </div>` +
+                `    <div class="button css" onclick="replaceContent('css', '${name}')">` +
+                `        <i class="ti ti-file-type-css"></i>` +
+                `    </div>` +
+                `    <div class="button js" onclick="replaceContent('js', '${name}')">` +
+                `        <i class="ti ti-file-type-js"></i>` +
+                `    </div>` +
+                `    <a class="button deploy" style="width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
+                `    <div class="button delete" onclick="removeAsync(this);">` +
+                `        <i class="ti ti-trash"></i>` +
+                `    </div>` +
+                `</div>`.trim();
+
+            deployLog.innerHTML = `${actionRow}\n${deployLog.innerHTML}`;
         }
 
         async function removeAsync(sender) {
