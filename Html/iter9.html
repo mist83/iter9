@@ -44,18 +44,37 @@
 
         body {
             display: grid;
-            grid-template-rows: 1fr 1fr;
-            grid-template-columns: 1fr 1fr;
             gap: 4px;
             height: 100vh;
             background-color: #0d0d0d;
             font-family: Arial, sans-serif;
             color: #fff;
+            transition: all 500ms ease-in-out;
+        }
+
+        .focus-normal {
+            grid-template: 1fr 1fr / 1fr 1fr;
+        }
+
+        .focus-html {
+            grid-template: 1fr 240px / 1fr 240px;
+        }
+
+        .focus-css {
+            grid-template: 1fr 240px / 240px 1fr;
+        }
+
+        .focus-js {
+            grid-template: 240px 1fr / 1fr 240px;
+        }
+
+        .focus-deploy {
+            grid-template: 240px 1fr / 240px 1fr;
         }
 
         .quadrant {
             display: grid;
-            grid-template: auto 1fr / 1fr 1fr;
+            grid-template: auto 1fr / 1fr 120px;
             gap: 4px;
             padding: 4px;
             align-items: stretch;
@@ -66,7 +85,7 @@
 
         .deploy {
             display: grid;
-            grid-template: auto 1fr / 1fr 1fr 1fr;
+            grid-template: auto 1fr / 1fr 120px 120px;
             gap: 4px;
             padding: 4px;
             align-items: stretch;
@@ -76,7 +95,8 @@
         }
 
         input {
-            background-color: #000;
+            background-color: black;
+            font-size: 18px;
             display: grid;
             padding: 10px;
             border: none;
@@ -88,8 +108,8 @@
         pre {
             background-color: #000;
             display: grid;
-            align-self: stretch;
             grid-area: 2 / 1 / 3 / 3;
+            text-wrap: wrap;
             resize: none;
             border: none;
             outline: none;
@@ -147,109 +167,160 @@
         }
 
             button.yellow {
-                background-color: #ffc107;
-                color: black;
+                background-color: black;
+                color: #ffc107;
             }
 
             button.lime {
-                background-color: #8bc34a;
-                color: black;
+                background-color: black;
+                color: #8bc34a;
             }
 
             button.fuchsia {
-                background-color: #e91e63;
-                color: black;
+                background-color: black;
+                color: #e91e63;
             }
 
             button.gray {
-                background-color: #666666;
-                color: black;
+                background-color: black;
+                color: #666666;
             }
 
             button.yellow:hover {
-                background-color: black;
-                color: #ffc107;
+                background-color: #ffc107;
+                color: black;
                 font-weight: bold;
             }
 
             button.lime:hover {
-                background-color: black;
-                color: #8bc34a;
+                background-color: #8bc34a;
+                color: black;
                 font-weight: bold;
             }
 
             button.fuchsia:hover {
-                background-color: black;
-                color: #e91e63;
+                background-color: #e91e63;
+                color: black;
                 font-weight: bold;
             }
 
             button.gray:hover {
-                background-color: black;
-                color: #ffffff;
+                background-color: #666666;
+                color: black;
                 font-weight: bold;
             }
 
         a {
+            font-size: 20px;
             color: #999999;
         }
 
             a:hover {
-                color: white
+                color: cyan;
             }
 
         /* Ensure mobile-friendliness */
         @media (max-width: 600px) {
             body {
-                grid-template-rows: repeat(4, 1fr);
-                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr) !important;
+                grid-template-columns: 1fr !important;
             }
         }
     </style>
 </head>
 
-<body>
+<body class="focus-normal">
     <div class="quadrant yellow">
-        <button class="yellow" onclick="pasteInto('html')">Paste</button>
         <input readonly id="htmlName" type="text" value="index.html" />
-        <pre id="html" contenteditable="true"></pre>
+        <button class="yellow" onclick="pasteInto('html')">Paste</button>
+        <pre id="html" contenteditable="true" onfocus="setFocusedQuadrant('html')"></pre>
     </div>
     <div class="quadrant lime">
-        <button class="lime" onclick="pasteInto('css')">Paste</button>
         <input readonly id="cssName" type="text" value="style.css" />
-        <pre id="css" contenteditable="true"></pre>
+        <button class="lime" onclick="pasteInto('css')">Paste</button>
+        <pre id="css" contenteditable="true" onfocus="setFocusedQuadrant('css')"></pre>
     </div>
     <div class="quadrant fuchsia">
-        <button class="fuchsia" onclick="pasteInto('js')">Paste</button>
         <input readonly id="jsName" type="text" value="script.js" />
-        <pre id="js" contenteditable="true"></pre>
+        <button class="fuchsia" onclick="pasteInto('js')">Paste</button>
+        <pre id="js" contenteditable="true" onfocus="setFocusedQuadrant('js')"></pre>
     </div>
     <div class="deploy gray">
-        <button class="gray" onclick="list()">Load</button>
-        <button id="deployBtn" class="gray" onclick="deploy()">Deploy</button>
         <input id="slugName" type="text" value="iter9_example" />
-        <div id="deployLog"></div>
+        <button class="gray" onclick="list()">Load</button>
+        <button id="deployBtn" class="gray" onfocus="deploy()">Deploy</button>
+        <div id="deployLog" onkeydown="setFocusedQuadrant('deploy')"></div>
     </div>
     <script>
+        const baseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9`;
+        //const url = "https://localhost:7056/api/iter9/list?${slug}";
+
         async function pasteInto(id) {
             try {
+                const btn = document.getElementById(id);
                 const text = await navigator.clipboard.readText();
-                document.getElementById(id).value = text;
+
+                btn.innerText = "Pasting...";
+                //setTimeout(() => {
+                btn.innerText = text;
+                //}, 200);
             } catch (err) {
-                console.error('Failed to read clipboard contents: ', err);
+                alert('Failed to read clipboard contents: ');
+            }
+        }
+
+        async function setFocusedQuadrant(id) {
+            const element = document.body;
+
+            return;
+
+            element.classList.remove("focus-normal");
+
+            element.classList.remove("focus-html");
+            element.classList.remove("focus-css");
+            element.classList.remove("focus-js");
+            element.classList.remove("focus-deploy");
+
+            switch (id) {
+                case "html":
+                    element.classList.add("focus-html");
+                    break;
+                case "css":
+                    element.classList.add("focus-css");
+                    break;
+                case "js":
+                    element.classList.add("focus-js");
+                    break;
+                case "deploy":
+                    element.classList.add("focus-deploy");
+                    break;
+
+                default:
+                    debugger;
+                    break;
             }
         }
 
         async function list() {
-            //const url = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9/list";
-            const url = "https://localhost:7056/api/iter9/list";
+            const slug = document.getElementById("slugName").value;
+
+            const url = `${baseUrl}/list?slug=${slug}`;
+            //const url = "https://localhost:7056/api/iter9/list?${slug}";
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
 
-            const json = await response.json();
-            document.getElementById("deployLog").innerHTML = json;
+            const list = await response.json();
+            const log = document.getElementById("deployLog");
+            log.innerHTML = "";
+
+            for (let i = 0; i < list.length; i++) {
+                const fullUrl = "/api/iter9/" + list[i];
+
+                // Prepend the new URL to the deployment log
+                log.innerHTML += `<a href="${fullUrl}" target="blank">${list[i]}</a>\n` + deployLog.innerHTML;
+            }
         }
 
         async function deploy() {
@@ -273,8 +344,7 @@
             };
 
             try {
-                const url = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9/snapshot";
-                //const url = "https://localhost:7056/api/iter9/snapshot";
+                const url = `${baseUrl}/snapshots`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -285,10 +355,10 @@
                     const { url } = await response.json();
                     const deployLog = document.getElementById('deployLog');
 
-                    const url2 = "/api/iter9/" + url;
+                    const fullUrl = "/api/iter9/" + url;
 
                     // Prepend the new URL to the deployment log
-                    deployLog.innerHTML = `<a href="${url2}" target="blank">${slug} (${new Date().toLocaleString()})</a>\n` + deployLog.innerHTML;
+                    deployLog.innerHTML = `<a href="${fullUrl}" target="blank">● ${slug} (${new Date().toLocaleString()})</a>\n` + deployLog.innerHTML;
                 } else {
                     console.error('Deployment failed: ', response.statusText);
                 }
@@ -299,27 +369,19 @@
             btn.innerText = "Deploy";
         }
 
-        function setDefaultContent() {
-            const defaultHtml = [
-                `<html>`,
-                `<head>`,
-                `    <link rel="stylesheet" type="text/css" href="style.css" />`,
-                `</head>`,
-                `<body>`,
-                `    <span id="iter"><span>`,
-                // is Chrome at fault for not rendering this correctly unless I split this apart or am I?
-                `</` + `body>`,
-                `<script type="text/javascript" src="script.js"></scrip` + `t>`,
-                `</` + `html>`
-            ].join('\n')
+        async function setDefaultContent() {
+            const url = `${baseUrl}/defaults`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
 
-            const defaultCss = `* { display: grid; align-self: stretch; justify-self: center; background-color: black; color: dodgerblue; font-family: 'Comic Sans MS'; transition: all 200ms ease-in-out; } span { font-size: 144px; }`;
-            const defaultJs = `let iter = 8; document.addEventListener('DOMContentLoaded', () => { setInterval(() => { document.getElementById('iter').innerText = "Hello Iter" + (++iter); document.getElementById('iter').style.fontSize = [48, 64, 72, 96, 112, 128, 144, 172, 196][Math.floor(Math.random() * 9)] + "px";}, 1000); });`;
+            const item = await response.json();
 
             // Set the default content in the text areas
-            document.getElementById('html').innerText = defaultHtml;
-            document.getElementById('css').innerText = defaultCss;
-            document.getElementById('js').innerText = defaultJs;
+            document.getElementById('html').innerText = item.html;
+            document.getElementById('css').innerText = item.css;
+            document.getElementById('js').innerText = item.js;
         }
 
         setDefaultContent();

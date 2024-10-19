@@ -20,15 +20,22 @@ public class Iter9Controller : ControllerBase
         this.dataStoreService = dataStoreService;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index()
+    private async Task<string> GetIndex(string resource)
     {
-        var stream = typeof(Iter9Controller).Assembly.GetManifestResourceStream("Iter9.Html.iter9.html");
+        var stream = typeof(Iter9Controller).Assembly.GetManifestResourceStream(resource);
         stream.Position = 0;
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
         ms.Position = 0;
         var textContent = Encoding.UTF8.GetString(ms.ToArray());
+
+        return textContent;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var textContent = await GetIndex("Iter9.Html.iter9.html");
 
         var result = new ContentResult
         {
@@ -132,7 +139,7 @@ public class Iter9Controller : ControllerBase
         return Ok(job);
     }
 
-    [HttpPost("snapshot")]
+    [HttpPost("snapshots")]
     public async Task<IActionResult> SnapshotAsync([FromBody] SnapshotModel snapshot)
     {
         ValidateJob(snapshot);
@@ -185,6 +192,22 @@ public class Iter9Controller : ControllerBase
             Url = url,
             snapshot.Slug,
         });
+    }
+
+    [HttpGet]
+    [Route("defaults")]
+    public async Task<IActionResult> GetDefaultsAsync()
+    {
+        await Task.CompletedTask;
+
+        var obj = new
+        {
+            Html = await GetIndex("Iter9.Defaults.default.html"),
+            Js = await GetIndex("Iter9.Defaults.default.js"),
+            Css = await GetIndex("Iter9.Defaults.default.css")
+        };
+
+        return Ok(obj);
     }
 
     private void ValidateJob(SnapshotModel job)

@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Defaults\default.css" />
+    <None Remove="Defaults\default.html" />
+    <None Remove="Defaults\default.js" />
     <None Remove="Html\iter9.html" />
   </ItemGroup>
 
@@ -15,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Defaults\default.css" />
+    <EmbeddedResource Include="Defaults\default.js" />
+    <EmbeddedResource Include="Defaults\default.html" />
     <EmbeddedResource Include="Html\iter9.html" />
   </ItemGroup>
 
