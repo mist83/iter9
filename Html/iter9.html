@@ -83,17 +83,6 @@
             border: 2px solid #333;
         }
 
-        .deploy {
-            display: grid;
-            grid-template: auto 1fr / 1fr 120px 120px;
-            gap: 4px;
-            padding: 4px;
-            align-items: stretch;
-            justify-items: stretch;
-            overflow: hidden;
-            border: 2px solid #333;
-        }
-
         input {
             background-color: black;
             font-size: 18px;
@@ -123,12 +112,10 @@
         #deployLog {
             background-color: #000;
             display: grid;
-            grid-area: 2 / 1 / 3 / 4;
+            grid-area: 2 / 1 / 3 / 3;
             align-content: start;
             padding: 10px;
             overflow-y: auto;
-            font-family: 'Courier New', Courier, monospace;
-            color: inherit;
         }
 
         .yellow {
@@ -151,7 +138,7 @@
             color: #ffffff;
         }
 
-        button {
+        .button {
             display: grid;
             padding: 10px;
             margin-right: 0px;
@@ -164,47 +151,50 @@
             transition: all 0.3s ease-in-out;
             z-index: 1;
             justify-self: stretch;
+            align-content: center;
+            justify-content: center;
+            user-select: none;
         }
 
-            button.yellow {
+            .button.yellow {
                 background-color: black;
                 color: #ffc107;
             }
 
-            button.lime {
+            .button.lime {
                 background-color: black;
                 color: #8bc34a;
             }
 
-            button.fuchsia {
+            .button.fuchsia {
                 background-color: black;
                 color: #e91e63;
             }
 
-            button.gray {
+            .button.gray {
                 background-color: black;
                 color: #666666;
             }
 
-            button.yellow:hover {
+            .button.yellow:hover {
                 background-color: #ffc107;
                 color: black;
                 font-weight: bold;
             }
 
-            button.lime:hover {
+            .button.lime:hover {
                 background-color: #8bc34a;
                 color: black;
                 font-weight: bold;
             }
 
-            button.fuchsia:hover {
+            .button.fuchsia:hover {
                 background-color: #e91e63;
                 color: black;
                 font-weight: bold;
             }
 
-            button.gray:hover {
+            .button.gray:hover {
                 background-color: #666666;
                 color: black;
                 font-weight: bold;
@@ -217,6 +207,25 @@
 
             a:hover {
                 color: cyan;
+            }
+
+        .deploy-log-button {
+            display: grid;
+            align-self: stretch;
+            align-content: center;
+            justify-content: center;
+            padding: 12px;
+            margin: 4px;
+            border: 2px solid rebeccapurple;
+            background-color: black;
+            color: cyan;
+            text-decoration: none;
+        }
+
+            .deploy-log-button:hover {
+                cursor: pointer;
+                background-color: darkcyan;
+                color: black;
             }
 
         /* Ensure mobile-friendliness */
@@ -232,41 +241,42 @@
 <body class="focus-normal">
     <div class="quadrant yellow">
         <input readonly id="htmlName" type="text" value="index.html" />
-        <button class="yellow" onclick="pasteInto('html')">Paste</button>
+        <div class="button yellow" onclick="pasteInto('html')">Paste</div>
         <pre id="html" contenteditable="true" onfocus="setFocusedQuadrant('html')"></pre>
     </div>
     <div class="quadrant lime">
         <input readonly id="cssName" type="text" value="style.css" />
-        <button class="lime" onclick="pasteInto('css')">Paste</button>
+        <div class="button lime" onclick="pasteInto('css')">Paste</div>
         <pre id="css" contenteditable="true" onfocus="setFocusedQuadrant('css')"></pre>
     </div>
     <div class="quadrant fuchsia">
         <input readonly id="jsName" type="text" value="script.js" />
-        <button class="fuchsia" onclick="pasteInto('js')">Paste</button>
+        <div class="button fuchsia" onclick="pasteInto('js')">Paste</div>
         <pre id="js" contenteditable="true" onfocus="setFocusedQuadrant('js')"></pre>
     </div>
-    <div class="deploy gray">
+    <div class="quadrant gray">
         <input id="slugName" type="text" value="iter9_example" />
-        <button class="gray" onclick="list()">Load</button>
-        <button id="deployBtn" class="gray" onfocus="deploy()">Deploy</button>
+        <div id="deploy" class="button gray" onclick="deploy()">Deploy</div>
         <div id="deployLog" onkeydown="setFocusedQuadrant('deploy')"></div>
     </div>
     <script>
         const baseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9`;
         //const url = "https://localhost:7056/api/iter9/list?${slug}";
 
-        async function pasteInto(id) {
-            try {
-                const btn = document.getElementById(id);
-                const text = await navigator.clipboard.readText();
+        async function replaceContent(id) {
+            const btn = document.getElementById(id);
 
-                btn.innerText = "Pasting...";
-                //setTimeout(() => {
-                btn.innerText = text;
-                //}, 200);
-            } catch (err) {
-                alert('Failed to read clipboard contents: ');
-            }
+            btn.innerText = `=== NEW STUB CONTENT (todo: load from record) ===`;
+        }
+
+        async function pasteInto(id) {
+            const btn = document.getElementById(id);
+            const text = await navigator.clipboard.readText();
+
+            btn.innerText = "Pasting...";
+            //setTimeout(() => {
+            btn.innerText = text;
+            //}, 200);
         }
 
         async function setFocusedQuadrant(id) {
@@ -324,7 +334,7 @@
         }
 
         async function deploy() {
-            const btn = document.getElementById("deployBtn");
+            const btn = document.getElementById("deploy");
             btn.innerText = "Deploying...";
 
             const slug = document.getElementById("slugName").value;
@@ -343,30 +353,35 @@
                 }
             };
 
-            try {
-                const url = `${baseUrl}/snapshots`;
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(snapshotModel),
-                });
+            const url = `${baseUrl}/snapshots`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(snapshotModel),
+            });
 
-                if (response.ok) {
-                    const { url } = await response.json();
-                    const deployLog = document.getElementById('deployLog');
+            const { returnUrl } = await response.json();
+            const deployLog = document.getElementById('deployLog');
 
-                    const fullUrl = "/api/iter9/" + url;
+            const fullUrl = "/api/iter9/" + returnUrl;
 
-                    // Prepend the new URL to the deployment log
-                    deployLog.innerHTML = `<a href="${fullUrl}" target="blank">● ${slug} (${new Date().toLocaleString()})</a>\n` + deployLog.innerHTML;
-                } else {
-                    console.error('Deployment failed: ', response.statusText);
-                }
-            } catch (err) {
-                console.error('Error during deployment: ', err);
-            }
+            // Prepend the new URL to the deployment log
+            let actionRow = `
+                     <div style="display: grid; grid-template: 1fr / auto auto auto 1fr auto;">
+                         <div class="button yellow" onclick="replaceContent('html')">HTML</div>
+                         <div class="button lime" onclick="replaceContent('css')">CSS</div>
+                         <div class="button fuchsia" onclick="replaceContent('js')">JS</div>
+                         <a class="deploy-log-button" style="width: unset;" href="${fullUrl}" target="blank">${slug} (${new Date().toLocaleString()})</a>
+                         <div class="deploy-log-button" onclick="removeAsync(this);">Delete</div>
+                     </div>`.trim();
+
+            deployLog.innerHTML = `${actionRow}\n${deployLog.innerHTML}`;
 
             btn.innerText = "Deploy";
+        }
+
+        async function removeAsync(sender) {
+            sender.parentElement.parentElement.removeChild(sender.parentElement);
         }
 
         async function setDefaultContent() {
