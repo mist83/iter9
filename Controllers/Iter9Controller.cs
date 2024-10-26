@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Immutable;
+using System.Net;
 using System.Net.Mime;
 using System.Text;
 
@@ -21,16 +22,49 @@ public class Iter9Controller : ControllerBase
         this.dataStoreService = dataStoreService;
     }
 
-    private async Task<string> GetIndex(string resource)
+    private async Task<byte[]> GetResourceBytes(string resource)
     {
         var stream = typeof(Iter9Controller).Assembly.GetManifestResourceStream(resource);
         stream.Position = 0;
         using var ms = new MemoryStream();
         await stream.CopyToAsync(ms);
         ms.Position = 0;
-        var textContent = Encoding.UTF8.GetString(ms.ToArray());
+        var bytes = ms.ToArray();
+
+        return bytes;
+    }
+
+    private async Task<string> GetIndex(string resource)
+    {
+        var bytes = await GetResourceBytes(resource);
+        var textContent = Encoding.UTF8.GetString(bytes);
 
         return textContent;
+    }
+
+    [HttpDelete]
+    [Route("nuke")]
+    public async Task<IActionResult> NukeAsync(string magicWord = "pleas")
+    {
+        if ((magicWord ?? "").ToLower().Trim() != "please")
+        {
+            using var stream = GetType().Assembly.GetManifestResourceStream("Iter9.Resources.please.webp");
+
+            var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            memoryStream.Position = 0;
+
+            return File(memoryStream, "image/webp");
+        }
+
+        var list = await dataStoreService.ListFilesAsync();
+        while (list.Any())
+        {
+            await Task.WhenAll(list.Select(async x => await dataStoreService.DeleteAsync(x)));
+            list = await dataStoreService.ListFilesAsync();
+        }
+
+        return Ok();
     }
 
     [HttpGet]
@@ -56,7 +90,7 @@ public class Iter9Controller : ControllerBase
         var slugPath = string.Join(dataStoreService.PathCharacter, config.DataRoot, slug);
         var directoryInfo = new DirectoryInfo(slugPath);
 
-        var files = await dataStoreService.ListAsync();
+        var files = await dataStoreService.ListKeysAsync();
         if (!string.IsNullOrWhiteSpace(slug))
         {
             files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{slug}{dataStoreService.PathCharacter}")).ToList();
@@ -111,7 +145,7 @@ public class Iter9Controller : ControllerBase
         var slugPath = string.Join(dataStoreService.PathCharacter, config.DataRoot, slug);
         var directoryInfo = new DirectoryInfo(slugPath);
 
-        var files = await dataStoreService.ListAsync();
+        var files = await dataStoreService.ListKeysAsync();
         files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{slug}{dataStoreService.PathCharacter}")).ToList();
 
         if (revision == null)

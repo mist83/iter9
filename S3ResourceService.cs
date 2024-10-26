@@ -49,6 +49,11 @@ public class S3ResourceService : IDataStoreService
         }
     }
 
+    public async Task DeleteAsync(string key)
+    {
+        await s3Client.DeleteAsync(bucketName, key, new Dictionary<string, object>());
+    }
+
     public async Task<string> SaveAsync(string key, byte[] blobResource)
     {
         var putRequest = new PutObjectRequest
@@ -80,7 +85,20 @@ public class S3ResourceService : IDataStoreService
         }
     }
 
-    public async Task<List<string>> ListAsync(string substring = "")
+    public async Task<List<string>> ListFilesAsync()
+    {
+        var request = new ListObjectsV2Request
+        {
+            BucketName = bucketName
+        };
+
+        var response = await s3Client.ListObjectsV2Async(request);
+
+        var list = response.S3Objects.Select(obj => obj.Key).ToList();
+        return list;
+    }
+
+    public async Task<List<string>> ListKeysAsync(string substring = "")
     {
         var keys = await GetKeysFromS3Async();
         var list = keys.Where(key => key.Contains(substring)).ToList();
@@ -101,6 +119,7 @@ public class S3ResourceService : IDataStoreService
 
         return response.S3Objects
             .Select(obj => obj.Key.Replace(".txt", "").Replace(".json", ""))
+            .Distinct()
             .ToList();
     }
 

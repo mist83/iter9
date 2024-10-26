@@ -11,6 +11,7 @@
     <None Remove="Defaults\default.html" />
     <None Remove="Defaults\default.js" />
     <None Remove="Html\iter9.html" />
+    <None Remove="Resources\please.webp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,7 @@
     <EmbeddedResource Include="Defaults\default.js" />
     <EmbeddedResource Include="Defaults\default.html" />
     <EmbeddedResource Include="Html\iter9.html" />
+    <EmbeddedResource Include="Resources\please.webp" />
   </ItemGroup>
 
   <ItemGroup>

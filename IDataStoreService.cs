@@ -8,9 +8,13 @@ public interface IDataStoreService
 
     Task<string> GetAsync(string key);
 
+    Task DeleteAsync(string key);
+
     Task<string> SaveAsync(string key, byte[] data);
 
     Task<byte[]> GetAsBinaryAsync(string key);
 
-    Task<List<string>> ListAsync(string substring = "");
+    Task<List<string>> ListFilesAsync();
+
+    Task<List<string>> ListKeysAsync(string substring = "");
 }

@@ -19,17 +19,18 @@
             --html: yellow;
             --css: lime;
             --js: #FF00FF;
-            --deploy: cyan;
+            --deploy: gray;
+            --delete: orangered;
         }
 
         /*        :root {
-                    --background: black;
-                    --html: white;
-                    --css: white;
-                    --js: white;
-                    --deploy: white;
-                }
-        */
+                            --background: black;
+                            --html: white;
+                            --css: white;
+                            --js: white;
+                            --deploy: white;
+                        }
+                */
         body {
             display: grid;
             /*gap: 4px;*/
@@ -37,7 +38,7 @@
             background-color: var(--background);
             font-family: Arial, sans-serif;
             color: #fff;
-            transition: all 500ms ease-in-out;
+            transition: all 200ms ease-in-out;
         }
 
         .quadrant ::-webkit-scrollbar {
@@ -68,28 +69,28 @@
             }
 
         .focus-normal {
-            grid-template: 1fr 1fr / 1fr 1fr;
+            grid-template: 50vh 50vh / 50vw 50vw;
         }
 
         .focus-html {
-            grid-template: 1fr 240px / 1fr 240px;
+            grid-template: 90vh 10vh / 90vw 10vw;
         }
 
         .focus-css {
-            grid-template: 1fr 240px / 240px 1fr;
+            grid-template: 90vh 10vh / 10vw 90vw;
         }
 
         .focus-js {
-            grid-template: 240px 1fr / 1fr 240px;
+            grid-template: 10vh 90vh / 90vw 10vw;
         }
 
         .focus-deploy {
-            grid-template: 240px 1fr / 240px 1fr;
+            grid-template: 10vh 90vh / 10vw 90vw;
         }
 
         .quadrant {
             display: grid;
-            grid-template: auto 1fr / 1fr 120px;
+            grid-template: auto 1fr / 1fr;
             gap: 2px;
             padding: 4px;
             align-items: stretch;
@@ -98,21 +99,24 @@
         }
 
         input {
-            background-color: black;
             font-size: 18px;
             display: grid;
             padding: 10px;
             border: none;
             outline: none;
             font-family: 'Courier New', Courier, monospace;
-            color: inherit;
+            background-color: inherit;
+            color: black;
         }
 
+            input:focus {
+                background-color: black;
+                color: inherit;
+            }
+
         pre {
-            background-color: black;
             display: grid;
             grid-area: 2 / 1 / 3 / 3;
-            text-wrap: wrap;
             resize: none;
             border: none;
             outline: none;
@@ -120,6 +124,7 @@
             word-wrap: break-word;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
+            background-color: black;
             color: inherit;
         }
 
@@ -157,81 +162,94 @@
             background-color: var(--js);
         }
 
+        .delete {
+            color: var(--delete);
+            background-color: var(--delete);
+        }
+
         .deploy {
             color: var(--deploy);
             background-color: var(--deploy);
         }
 
         .button {
+            position: fixed;
             display: grid;
-            padding: 10px;
+            justify-self: end;
+            align-self: end;
+            border-radius: 1000px;
+            padding: 16px;
+            margin: 36px;
             cursor: pointer;
-            transition: all 0.3s ease-in-out;
+            color: inherit;
+            background-color: #111;
             z-index: 1;
-            justify-self: stretch;
-            align-content: center;
-            justify-content: center;
             user-select: none;
+            transition: all 200ms ease-in-out;
         }
 
-            .button.html {
-                background-color: black;
-                color: var(--html);
-            }
-
-            .button.css {
-                background-color: black;
-                color: var(--css);
-            }
-
-            .button.js {
-                background-color: black;
-                color: var(--js);
-            }
-
-            .button.deploy {
-                background-color: black;
-                color: var(--deploy);
-            }
-
-            .button.delete {
-                background-color: black;
-                color: red;
-            }
-
             .button:hover {
-                color: black;
                 font-weight: bold;
+                background-color: inherit;
+                color: black;
+                transform: scale(1.2);
             }
 
-            .button.html:hover {
-                background-color: var(--html);
-            }
+        .deployed-button {
+            border-radius: 1000px;
+            padding: 16px;
+            margin: 36px;
+            cursor: pointer;
+            color: inherit;
+            background-color: black;
+            z-index: 1;
+            user-select: none;
+            transition: all 200ms ease-in-out;
+        }
 
-            .button.css:hover {
-                background-color: var(--css);
-            }
-
-            .button.js:hover {
-                background-color: var(--js);
-            }
-
-            .button.deploy:hover {
-                background-color: var(--deploy);
-            }
-
-            .button.delete:hover {
-                background-color: red;
+            .deployed-button:hover {
+                font-weight: bold;
+                background-color: black;
+                color: inherit;
             }
 
         a {
-            font-size: 20px;
             text-decoration: none;
+            color: cyan;
+            transition: all 200ms ease-in-out;
         }
+
+            a :visited {
+                color: cyan;
+            }
+
+            a:hover {
+                color: black;
+            }
 
         i {
             font-size: 36px !important;
         }
+
+        #dev-button {
+            display: grid;
+            position: absolute;
+            align-self: end;
+            justify-self: start;
+            background-color: #111;
+            color: cyan;
+            padding: 16px;
+            margin: 36px;
+            margin-left: 36px;
+            z-index: 1000;
+            border-radius: 1000px;
+            transition: all 200ms ease-in-out;
+        }
+
+            #dev-button:hover {
+                background-color: cyan;
+                transform: scale(1.2);
+            }
 
         /* Ensure mobile-friendliness */
         @media (max-width: 600px) {
@@ -244,24 +262,37 @@
 </head>
 
 <body class="focus-normal">
+    <div id="dev-button">
+        <a href="../swagger" target="_blank">
+            <i class="ti ti-terminal-2"></i>
+        </a>
+    </div>
     <div class="quadrant html">
-        <input readonly id="htmlName" type="text" value="index.html" />
-        <div class="button html" onclick="pasteInto('html')">Paste</div>
+        <input id="htmlName" type="text" value="index.html" />
+        <div class="button" onclick="pasteInto('html')">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <pre id="html" contenteditable="true" onfocus="setFocusedQuadrant('html')"></pre>
     </div>
     <div class="quadrant css">
-        <input readonly id="cssName" type="text" value="style.css" />
-        <div class="button css" onclick="pasteInto('css')">Paste</div>
+        <input id="cssName" type="text" value="style.css" />
+        <div class="button" onclick="pasteInto('css')">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <pre id="css" contenteditable="true" onfocus="setFocusedQuadrant('css')"></pre>
     </div>
     <div class="quadrant js">
-        <input readonly id="jsName" type="text" value="script.js" />
-        <div class="button js" onclick="pasteInto('js')">Paste</div>
+        <input id="jsName" type="text" value="script.js" />
+        <div class="button" onclick="pasteInto('js')">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <pre id="js" contenteditable="true" onfocus="setFocusedQuadrant('js')"></pre>
     </div>
     <div class="quadrant deploy">
         <input id="slugName" type="text" value="iter9_example" />
-        <div id="deploy" class="button deploy" onclick="deploy()">Deploy</div>
+        <div id="deploy" class="button" onclick="deploy()">
+            <i class="ti ti-cloud-up" title="deploy"></i>
+        </div>
         <div id="deployLog" onkeydown="setFocusedQuadrant('deploy')"></div>
     </div>
     <script>
@@ -381,17 +412,17 @@
 
             const actionRow = `` +
                 `<div class="deploy-log-row">` +
-                `    <div class="button html" onclick="replaceContent('html', '${name}')">` +
+                `    <div class="deployed-button html" onclick="replaceContent('html', '${name}')">` +
                 `        <i class="ti ti-file-type-html"></i>` +
                 `    </div>` +
-                `    <div class="button css" onclick="replaceContent('css', '${name}')">` +
+                `    <div class="deployed-button css" onclick="replaceContent('css', '${name}')">` +
                 `        <i class="ti ti-file-type-css"></i>` +
                 `    </div>` +
-                `    <div class="button js" onclick="replaceContent('js', '${name}')">` +
+                `    <div class="deployed-button js" onclick="replaceContent('js', '${name}')">` +
                 `        <i class="ti ti-file-type-js"></i>` +
                 `    </div>` +
-                `    <a class="button deploy" style="width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
-                `    <div class="button delete" onclick="removeAsync(this);">` +
+                `    <a class="deployed-button deploy" style="width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
+                `    <div class="deployed-button delete" onclick="removeAsync(this);">` +
                 `        <i class="ti ti-trash"></i>` +
                 `    </div>` +
                 `</div>`.trim();
