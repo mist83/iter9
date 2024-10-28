@@ -23,17 +23,8 @@
             --delete: orangered;
         }
 
-        /*        :root {
-                            --background: black;
-                            --html: white;
-                            --css: white;
-                            --js: white;
-                            --deploy: white;
-                        }
-                */
         body {
             display: grid;
-            /*gap: 4px;*/
             height: 100vh;
             background-color: var(--background);
             font-family: Arial, sans-serif;
@@ -221,8 +212,6 @@
 
         a {
             text-decoration: none;
-            color: cyan;
-            transition: all 200ms ease-in-out;
         }
 
             a :visited {
@@ -237,44 +226,61 @@
             font-size: 36px !important;
         }
 
-        #dev-button {
-            display: grid;
+        #dev-button-container {
             position: absolute;
+            display: grid;
+            gap: 36px;
+            grid-auto-flow: column;
             align-self: end;
             justify-self: start;
-            background-color: #111;
             color: cyan;
-            padding: 16px;
             margin: 36px;
             margin-left: 36px;
             z-index: 1000;
-            border-radius: 1000px;
             transition: all 200ms ease-in-out;
         }
 
-            #dev-button:hover {
+        .dev-button {
+            display: grid;
+            cursor: pointer;
+            padding: 16px;
+            border-radius: 1000px;
+            color: cyan;
+            background-color: #111;
+            transition: all 200ms ease-in-out;
+        }
+
+            .dev-button:hover {
                 background-color: cyan;
+                color:black;
                 transform: scale(1.2);
             }
 
         /* Ensure mobile-friendliness */
         @media (max-width: 600px) {
-            body {
+/*            body {
                 grid-template-rows: repeat(4, 1fr) !important;
                 grid-template-columns: 1fr !important;
                 margin: 0;
                 overflow: hidden;
                 height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
             }
+*/
+            body {
+                /*transform: scale(0.9);*/
+            }
         }
     </style>
 </head>
 
 <body class="focus-normal">
-    <div id="dev-button">
-        <a href="../swagger" target="_blank">
+    <div id="dev-button-container">
+        <a class="dev-button" href="../swagger" target="_blank">
             <i class="ti ti-terminal-2"></i>
         </a>
+        <div class="dev-button" onclick="clearAll()">
+            <i class="ti ti-cancel"></i>
+        </div>
     </div>
     <div class="quadrant html">
         <input id="htmlName" type="text" value="index.html" />
@@ -382,7 +388,7 @@
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
-            });6
+            }); 6
 
             const list = await response.json();
             const log = document.getElementById("deployLog");
@@ -463,6 +469,12 @@
                 `</div>`.trim();
 
             deployLog.innerHTML = `${actionRow}\n${deployLog.innerHTML}`;
+        }
+
+        async function clearAll() {
+            document.getElementById('html').innerText = "";
+            document.getElementById('css').innerText = "";
+            document.getElementById('js').innerText = "";
         }
 
         async function setDefaultContent() {
