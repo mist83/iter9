@@ -105,6 +105,8 @@
             border: none;
             outline: none;
             font-family: 'Courier New', Courier, monospace;
+            background-color: black;
+            color: inherit;
             background-color: inherit;
             color: black;
         }
@@ -172,6 +174,10 @@
             background-color: var(--deploy);
         }
 
+            .deploy:hover {
+                color: cyan;
+            }
+
         .button {
             position: fixed;
             display: grid;
@@ -197,10 +203,10 @@
 
         .deployed-button {
             border-radius: 1000px;
-            padding: 16px;
-            margin: 36px;
+            padding: 4px;
+            margin: 4px;
             cursor: pointer;
-            color: inherit;
+            /*color: inherit;*/
             background-color: black;
             z-index: 1;
             user-select: none;
@@ -210,7 +216,7 @@
             .deployed-button:hover {
                 font-weight: bold;
                 background-color: black;
-                color: inherit;
+                transform: scale(1.2);
             }
 
         a {
@@ -286,6 +292,9 @@
         <div class="button" onclick="pasteInto('js')">
             <i class="ti ti-clipboard" title="paste"></i>
         </div>
+        <div class="button" onclick="pasteInto('js')">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <pre id="js" contenteditable="true" onfocus="setFocusedQuadrant('js')"></pre>
     </div>
     <div class="quadrant deploy">
@@ -296,14 +305,28 @@
         <div id="deployLog" onkeydown="setFocusedQuadrant('deploy')"></div>
     </div>
     <script>
-        const baseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/api/iter9`;
+        const baseBaseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws`;
+        const baseUrl = `${baseBaseUrl}/api/iter9`;
         //const url = "https://localhost:7056/api/iter9/list?${slug}";
 
-        async function replaceContent(id, content) {
+        async function replaceContent(id, sourceId) {
             const btn = document.getElementById(id);
-            //const content = document.getElementById(id).innerText
 
-            btn.innerText = `=== TODO: load ${content}) ===`;
+            //const url = `https://localhost:7056/api/iter9/snapshots/${slug}/revision/resource`;
+
+            const fileName = id === "html" ? "index.html" : (id === "css" ? "style.css" : "script.js");
+            const url = `${baseUrl}/snapshots/${sourceId}/${fileName}`;
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            try {
+                const resource = await response.text();
+                btn.innerText = resource;
+            } catch {
+                btn.innerText = `=== ERROR loading ${sourceId}) ===`;
+            }
         }
 
         async function pasteInto(id) {
@@ -352,19 +375,19 @@
             const slug = document.getElementById("slugName").value;
 
             //const url = `${baseUrl}/list`;
-            //const url = `${baseUrl}/list?slug=${slug}`;
             const url = "https://localhost:7056/api/iter9/list";
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
-            });
+            });6
 
             const list = await response.json();
             const log = document.getElementById("deployLog");
             log.innerHTML = "";
 
             for (let i = 0; i < list.length; i++) {
-                const fullUrl = "/api/iter9/" + list[i];
+                let fullUrl = "/api/iter9/snapshots/" + list[i] + "/index.html";
+
                 addActionRow(list[i], fullUrl);
             }
         }
@@ -407,6 +430,15 @@
             btn.innerText = "Deploy";
         }
 
+        async function deleteAsync(sender, url) {
+            const fudgedUrl = baseBaseUrl + url.split("/").slice(0, -1).join("/");
+            await fetch(fudgedUrl, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            });
+            sender.parentElement.parentElement.removeChild(sender.parentElement);
+        }
+
         async function addActionRow(name, fullUrl) {
             const deployLog = document.getElementById('deployLog');
 
@@ -421,17 +453,13 @@
                 `    <div class="deployed-button js" onclick="replaceContent('js', '${name}')">` +
                 `        <i class="ti ti-file-type-js"></i>` +
                 `    </div>` +
-                `    <a class="deployed-button deploy" style="width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
-                `    <div class="deployed-button delete" onclick="removeAsync(this);">` +
+                `    <a class="deploy" style="display: grid; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
+                `    <div class="deployed-button delete" onclick="deleteAsync(this, '${fullUrl}');">` +
                 `        <i class="ti ti-trash"></i>` +
                 `    </div>` +
                 `</div>`.trim();
 
             deployLog.innerHTML = `${actionRow}\n${deployLog.innerHTML}`;
-        }
-
-        async function removeAsync(sender) {
-            sender.parentElement.parentElement.removeChild(sender.parentElement);
         }
 
         async function setDefaultContent() {

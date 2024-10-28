@@ -85,7 +85,7 @@ public class S3ResourceService : IDataStoreService
         }
     }
 
-    public async Task<List<string>> ListFilesAsync()
+    public async Task<List<string>> ListKeysAsync()
     {
         var request = new ListObjectsV2Request
         {

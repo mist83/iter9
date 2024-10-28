@@ -14,7 +14,7 @@ public interface IDataStoreService
 
     Task<byte[]> GetAsBinaryAsync(string key);
 
-    Task<List<string>> ListFilesAsync();
+    Task<List<string>> ListKeysAsync();
 
     Task<List<string>> ListKeysAsync(string substring = "");
 }

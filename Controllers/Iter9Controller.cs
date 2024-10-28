@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon.Auth.AccessControlPolicy;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Collections.Immutable;
-using System.Net;
-using System.Net.Mime;
 using System.Text;
 
 namespace Iter9.Controllers;
@@ -42,6 +41,20 @@ public class Iter9Controller : ControllerBase
         return textContent;
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var textContent = await GetIndex("Iter9.Html.iter9.html");
+
+        var result = new ContentResult
+        {
+            Content = textContent,
+            ContentType = "text/html"
+        };
+
+        return result;
+    }
+
     [HttpDelete]
     [Route("nuke")]
     public async Task<IActionResult> NukeAsync(string magicWord = "pleas")
@@ -57,28 +70,28 @@ public class Iter9Controller : ControllerBase
             return File(memoryStream, "image/webp");
         }
 
-        var list = await dataStoreService.ListFilesAsync();
+        var list = await dataStoreService.ListKeysAsync();
         while (list.Any())
         {
             await Task.WhenAll(list.Select(async x => await dataStoreService.DeleteAsync(x)));
-            list = await dataStoreService.ListFilesAsync();
+            list = await dataStoreService.ListKeysAsync();
         }
 
         return Ok();
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Index()
+    [HttpDelete]
+    [Route("snapshots/{slug}/{revision}")]
+    public async Task<IActionResult> DeleteAllAsync(string slug = "iter9_example", string revision = null)
     {
-        var textContent = await GetIndex("Iter9.Html.iter9.html");
+        var keys = await dataStoreService.ListKeysAsync();
 
-        var result = new ContentResult
-        {
-            Content = textContent,
-            ContentType = "text/html"
-        };
+        var startKey = string.Join(dataStoreService.PathCharacter, config.DataPath, slug, revision);
+        keys = keys.Where(x => x.StartsWith(startKey)).ToList();
 
-        return result;
+        await Task.WhenAll(keys.Select(async x => await dataStoreService.DeleteAsync(x)));
+
+        return Ok();
     }
 
     [HttpGet]
@@ -98,7 +111,15 @@ public class Iter9Controller : ControllerBase
 
         if (string.IsNullOrWhiteSpace(revision))
         {
-            var snapshots = files.Where(x => x.Split('/').Length >= 3).Select(x => $"{x.Split('/')[1]} ({x.Split('/')[2]})").Distinct().ToArray();
+            var snapshots = files.Where(x => x.Split('/').Length >= 3)
+                .Where(x => x.ToLower().EndsWith(".html"))
+                .Select(x => string.Join('/', x.Split('/')
+                .Skip(1)     // snapshots/...
+                .SkipLast(1) // .../index.html
+                ))
+                //.Select(x => $"{x.Split('/')[1]} ({x.Split('/')[2]})")
+                .Distinct()
+                .ToArray();
             snapshots = snapshots.Take(10).ToArray();
 
             return Ok(snapshots);
@@ -116,7 +137,7 @@ public class Iter9Controller : ControllerBase
     }
 
     [HttpGet("snapshots/{slug}/{revision}/{resource}")]
-    public async Task<IActionResult> GetAsync(string slug = "iter9_example", string revision = "2024_10_09-13_03_17", string resource = "index.html")
+    public async Task<IActionResult> GetAsync(string slug = "iter9_example", string revision = null, string resource = "index.html")
     {
         await Task.CompletedTask;
 
@@ -136,47 +157,6 @@ public class Iter9Controller : ControllerBase
             Content = content,
             ContentType = contentType
         };
-    }
-
-    private async Task<IActionResult> GetOldAsync(string slug, string revision, string file)
-    {
-        await Task.CompletedTask;
-
-        var slugPath = string.Join(dataStoreService.PathCharacter, config.DataRoot, slug);
-        var directoryInfo = new DirectoryInfo(slugPath);
-
-        var files = await dataStoreService.ListKeysAsync();
-        files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{slug}{dataStoreService.PathCharacter}")).ToList();
-
-        if (revision == null)
-        {
-            files = files.Where(x => x.Contains("_live")).ToList();
-        }
-
-        if (!files.Any())
-        {
-            return NotFound();
-        }
-
-        var dict = new Dictionary<string, string>();
-        foreach (var file1 in files)
-        {
-            dict[file1.Split(dataStoreService.PathCharacter).Last()] = await dataStoreService.GetAsync(file);
-        }
-
-        var job = new
-        {
-            Slug = slug,
-            Metadata = dict["metadata.json"],
-            Files = new
-            {
-                Html = dict["index.html"],
-                Css = dict["style.css"],
-                Js = dict["script.js"]
-            }
-        };
-
-        return Ok(job);
     }
 
     [HttpPost("snapshots")]
