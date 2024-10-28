@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <title>Iter9</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <style>
@@ -262,6 +262,9 @@
             body {
                 grid-template-rows: repeat(4, 1fr) !important;
                 grid-template-columns: 1fr !important;
+                margin: 0;
+                overflow: hidden;
+                height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
             }
         }
     </style>
@@ -374,8 +377,8 @@
         async function list() {
             const slug = document.getElementById("slugName").value;
 
-            //const url = `${baseUrl}/list`;
-            const url = "https://localhost:7056/api/iter9/list";
+            const url = `${baseUrl}/list`;
+            //const url = "https://localhost:7056/api/iter9/list";
             const response = await fetch(url, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
