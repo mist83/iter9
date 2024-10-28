@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Text;
 
 namespace Iter9.Controllers;
@@ -36,8 +37,13 @@ public class Iter9Controller : ControllerBase
     private async Task<string> GetIndex(string resource)
     {
         var bytes = await GetResourceBytes(resource);
-        var textContent = Encoding.UTF8.GetString(bytes);
 
+        if (Debugger.IsAttached)
+        {
+            bytes = await System.IO.File.ReadAllBytesAsync(@"Z:\code\Iter9\Html\iter9.html");
+        }
+
+        var textContent = Encoding.UTF8.GetString(bytes);
         return textContent;
     }
 
