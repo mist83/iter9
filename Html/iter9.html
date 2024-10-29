@@ -25,7 +25,11 @@
 
         body {
             display: grid;
-            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
             background-color: var(--background);
             font-family: Arial, sans-serif;
             color: #fff;
@@ -60,23 +64,7 @@
             }
 
         .focus-normal {
-            grid-template: 50vh 50vh / 50vw 50vw;
-        }
-
-        .focus-html {
-            grid-template: 90vh 10vh / 90vw 10vw;
-        }
-
-        .focus-css {
-            grid-template: 90vh 10vh / 10vw 90vw;
-        }
-
-        .focus-js {
-            grid-template: 10vh 90vh / 90vw 10vw;
-        }
-
-        .focus-deploy {
-            grid-template: 10vh 90vh / 10vw 90vw;
+            grid-template: 6fr 4fr / 1fr;
         }
 
         .quadrant {
@@ -88,6 +76,10 @@
             justify-items: stretch;
             overflow: hidden;
         }
+
+            .quadrant.selected {
+                z-index: 1;
+            }
 
         input {
             font-size: 18px;
@@ -125,7 +117,7 @@
             display: grid;
             grid-area: 2 / 1 / 3 / 3;
             align-content: start;
-            padding: 10px;
+            padding: 12px;
             background-color: black;
             overflow-y: auto;
         }
@@ -197,17 +189,20 @@
             padding: 4px;
             margin: 4px;
             cursor: pointer;
-            /*color: inherit;*/
-            background-color: black;
             z-index: 1;
             user-select: none;
+            display: grid;
+            cursor: pointer;
+            padding: 16px;
+            border-radius: 1000px;
+            background-color: black;
             transition: all 200ms ease-in-out;
         }
 
             .deployed-button:hover {
                 font-weight: bold;
                 background-color: black;
-                transform: scale(1.2);
+                transform: scale(1.5);
             }
 
         a {
@@ -226,13 +221,43 @@
             font-size: 36px !important;
         }
 
+        #thumb-button-container {
+            position: fixed;
+            display: grid;
+            gap: 36px;
+            align-self: start;
+            justify-self: end;
+            color: cyan;
+            margin: 36px;
+            margin-top: 72px;
+            z-index: 1000;
+            transition: all 200ms ease-in-out;
+        }
+
+        .thumb-button {
+            display: grid;
+            cursor: pointer;
+            padding: 16px;
+            border-radius: 1000px;
+            color: cyan;
+            background-color: #111;
+            transition: all 200ms ease-in-out;
+        }
+
+            .thumb-button:hover {
+                background-color: cyan;
+                color: black;
+                transform: scale(1.2);
+            }
+
+
         #dev-button-container {
             position: absolute;
             display: grid;
             gap: 36px;
             grid-auto-flow: column;
-            align-self: end;
-            justify-self: start;
+            bottom: 0;
+            left: 0;
             color: cyan;
             margin: 36px;
             margin-left: 36px;
@@ -252,24 +277,9 @@
 
             .dev-button:hover {
                 background-color: cyan;
-                color:black;
+                color: black;
                 transform: scale(1.2);
             }
-
-        /* Ensure mobile-friendliness */
-        @media (max-width: 600px) {
-/*            body {
-                grid-template-rows: repeat(4, 1fr) !important;
-                grid-template-columns: 1fr !important;
-                margin: 0;
-                overflow: hidden;
-                height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-            }
-*/
-            body {
-                /*transform: scale(0.9);*/
-            }
-        }
     </style>
 </head>
 
@@ -278,42 +288,41 @@
         <a class="dev-button" href="../swagger" target="_blank">
             <i class="ti ti-terminal-2"></i>
         </a>
-        <div class="dev-button" onclick="clearAll()">
-            <i class="ti ti-cancel"></i>
-        </div>
     </div>
     <div class="quadrant html">
         <input id="htmlName" type="text" value="index.html" />
-        <div class="button" onclick="pasteInto('html')">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
-        <pre id="html" contenteditable="true" onfocus="setFocusedQuadrant('html')"></pre>
+        <pre id="html" contenteditable="true"></pre>
     </div>
-    <div class="quadrant css">
+    <div class="quadrant css" style="display: none;">
         <input id="cssName" type="text" value="style.css" />
-        <div class="button" onclick="pasteInto('css')">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
-        <pre id="css" contenteditable="true" onfocus="setFocusedQuadrant('css')"></pre>
+        <pre id="css" contenteditable="true"></pre>
     </div>
-    <div class="quadrant js">
+    <div class="quadrant selected js" style="display: none;">
         <input id="jsName" type="text" value="script.js" />
-        <div class="button" onclick="pasteInto('js')">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
-        <div class="button" onclick="pasteInto('js')">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
-        <pre id="js" contenteditable="true" onfocus="setFocusedQuadrant('js')"></pre>
+        <pre id="js" contenteditable="true"></pre>
     </div>
     <div class="quadrant deploy">
         <input id="slugName" type="text" value="iter9_example" />
-        <div id="deploy" class="button" onclick="deploy()">
+        <div id="deployLog"></div>
+    </div>
+    <div id="thumb-button-container">
+        <div class="thumb-button" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+            <i class="ti ti-chevron-right" title="next"></i>
+        </div>
+        <div class="thumb-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
+        <div id="deploy" class="thumb-button" onclick="deploy()">
             <i class="ti ti-cloud-up" title="deploy"></i>
         </div>
-        <div id="deployLog" onkeydown="setFocusedQuadrant('deploy')"></div>
+        <div class="thumb-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-cancel" title="clear"></i>
+        </div>
     </div>
     <script>
+        let tabs = ['html', 'css', 'js'];
+        let currentTabIndex = 0;
+
         const baseBaseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws`;
         const baseUrl = `${baseBaseUrl}/api/iter9`;
         //const url = "https://localhost:7056/api/iter9/list?${slug}";
@@ -348,35 +357,14 @@
             //}, 200);
         }
 
-        async function setFocusedQuadrant(id) {
-            const element = document.body;
+        async function setActive(id) {
+            const quadrants = Array.from(document.getElementsByClassName("quadrant"));
+            for (let i = 0; i < quadrants.length; i++) {
+                if (quadrants[i].classList.contains("deploy")) {
+                    continue;
+                }
 
-            return;
-
-            element.classList.remove("focus-normal");
-
-            element.classList.remove("focus-html");
-            element.classList.remove("focus-css");
-            element.classList.remove("focus-js");
-            element.classList.remove("focus-deploy");
-
-            switch (id) {
-                case "html":
-                    element.classList.add("focus-html");
-                    break;
-                case "css":
-                    element.classList.add("focus-css");
-                    break;
-                case "js":
-                    element.classList.add("focus-js");
-                    break;
-                case "deploy":
-                    element.classList.add("focus-deploy");
-                    break;
-
-                default:
-                    debugger;
-                    break;
+                quadrants[i].style.display = quadrants[i].classList.contains(id) ? "grid" : "none";
             }
         }
 
@@ -462,7 +450,7 @@
                 `    <div class="deployed-button js" onclick="replaceContent('js', '${name}')">` +
                 `        <i class="ti ti-file-type-js"></i>` +
                 `    </div>` +
-                `    <a class="deploy" style="display: grid; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
+                `    <a class="deploy" style="display: grid; font-size: 24px; margin-left: 24px; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
                 `    <div class="deployed-button delete" onclick="deleteAsync(this, '${fullUrl}');">` +
                 `        <i class="ti ti-trash"></i>` +
                 `    </div>` +
@@ -471,10 +459,8 @@
             deployLog.innerHTML = `${actionRow}\n${deployLog.innerHTML}`;
         }
 
-        async function clearAll() {
-            document.getElementById('html').innerText = "";
-            document.getElementById('css').innerText = "";
-            document.getElementById('js').innerText = "";
+        async function clearContent(id) {
+            document.getElementById(id).innerText = "";
         }
 
         async function setDefaultContent() {
