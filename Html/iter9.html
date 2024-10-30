@@ -69,7 +69,7 @@
 
         .quadrant {
             display: grid;
-            grid-template: auto 1fr / 1fr;
+            grid-template: auto 1fr / auto auto 1fr auto;
             gap: 2px;
             padding: 4px;
             align-items: stretch;
@@ -101,12 +101,13 @@
 
         pre {
             display: grid;
-            grid-area: 2 / 1 / 3 / 3;
+            grid-area: 2 / 1 / 3 / 4;
             resize: none;
             border: none;
             outline: none;
             padding: 10px;
             word-wrap: break-word;
+            text-wrap: wrap;
             overflow-y: auto;
             font-family: 'Courier New', Courier, monospace;
             background-color: black;
@@ -124,7 +125,7 @@
 
         #deployLog {
             display: grid;
-            grid-area: 2 / 1 / 3 / 3;
+            grid-area: 2 / 1 / 3 / 4;
             align-content: start;
             background-color: black;
             overflow-y: auto;
@@ -237,6 +238,14 @@
                 transform: scale(1.2);
             }
 
+        .next-button {
+            display: grid;
+            cursor: pointer;
+            color: black;
+            padding: 8px;
+            transition: all 200ms ease-in-out;
+        }
+
         .dev-button {
             display: grid;
             cursor: pointer;
@@ -264,33 +273,52 @@
         <i class="ti ti-terminal-2"></i>
     </a>-->
     <div class="quadrant html">
+        <div class="next-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-cancel" title="clear"></i>
+        </div>
+        <div class="next-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <input id="htmlName" type="text" value="index.html" />
+        <div class="next-button css" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+            <i class="ti ti-chevron-right" title="css"></i>
+        </div>
         <pre id="html" contenteditable="true"></pre>
     </div>
     <div class="quadrant css" style="display: none;">
+        <div class="next-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-cancel" title="clear"></i>
+        </div>
+        <div class="next-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <input id="cssName" type="text" value="style.css" />
+        <div class="next-button js" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+            <i class="ti ti-chevron-right" title="js"></i>
+        </div>
         <pre id="css" contenteditable="true"></pre>
     </div>
     <div class="quadrant js" style="display: none;">
+        <div class="next-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-cancel" title="clear"></i>
+        </div>
+        <div class="next-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+            <i class="ti ti-clipboard" title="paste"></i>
+        </div>
         <input id="jsName" type="text" value="script.js" />
+        <div class="next-button html" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+            <i class="ti ti-chevron-right" title="html"></i>
+        </div>
         <pre id="js" contenteditable="true"></pre>
     </div>
     <div id="deploy-section" class="quadrant deploy">
-        <input id="slugName" type="text" value="iter9_example" />
+        <input id="slugName" type="text" value="iter9_example" style="display:none;" />
+        <span></span>
         <div id="deployLog"></div>
     </div>
     <div id="thumb-button-container">
-        <div class="thumb-button" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
-            <i class="ti ti-chevron-right" title="next"></i>
-        </div>
-        <div class="thumb-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
         <div id="deploy" class="thumb-button" onclick="deploy()">
             <i class="ti ti-cloud-up" title="deploy"></i>
-        </div>
-        <div class="thumb-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
-            <i class="ti ti-cancel" title="clear"></i>
         </div>
         <div class="thumb-button">
             <i class="ti ti-layout-bottombar-collapse" onclick="toggleBottomBar()"></i>
@@ -326,7 +354,9 @@
 
             try {
                 const resource = await response.text();
-                btn.innerText = resource;
+
+                const slug = document.getElementById("slugName").value;
+                btn.innerText = resource.replace(`${slug}/`, "");
             } catch {
                 btn.innerText = `=== ERROR loading ${sourceId}) ===`;
             }
@@ -379,7 +409,10 @@
             for (let i = 0; i < list.length; i++) {
                 let fullUrl = "/api/iter9/snapshots/" + list[i] + "/index.html";
 
-                addActionRow(list[i], fullUrl);
+                const slug = document.getElementById("slugName").value;
+                const name = list[i].replace(`${slug}/`, "");
+
+                addActionRow(name, fullUrl);
             }
         }
 
