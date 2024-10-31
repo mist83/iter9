@@ -7,6 +7,10 @@
     <title>Iter9</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
     <style>
+        :root {
+            font-size: 20px;
+        }
+
         * {
             padding: 0;
             margin: 0;
@@ -82,7 +86,8 @@
             }
 
         input {
-            font-size: 18px;
+            font-size: var(--font-size);
+            font-weight: bold;
             display: grid;
             padding-left: 10px;
             width: 100%;
@@ -105,8 +110,9 @@
             grid-area: 2 / 1 / 3 / 5;
             resize: none;
             border: none;
+            font-size: var(--font-size);
             outline: none;
-            padding: 10px;
+            padding: 24px;
             word-wrap: break-word;
             text-wrap: wrap;
             overflow-y: auto;
@@ -118,7 +124,7 @@
         #deploy-section {
             display: grid;
             grid-template: auto 1fr / auto 1fr auto;
-            height: 40vh;
+            height: 60vh;
             transition: all 100ms ease-in-out;
         }
 
@@ -141,8 +147,6 @@
 
         .deploy-log-row {
             display: grid;
-            margin: 36px;
-            margin-top: 12px;
             margin-bottom: 0px;
             grid-template: 1fr / auto 1fr auto;
         }
@@ -191,7 +195,6 @@
         }
 
             .deployed-button:hover {
-                font-weight: bold;
                 background-color: black;
                 transform: scale(1.5);
             }
@@ -289,11 +292,11 @@
         </div>
         <pre id="js" contenteditable="true"></pre>
     </div>
-    <div id="deploy-section" class="quadrant deploy">
-        <div id="collapse" class="button">
+    <div id="deploy-section" class="quadrant deploy zero-height">
+        <div id="collapse" class="button fade">
             <i class="ti ti-layout-bottombar-collapse" onclick="toggleBottomBar()"></i>
         </div>
-        <div id="expand" class="button fade">
+        <div id="expand" class="button">
             <i class="ti ti-layout-bottombar-expand" onclick="toggleBottomBar()"></i>
         </div>
         <input id="slugName" type="text" value="iter9_example" style="display: none;" />
@@ -460,7 +463,7 @@
                 `    <div class="deployed-button js" onclick="replaceContent('js', '${name}')">` +
                 `        <i class="ti ti-file-type-js"></i>` +
                 `    </div>` +
-                `    <a class="deploy" style="display: grid; font-size: 24px; margin-left: 24px; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
+                `    <a class="deploy" style="display: grid; font-size: var(--font-size); margin-left: 24px; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
                 `    <div class="deployed-button delete" onclick="deleteAsync(this, '${fullUrl}');">` +
                 `        <i class="ti ti-trash"></i>` +
                 `    </div>` +
