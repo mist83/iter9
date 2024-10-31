@@ -116,12 +116,14 @@
         }
 
         #deploy-section {
+            display: grid;
+            grid-template: auto 1fr / auto 1fr auto;
             height: 40vh;
             transition: all 100ms ease-in-out;
         }
 
         .zero-height {
-            height: 0 !important;
+            height: 48px !important;
         }
 
         #deployLog {
@@ -210,36 +212,7 @@
             font-size: 36px !important;
         }
 
-        #thumb-button-container {
-            position: fixed;
-            display: grid;
-            gap: 36px;
-            top: 0;
-            right: 0;
-            color: cyan;
-            margin: 36px;
-            margin-top: 288px;
-            z-index: 1000;
-            transition: all 200ms ease-in-out;
-        }
-
-        .thumb-button {
-            display: grid;
-            cursor: pointer;
-            padding: 16px;
-            border-radius: 1000px;
-            color: cyan;
-            background-color: #111;
-            transition: all 200ms ease-in-out;
-        }
-
-            .thumb-button:hover {
-                background-color: cyan;
-                color: black;
-                transform: scale(1.2);
-            }
-
-        .next-button {
+        .button {
             display: grid;
             cursor: pointer;
             color: black;
@@ -266,6 +239,10 @@
         .toggle-collapsed {
             top: calc(90vh) !important;
         }
+
+        .fade {
+            display: none;
+        }
     </style>
 </head>
 
@@ -274,56 +251,60 @@
         <i class="ti ti-terminal-2"></i>
     </a>-->
     <div class="quadrant html">
-        <div class="next-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+        <div class="button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
             <i class="ti ti-cancel" title="clear"></i>
         </div>
-        <div class="next-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+        <div class="button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
             <i class="ti ti-clipboard" title="paste"></i>
         </div>
         <input id="htmlName" type="text" value="index.html" />
-        <div class="next-button css" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+        <div class="button css" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
             <i class="ti ti-chevron-right" title="css"></i>
         </div>
         <pre id="html" contenteditable="true"></pre>
     </div>
     <div class="quadrant css" style="display: none;">
-        <div class="next-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+        <div class="button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
             <i class="ti ti-cancel" title="clear"></i>
         </div>
-        <div class="next-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+        <div class="button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
             <i class="ti ti-clipboard" title="paste"></i>
         </div>
         <input id="cssName" type="text" value="style.css" />
-        <div class="next-button js" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+        <div class="button js" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
             <i class="ti ti-chevron-right" title="js"></i>
         </div>
         <pre id="css" contenteditable="true"></pre>
     </div>
     <div class="quadrant js" style="display: none;">
-        <div class="next-button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
+        <div class="button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
             <i class="ti ti-cancel" title="clear"></i>
         </div>
-        <div class="next-button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
+        <div class="button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
             <i class="ti ti-clipboard" title="paste"></i>
         </div>
         <input id="jsName" type="text" value="script.js" />
-        <div class="next-button html" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
+        <div class="button html" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
             <i class="ti ti-chevron-right" title="html"></i>
         </div>
         <pre id="js" contenteditable="true"></pre>
     </div>
     <div id="deploy-section" class="quadrant deploy">
-        <input id="slugName" type="text" value="iter9_example" style="display:none;" />
-        <span></span>
-        <div id="deployLog"></div>
-    </div>
-    <div id="thumb-button-container">
-        <div id="deploy" class="thumb-button" onclick="deploy()">
-            <i class="ti ti-cloud-up" title="deploy"></i>
-        </div>
-        <div class="thumb-button">
+        <div id="collapse" class="button">
             <i class="ti ti-layout-bottombar-collapse" onclick="toggleBottomBar()"></i>
         </div>
+        <div id="expand" class="button fade">
+            <i class="ti ti-layout-bottombar-expand" onclick="toggleBottomBar()"></i>
+        </div>
+        <input id="slugName" type="text" value="iter9_example" style="display: none;" />
+        <span></span>
+        <div id="deploy" class="button" onclick="deploy()">
+            <i class="ti ti-cloud-plus" title="deploy"></i>
+        </div>
+        <div id="deploying" class="button fade" onclick="deploy()">
+            <i class="ti ti-cloud-up" title="deploy"></i>
+        </div>
+        <div id="deployLog"></div>
     </div>
     <script>
         let tabs = ['html', 'css', 'js'];
@@ -336,9 +317,8 @@
         function toggleBottomBar() {
             const section = document.getElementById("deploy-section");
             section.classList.toggle("zero-height");
-
-            const toggleButton = document.getElementById("toggle-deployments-list-container");
-            toggleButton.classList.toggle("toggle-collapsed");
+            document.getElementById("expand").classList.toggle("fade");
+            document.getElementById("collapse").classList.toggle("fade");
         }
 
         async function replaceContent(id, sourceId) {
@@ -421,7 +401,9 @@
 
         async function deploy() {
             const btn = document.getElementById("deploy");
-            btn.innerText = "Deploying...";
+
+            document.getElementById("deploy").classList.toggle("fade");
+            document.getElementById("deploying").classList.toggle("fade");
 
             const slug = document.getElementById("slugName").value;
 
@@ -446,13 +428,13 @@
                 body: JSON.stringify(snapshotModel),
             });
 
-            const { returnUrl } = await response.json();
+            const response2 = await response.json();
+            const fullUrl = "/api/iter9/" + response2.key;
 
-            const fullUrl = "/api/iter9/" + returnUrl;
-            const name = `${slug} (${new Date().toLocaleString()})`;
-            addActionRow(name, fullUrl);
+            addActionRow(response2.revision, fullUrl);
 
-            btn.innerText = "Deploy";
+            document.getElementById("deploy").classList.toggle("fade");
+            document.getElementById("deploying").classList.toggle("fade");
         }
 
         async function deleteAsync(sender, url) {

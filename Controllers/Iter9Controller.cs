@@ -173,8 +173,8 @@ public class Iter9Controller : ControllerBase
         ValidateJob(snapshot);
         UpdateAppSlug(snapshot.Slug);
 
-        // Construct the revision subdirectory path based on the current timestamp
-        var revisionPath = string.Join(dataStoreService.PathCharacter.ToString(), config.DataPath, snapshot.Slug, DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss"));
+        var revision = DateTime.Now.ToString("yyyy_MM_dd-HH_mm_ss");
+        var revisionPath = string.Join(dataStoreService.PathCharacter.ToString(), config.DataPath, snapshot.Slug, revision);
 
         // Path for the "_live" directory which will be reset with each POST
         var livePath = string.Join(dataStoreService.PathCharacter.ToString(), config.DataPath, snapshot.Slug, "_live");
@@ -217,8 +217,9 @@ public class Iter9Controller : ControllerBase
         {
             Success = true,
             Message = "Files saved successfully.",
-            Url = url,
-            snapshot.Slug,
+            revision,
+            key = url,
+            slug = snapshot.Slug,
         });
     }
 
