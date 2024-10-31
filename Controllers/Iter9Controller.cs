@@ -125,7 +125,9 @@ public class Iter9Controller : ControllerBase
                 ))
                 //.Select(x => $"{x.Split('/')[1]} ({x.Split('/')[2]})")
                 .Distinct()
+                .Where(x => !x.Contains("_live"))
                 .ToArray();
+
             snapshots = snapshots.Take(10).ToArray();
 
             return Ok(snapshots);
