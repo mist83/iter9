@@ -392,11 +392,7 @@
 
             for (let i = 0; i < list.length; i++) {
                 let fullUrl = "/api/iter9/snapshots/" + list[i] + "/index.html";
-
-                const slug = document.getElementById("slugName").value;
-                const name = list[i].replace(`${slug}/`, "");
-
-                addActionRow(name, fullUrl);
+                addActionRow(list[i], fullUrl);
             }
         }
 
@@ -407,6 +403,8 @@
 
             document.getElementById("deploy").classList.toggle("fade");
             document.getElementById("deploying").classList.toggle("fade");
+
+            document.getElementById("deploy-section").classList.remove("zero-height");
 
             const slug = document.getElementById("slugName").value;
 
@@ -449,18 +447,22 @@
             sender.parentElement.parentElement.removeChild(sender.parentElement);
         }
 
-        async function addActionRow(name, fullUrl) {
+        async function addActionRow(fullName, fullUrl) {
+
+            const slug = document.getElementById("slugName").value;
+            const name = fullName.replace(`${slug}/`, "");
+
             const deployLog = document.getElementById('deployLog');
 
             const actionRow = `` +
                 `<div class="deploy-log-row">` +
-                `    <div class="deployed-button html" onclick="replaceContent('html', '${name}')">` +
+                `    <div class="deployed-button html" onclick="replaceContent('html', '${fullName}')">` +
                 `        <i class="ti ti-file-type-html"></i>` +
                 `    </div>` +
-                `    <div class="deployed-button css" onclick="replaceContent('css', '${name}')">` +
+                `    <div class="deployed-button css" onclick="replaceContent('css', '${fullName}')">` +
                 `        <i class="ti ti-file-type-css"></i>` +
                 `    </div>` +
-                `    <div class="deployed-button js" onclick="replaceContent('js', '${name}')">` +
+                `    <div class="deployed-button js" onclick="replaceContent('js', '${fullName}')">` +
                 `        <i class="ti ti-file-type-js"></i>` +
                 `    </div>` +
                 `    <a class="deploy" style="display: grid; font-size: var(--font-size); margin-left: 24px; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
