@@ -76,6 +76,10 @@ public class Iter9Controller : ControllerBase
         {
             contentType = "text/javascript";
         }
+        else if (catchAll.EndsWith(".html"))
+        {
+            contentType = "text/html";
+        }
 
 
         var textContent = await GetIndex("Iter9.Html." + catchAll);
