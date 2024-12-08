@@ -67,6 +67,12 @@ public class Iter9Controller : ControllerBase
         if (catchAll.EndsWith("manifest.json"))
         {
             contentType = "application/manifest+json";
+            var manifestContent = GetDefaultManifest();
+            return new ContentResult
+            {
+                Content = manifestContent,
+                ContentType = contentType
+            };
         }
         else if (catchAll.EndsWith(".css"))
         {
@@ -281,5 +287,34 @@ public class Iter9Controller : ControllerBase
     private void UpdateAppSlug(string appSlug)
     {
         // Placeholder for appSlug update logic
+    }
+    private string GetDefaultManifest()
+    {
+        var manifest = new
+        {
+            name = "My PWA App",
+            short_name = "PWA",
+            start_url = "/index.html",
+            display = "standalone",
+            background_color = "#ffffff",
+            theme_color = "#000000",
+            icons = new[]
+            {
+                new
+                {
+                    src = "/icons/icon-192x192.png",
+                    type = "image/png",
+                    sizes = "192x192"
+                },
+                new
+                {
+                    src = "/icons/icon-512x512.png",
+                    type = "image/png",
+                    sizes = "512x512"
+                }
+            }
+        };
+
+        return JsonConvert.SerializeObject(manifest);
     }
 }
