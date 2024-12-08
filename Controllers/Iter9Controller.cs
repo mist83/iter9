@@ -40,7 +40,12 @@ public class Iter9Controller : ControllerBase
 
         if (Debugger.IsAttached)
         {
-            bytes = await System.IO.File.ReadAllBytesAsync(@"Z:\code\Iter9\Html\iter9.html");
+            var final = @"Z:\code\" + resource.Replace(".", @"\");
+            final = final.Replace(@"\html", ".html");
+            final = final.Replace(@"\css", ".css");
+            final = final.Replace(@"\js", ".js");
+
+            bytes = await System.IO.File.ReadAllBytesAsync(final);
         }
 
         var textContent = Encoding.UTF8.GetString(bytes);
@@ -48,14 +53,37 @@ public class Iter9Controller : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    [Route("{**catchAll}")]
+    public async Task<IActionResult> Index(string catchAll)
     {
-        var textContent = await GetIndex("Iter9.Html.iter9.html");
+        var contentType = "";
+
+        if (string.IsNullOrWhiteSpace(catchAll))
+        {
+            catchAll = "index.html";
+            contentType = "text/html";
+        }
+
+        if (catchAll.EndsWith("manifest.json"))
+        {
+            contentType = "application/manifest+json";
+        }
+        else if (catchAll.EndsWith(".css"))
+        {
+            contentType = "text/css";
+        }
+        else if (catchAll.EndsWith(".js"))
+        {
+            contentType = "text/javascript";
+        }
+
+
+        var textContent = await GetIndex("Iter9.Html." + catchAll);
 
         var result = new ContentResult
         {
             Content = textContent,
-            ContentType = "text/html"
+            ContentType = contentType
         };
 
         return result;
@@ -128,7 +156,9 @@ public class Iter9Controller : ControllerBase
                 .Where(x => !x.Contains("_live"))
                 .ToArray();
 
-            snapshots = snapshots.Take(10).ToArray();
+            snapshots = snapshots
+                //.Take(10)
+                .ToArray();
 
             return Ok(snapshots);
 
