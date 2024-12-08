@@ -296,7 +296,7 @@ public class Iter9Controller : ControllerBase
             short_name = "PWA",
             start_url = "/index.html",
             display = "standalone",
-            background_color = "#ffffff",
+            background_color = "#ff0000",
             theme_color = "#000000",
             icons = new[]
             {
