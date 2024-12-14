@@ -292,12 +292,12 @@ public class Iter9Controller : ControllerBase
     {
         var manifest = new
         {
-            name = "My Updated PWA App",
-            short_name = "UpdatedPWA",
-            start_url = "/pwa_index.html",
+            name = "Iter9",
+            short_name = "Iter9",
+            start_url = "/api/iter9",
             display = "standalone",
             background_color = "#ffffff",
-            theme_color = "#0000ff",
+            theme_color = "#ffffff",
             icons = new[]
             {
                 new

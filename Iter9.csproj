@@ -7,22 +7,33 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Html\manifest.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Defaults\default.css" />
     <None Remove="Defaults\default.html" />
     <None Remove="Defaults\default.js" />
-    <None Remove="Html\iter9.html" />
+    <None Remove="Html\index.html" />
+    <None Remove="Html\script.js" />
+    <None Remove="Html\service-worker.js" />
+    <None Remove="Html\style.css" />
     <None Remove="Resources\please.webp" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include=".env\config.json" />
+    <Content Include="Html\service-worker.js" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Defaults\default.css" />
     <EmbeddedResource Include="Defaults\default.js" />
     <EmbeddedResource Include="Defaults\default.html" />
-    <EmbeddedResource Include="Html\iter9.html" />
+    <EmbeddedResource Include="Html\index.html" />
+    <EmbeddedResource Include="Html\manifest.json" />
+    <EmbeddedResource Include="Html\script.js" />
+    <EmbeddedResource Include="Html\style.css" />
     <EmbeddedResource Include="Resources\please.webp" />
   </ItemGroup>
 
