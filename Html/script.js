@@ -1,9 +1,10 @@
-let tabs = ['html', 'css', 'js'];
+let tabs = ['html'];
 let currentTabIndex = 0;
 
-const baseBaseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws`;
+let baseBaseUrl = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws`;
+baseBaseUrl = `https://localhost:7056`;
+
 const baseUrl = `${baseBaseUrl}/api/iter9`;
-//const url = "https://localhost:7056/api/iter9/list?${slug}";
 
 function toggleBottomBar() {
     const section = document.getElementById("deploy-section");
@@ -15,10 +16,10 @@ function toggleBottomBar() {
 async function replaceContent(id, sourceId) {
     const btn = document.getElementById(id);
 
-    //const url = `https://localhost:7056/api/iter9/snapshots/${slug}/revision/resource`;
+    let url = `${baseBaseUrl}/api/iter9/snapshots/${slug}/revision/resource`;
+    url = `${baseUrl}/snapshots/${sourceId}/${fileName}`;
 
-    const fileName = id === "html" ? "index.html" : (id === "css" ? "style.css" : "script.js");
-    const url = `${baseUrl}/snapshots/${sourceId}/${fileName}`;
+    const fileName = "index.html";
     const response = await fetch(url, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -39,9 +40,7 @@ async function pasteInto(id) {
     const text = await navigator.clipboard.readText();
 
     btn.innerText = "Pasting...";
-    //setTimeout(() => {
     btn.innerText = text;
-    //}, 200);
 }
 
 async function setActive(id) {
@@ -97,16 +96,11 @@ async function deploy() {
     const slug = document.getElementById("slugName").value;
 
     const htmlContent = document.getElementById('html').innerText;
-    const cssContent = document.getElementById('css').innerText;
-    const jsContent = document.getElementById('js').innerText;
 
-    // Building the snapshot model with arrays for each file type
     const snapshotModel = {
         slug: slug,
         files: {
             html: [htmlContent],
-            css: [cssContent],
-            js: [jsContent]
         }
     };
 
@@ -147,12 +141,6 @@ async function addActionRow(fullName, fullUrl) {
         `    <div class="deployed-button html" onclick="replaceContent('html', '${fullName}')">` +
         `        <i class="ti ti-file-type-html"></i>` +
         `    </div>` +
-        `    <div class="deployed-button css" onclick="replaceContent('css', '${fullName}')">` +
-        `        <i class="ti ti-file-type-css"></i>` +
-        `    </div>` +
-        `    <div class="deployed-button js" onclick="replaceContent('js', '${fullName}')">` +
-        `        <i class="ti ti-file-type-js"></i>` +
-        `    </div>` +
         `    <a class="deploy" style="display: grid; font-size: var(--font-size); margin-left: 24px; align-self: center; background-color: black; width: unset;" href="${fullUrl}" target="blank">${name}</a>` +
         `    <div class="deployed-button delete" onclick="deleteAsync(this, '${fullUrl}');">` +
         `        <i class="ti ti-trash"></i>` +
@@ -176,10 +164,8 @@ async function setDefaultContent() {
 
     const item = await response.json();
 
-    // Set the default content in the text areas
+    // Set the default content in the text area
     document.getElementById('html').innerText = item.html;
-    document.getElementById('css').innerText = item.css;
-    document.getElementById('js').innerText = item.js;
 }
 
 setDefaultContent();

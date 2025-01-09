@@ -64,7 +64,7 @@ body {
 
 .quadrant {
     display: grid;
-    grid-template: auto 1fr / auto auto 1fr auto;
+    grid-template: auto 1fr / auto auto 1fr;
     gap: 2px;
     padding: 4px;
     align-items: stretch;

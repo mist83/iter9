@@ -22,36 +22,8 @@
             <i class="ti ti-clipboard" title="paste"></i>
         </div>
         <input id="htmlName" type="text" value="index.html" />
-        <div class="button css" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
-            <i class="ti ti-chevron-right" title="css"></i>
-        </div>
+        <div></div>
         <pre id="html" contenteditable="true"></pre>
-    </div>
-    <div class="quadrant css" style="display: none;">
-        <div class="button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
-            <i class="ti ti-cancel" title="clear"></i>
-        </div>
-        <div class="button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
-        <input id="cssName" type="text" value="style.css" />
-        <div class="button js" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
-            <i class="ti ti-chevron-right" title="js"></i>
-        </div>
-        <pre id="css" contenteditable="true"></pre>
-    </div>
-    <div class="quadrant js" style="display: none;">
-        <div class="button" onclick="clearContent(tabs[currentTabIndex % tabs.length])">
-            <i class="ti ti-cancel" title="clear"></i>
-        </div>
-        <div class="button" onclick="pasteInto(tabs[currentTabIndex % tabs.length])">
-            <i class="ti ti-clipboard" title="paste"></i>
-        </div>
-        <input id="jsName" type="text" value="script.js" />
-        <div class="button html" onclick="setActive(tabs[++currentTabIndex % tabs.length])">
-            <i class="ti ti-chevron-right" title="html"></i>
-        </div>
-        <pre id="js" contenteditable="true"></pre>
     </div>
     <div id="deploy-section" class="quadrant deploy zero-height">
         <div id="collapse" class="button fade">
