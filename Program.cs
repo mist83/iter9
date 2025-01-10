@@ -2,6 +2,10 @@ using Amazon.S3;
 using Iter9;
 using Iter9.Controllers;
 
+// HACK
+Environment.SetEnvironmentVariable("AWS_ACCESS_KEY_ID", Environment.GetEnvironmentVariable("_AWS_ACCESS_KEY_ID"));
+Environment.SetEnvironmentVariable("AWS_SECRET_ACCESS_KEY", Environment.GetEnvironmentVariable("_AWS_SECRET_ACCESS_KEY"));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
