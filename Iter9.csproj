@@ -49,4 +49,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ReusableUtilities\ReusableUtilities.csproj" />
+  </ItemGroup>
+
 </Project>
