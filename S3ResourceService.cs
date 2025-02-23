@@ -1,4 +1,5 @@
-﻿using Amazon.S3;
+﻿using Amazon;
+using Amazon.S3;
 using Amazon.S3.Model;
 using Iter9.Controllers;
 
@@ -85,18 +86,34 @@ public class S3ResourceService : IDataStoreService
         }
     }
 
-    public async Task<List<string>> ListKeysAsync()
+    public async Task<string[]> ListKeysAsync()
     {
-        var request = new ListObjectsV2Request
+        var keys = new List<string>();
+        string continuationToken = null;
+
+        do
         {
-            BucketName = bucketName
-        };
+            var request = new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                ContinuationToken = continuationToken, // This helps paginate through results
+                MaxKeys = 1000 // Adjust if needed, 1000 is the S3 max
+            };
 
-        var response = await s3Client.ListObjectsV2Async(request);
+            string id = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+            string key = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+            var s3Client2 = new AmazonS3Client(id, key, RegionEndpoint.USWest2);
 
-        var list = response.S3Objects.Select(obj => obj.Key).ToList();
-        return list;
+            var response = await s3Client2.ListObjectsV2Async(request);
+            keys.AddRange(response.S3Objects.Select(x => x.Key));
+
+            continuationToken = response.NextContinuationToken; // Continue if more results exist
+
+        } while (!string.IsNullOrEmpty(continuationToken)); // Stop when there's no more data
+
+        return keys.ToArray();
     }
+
 
     public async Task<List<string>> ListKeysAsync(string substring = "")
     {

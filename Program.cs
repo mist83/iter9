@@ -1,10 +1,33 @@
 using Amazon.S3;
+using Amazon.SecurityToken;
+using Amazon.SecurityToken.Model;
 using Iter9;
 using Iter9.Controllers;
+using System.Diagnostics;
 
-// HACK
-Environment.SetEnvironmentVariable("AWS_ACCESS_KEY_ID", Environment.GetEnvironmentVariable("_AWS_ACCESS_KEY_ID"));
-Environment.SetEnvironmentVariable("AWS_SECRET_ACCESS_KEY", Environment.GetEnvironmentVariable("_AWS_SECRET_ACCESS_KEY"));
+if (Debugger.IsAttached)
+{
+    // WTF credential chain lol
+    string id = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+    string key = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+
+    try
+    {
+        // this NEEDS TO WORK wtf
+        using var stsClient = new AmazonSecurityTokenServiceClient();
+
+        ////stsClient = new AmazonSecurityTokenServiceClient(id, key, Amazon.RegionEndpoint.USWest2);
+
+        //var response = await stsClient.GetCallerIdentityAsync(new GetCallerIdentityRequest());
+        //Console.WriteLine("Account: " + response.Account);
+        //Console.WriteLine("ARN: " + response.Arn);
+        //Console.WriteLine("UserId: " + response.UserId);
+    }
+    catch
+    {
+        Debugger.Break();
+    }
+}
 
 var builder = WebApplication.CreateBuilder(args);
 

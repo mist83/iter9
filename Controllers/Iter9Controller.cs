@@ -1,9 +1,13 @@
-﻿using Amazon.Auth.AccessControlPolicy;
-using Microsoft.AspNetCore.DataProtection.KeyManagement;
+﻿using Amazon;
+using Amazon.S3;
+using Amazon.S3.Model;
+using HtmlAgilityPack;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Iter9.Controllers;
 
@@ -52,6 +56,149 @@ public class Iter9Controller : ControllerBase
         return textContent;
     }
 
+    #region reorganize
+
+    private static readonly string bucketName = "iter9";
+    private static readonly string prefix = "snapshots/iter9_example/";
+    private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USWest2;
+
+    private static string id = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+    private static string key = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+    private static readonly AmazonS3Client s3Client = new AmazonS3Client(id, key, RegionEndpoint.USWest2);
+    //private static readonly AmazonS3Client s3Client = new AmazonS3Client(bucketRegion);
+
+    [HttpPost("reorganize")]
+    public async Task<IActionResult> RunAsync()
+    {
+        var fileMappings = new Dictionary<string, string>();
+
+        // Step 1: Get all objects in the bucket with the given prefix
+        var allKeys = await ListAllObjectsAsync();
+
+        // Step 2: Group by unique timestamp folders
+        var folderGroups = allKeys
+            .Select(k => GetFolderFromKey(k))
+            .Where(f => f != null)
+            .Distinct()
+            .ToList();
+
+        Console.WriteLine($"Found {folderGroups.Count} unique folders.");
+
+        var rnd = new Random();
+        foreach (var folder in folderGroups)
+        {
+            string newFolderName = await DetermineNewFolderName(folder);
+            if (newFolderName == null) continue; // Skip if something goes wrong
+
+            string oldPath = $"{prefix}{folder}/";
+            string newPath = $"codescoops/{newFolderName}/";
+
+            if (!fileMappings.ContainsKey(oldPath))
+            {
+                var count = fileMappings.Values.Count(x => x == newPath);
+                //if (count > 0)
+                {
+                    newPath += rnd.Next(1000, 10000) + "/";
+                }
+
+                fileMappings[oldPath] = newPath;
+                PrintChange(oldPath, newPath);
+            }
+        }
+
+        return Ok(fileMappings);
+    }
+
+    private static async Task<List<string>> ListAllObjectsAsync()
+    {
+        var keys = new List<string>();
+        string continuationToken = null;
+        do
+        {
+            var request = new ListObjectsV2Request { BucketName = bucketName, Prefix = prefix, ContinuationToken = continuationToken };
+
+            var response = await s3Client.ListObjectsV2Async(request);
+
+            keys.AddRange(response.S3Objects.Select(o => o.Key));
+            continuationToken = response.NextContinuationToken;
+        } while (continuationToken != null);
+
+        return keys;
+    }
+
+    private static string GetFolderFromKey(string key)
+    {
+        var match = Regex.Match(key, @"snapshots/iter9_example/(\d{4}_\d{2}_\d{2}-\d{2}_\d{2}_\d{2})/");
+        return match.Success ? match.Groups[1].Value : null;
+    }
+
+    private static async Task<string> DetermineNewFolderName(string folder)
+    {
+        var indexHtmlKey = $"{prefix}{folder}/index.html";
+        var exists = await ObjectExistsAsync(indexHtmlKey);
+
+        if (exists)
+        {
+            var title = await ExtractHtmlTitle(indexHtmlKey);
+            return title ?? "unknown_html";
+        }
+
+        return "unknown_various";
+    }
+
+    private static async Task<bool> ObjectExistsAsync(string key)
+    {
+        try
+        {
+            await s3Client.GetObjectMetadataAsync(bucketName, key);
+            return true;
+        }
+        catch (AmazonS3Exception e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return false;
+        }
+    }
+
+    private static async Task<string> ExtractHtmlTitle(string key)
+    {
+        try
+        {
+            var response = await s3Client.GetObjectAsync(bucketName, key);
+            using (var reader = new System.IO.StreamReader(response.ResponseStream))
+            {
+                var html = await reader.ReadToEndAsync();
+                var doc = new HtmlDocument();
+                doc.LoadHtml(html);
+
+                var titleNode = doc.DocumentNode.SelectSingleNode("//title");
+                if (titleNode != null)
+                {
+                    var cleanTitle = Regex.Replace(titleNode.InnerText.ToLower().Trim(), @"[^a-z0-9_]", "_");
+                    return cleanTitle;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            // Fail silently, assume no title found
+        }
+        return null;
+    }
+
+    private static void PrintChange(string oldPath, string newPath)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Write(oldPath);
+        Console.ResetColor();
+        Console.Write(" => ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine(newPath);
+
+        Console.ResetColor();
+    }
+
+    #endregion
     [HttpGet]
     [Route("{**catchAll}")]
     public async Task<IActionResult> Index(string catchAll)
@@ -99,6 +246,22 @@ public class Iter9Controller : ControllerBase
         return result;
     }
 
+    public static string canonKey = null;
+
+    [HttpPost]
+    [Route("reset_canon")]
+    public async Task<IActionResult> ResetCanonMainPage([FromQuery] string key)
+    {
+        await Task.CompletedTask;
+
+        canonKey = key;
+
+        // TODO: check if key exists, if so, use it, if not, fallback to index
+        //canonKey = null;
+
+        return Ok();
+    }
+
     [HttpDelete]
     [Route("nuke")]
     public async Task<IActionResult> NukeAsync(string magicWord = "pleas")
@@ -131,7 +294,7 @@ public class Iter9Controller : ControllerBase
         var keys = await dataStoreService.ListKeysAsync();
 
         var startKey = string.Join(dataStoreService.PathCharacter, config.DataPath, slug, revision);
-        keys = keys.Where(x => x.StartsWith(startKey)).ToList();
+        keys = keys.Where(x => x.StartsWith(startKey)).ToArray();
 
         await Task.WhenAll(keys.Select(async x => await dataStoreService.DeleteAsync(x)));
 
@@ -150,7 +313,7 @@ public class Iter9Controller : ControllerBase
         var files = await dataStoreService.ListKeysAsync();
         if (!string.IsNullOrWhiteSpace(slug))
         {
-            files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{slug}{dataStoreService.PathCharacter}")).ToList();
+            files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{slug}{dataStoreService.PathCharacter}")).ToArray();
         }
 
         if (string.IsNullOrWhiteSpace(revision))
@@ -176,7 +339,7 @@ public class Iter9Controller : ControllerBase
         }
         else if (revision != "*")
         {
-            files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{revision}{dataStoreService.PathCharacter}")).ToList();
+            files = files.Where(x => x.Contains($"{dataStoreService.PathCharacter}{revision}{dataStoreService.PathCharacter}")).ToArray();
         }
 
         ////files = files.Where(x => x.EndsWith("/index.html")).ToList();

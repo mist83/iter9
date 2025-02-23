@@ -14,6 +14,7 @@
     <None Remove="Defaults\default.css" />
     <None Remove="Defaults\default.html" />
     <None Remove="Defaults\default.js" />
+    <None Remove="Html\dynamic.html" />
     <None Remove="Html\index.html" />
     <None Remove="Html\script.js" />
     <None Remove="Html\service-worker.js" />
@@ -30,6 +31,7 @@
     <EmbeddedResource Include="Defaults\default.css" />
     <EmbeddedResource Include="Defaults\default.js" />
     <EmbeddedResource Include="Defaults\default.html" />
+    <EmbeddedResource Include="Html\dynamic.html" />
     <EmbeddedResource Include="Html\index.html" />
     <EmbeddedResource Include="Html\manifest.json" />
     <EmbeddedResource Include="Html\script.js" />
@@ -40,7 +42,10 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.7.1" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
-    <PackageReference Include="AWSSDK.S3" Version="3.7.403.1" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.401.26" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.36" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
