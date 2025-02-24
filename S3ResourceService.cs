@@ -100,11 +100,7 @@ public class S3ResourceService : IDataStoreService
                 MaxKeys = 1000 // Adjust if needed, 1000 is the S3 max
             };
 
-            string id = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-            string key = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-            var s3Client2 = new AmazonS3Client(id, key, RegionEndpoint.USWest2);
-
-            var response = await s3Client2.ListObjectsV2Async(request);
+            var response = await s3Client.ListObjectsV2Async(request);
             keys.AddRange(response.S3Objects.Select(x => x.Key));
 
             continuationToken = response.NextContinuationToken; // Continue if more results exist

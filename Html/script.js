@@ -151,8 +151,9 @@ async function addActionRow(fullName, fullUrl) {
     setActive(tabs[currentTabIndex]);
 }
 
-async function clearContent(id) {
-    document.getElementById(id).innerText = "";
+async function pasteAndDeploy(id) {
+    pasteInto(tabs[0]);
+    deploy();
 }
 
 async function setDefaultContent() {

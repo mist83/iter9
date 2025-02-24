@@ -11,22 +11,13 @@ if (Debugger.IsAttached)
     string id = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
     string key = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
 
-    try
-    {
-        // this NEEDS TO WORK wtf
-        using var stsClient = new AmazonSecurityTokenServiceClient();
+    using var stsClient = new AmazonSecurityTokenServiceClient();
 
-        ////stsClient = new AmazonSecurityTokenServiceClient(id, key, Amazon.RegionEndpoint.USWest2);
-
-        //var response = await stsClient.GetCallerIdentityAsync(new GetCallerIdentityRequest());
-        //Console.WriteLine("Account: " + response.Account);
-        //Console.WriteLine("ARN: " + response.Arn);
-        //Console.WriteLine("UserId: " + response.UserId);
-    }
-    catch
-    {
-        Debugger.Break();
-    }
+    var response = await stsClient.GetCallerIdentityAsync(new GetCallerIdentityRequest());
+    Console.WriteLine("Account: \x1b[33m" + response.Account + "\x1b[0m");
+    Console.WriteLine("ARN:     \x1b[33m" + response.Arn + "\x1b[0m");
+    Console.WriteLine("UserId:  \x1b[33m" + response.UserId + "\x1b[0m");
+    Console.WriteLine();
 }
 
 var builder = WebApplication.CreateBuilder(args);

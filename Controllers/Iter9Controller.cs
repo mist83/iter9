@@ -17,12 +17,13 @@ namespace Iter9.Controllers;
 public class Iter9Controller : ControllerBase
 {
     private readonly Config config;
-
+    private readonly IAmazonS3 s3Client;
     private readonly IDataStoreService dataStoreService;
 
-    public Iter9Controller(Config config, IDataStoreService dataStoreService)
+    public Iter9Controller(Config config, IAmazonS3 s3Client, IDataStoreService dataStoreService)
     {
         this.config = config;
+        this.s3Client = s3Client;
         this.dataStoreService = dataStoreService;
     }
 
@@ -60,15 +61,9 @@ public class Iter9Controller : ControllerBase
 
     private static readonly string bucketName = "iter9";
     private static readonly string prefix = "snapshots/iter9_example/";
-    private static readonly RegionEndpoint bucketRegion = RegionEndpoint.USWest2;
 
-    private static string id = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-    private static string key = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-    private static readonly AmazonS3Client s3Client = new AmazonS3Client(id, key, RegionEndpoint.USWest2);
-    //private static readonly AmazonS3Client s3Client = new AmazonS3Client(bucketRegion);
-
-    [HttpPost("reorganize")]
-    public async Task<IActionResult> RunAsync()
+    [HttpGet("reorganize")]
+    public async Task<IActionResult> GetReorganizationAsync()
     {
         var fileMappings = new Dictionary<string, string>();
 
@@ -91,7 +86,7 @@ public class Iter9Controller : ControllerBase
             if (newFolderName == null) continue; // Skip if something goes wrong
 
             string oldPath = $"{prefix}{folder}/";
-            string newPath = $"codescoops/{newFolderName}/";
+            string newPath = $"codescoops://{newFolderName}/";
 
             if (!fileMappings.ContainsKey(oldPath))
             {
@@ -109,7 +104,14 @@ public class Iter9Controller : ControllerBase
         return Ok(fileMappings);
     }
 
-    private static async Task<List<string>> ListAllObjectsAsync()
+    [HttpPost("reorganize")]
+    public async Task<IActionResult> ReorganizeAsync([FromBody] Dictionary<string, string> fileMappings)
+    {
+        await Task.CompletedTask;
+        return BadRequest("TODO");
+    }
+
+    private async Task<List<string>> ListAllObjectsAsync()
     {
         var keys = new List<string>();
         string continuationToken = null;
@@ -126,13 +128,13 @@ public class Iter9Controller : ControllerBase
         return keys;
     }
 
-    private static string GetFolderFromKey(string key)
+    private string GetFolderFromKey(string key)
     {
         var match = Regex.Match(key, @"snapshots/iter9_example/(\d{4}_\d{2}_\d{2}-\d{2}_\d{2}_\d{2})/");
         return match.Success ? match.Groups[1].Value : null;
     }
 
-    private static async Task<string> DetermineNewFolderName(string folder)
+    private async Task<string> DetermineNewFolderName(string folder)
     {
         var indexHtmlKey = $"{prefix}{folder}/index.html";
         var exists = await ObjectExistsAsync(indexHtmlKey);
@@ -146,7 +148,7 @@ public class Iter9Controller : ControllerBase
         return "unknown_various";
     }
 
-    private static async Task<bool> ObjectExistsAsync(string key)
+    private async Task<bool> ObjectExistsAsync(string key)
     {
         try
         {
@@ -159,7 +161,7 @@ public class Iter9Controller : ControllerBase
         }
     }
 
-    private static async Task<string> ExtractHtmlTitle(string key)
+    private async Task<string> ExtractHtmlTitle(string key)
     {
         try
         {
@@ -393,16 +395,16 @@ public class Iter9Controller : ControllerBase
             }
 
             {
-                var file = snapshot.Files.Css.Single();
-                if (file.Trim() == "") continue;
+                var file = snapshot.Files.Css?.SingleOrDefault();
+                if (string.IsNullOrWhiteSpace(file)) continue;
 
                 var fullPath = string.Join(dataStoreService.PathCharacter, path, "style.css");
                 await dataStoreService.SaveAsync(fullPath, file);
             }
 
             {
-                var file = snapshot.Files.Js.Single();
-                if (file.Trim() == "") continue;
+                var file = snapshot.Files.Js?.SingleOrDefault();
+                if (string.IsNullOrWhiteSpace(file)) continue;
 
                 var fullPath = string.Join(dataStoreService.PathCharacter, path, "script.js");
                 await dataStoreService.SaveAsync(fullPath, file);
