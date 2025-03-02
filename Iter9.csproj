@@ -7,41 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Html\manifest.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Defaults\default.css" />
     <None Remove="Defaults\default.html" />
     <None Remove="Defaults\default.js" />
-    <None Remove="Html\dynamic.html" />
-    <None Remove="Html\index.html" />
-    <None Remove="Html\script.js" />
-    <None Remove="Html\service-worker.js" />
-    <None Remove="Html\style.css" />
-    <None Remove="Resources\please.webp" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include=".env\config.json" />
-    <Content Include="Html\service-worker.js" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Defaults\default.css" />
     <EmbeddedResource Include="Defaults\default.js" />
     <EmbeddedResource Include="Defaults\default.html" />
-    <EmbeddedResource Include="Html\dynamic.html" />
-    <EmbeddedResource Include="Html\index.html" />
-    <EmbeddedResource Include="Html\manifest.json" />
-    <EmbeddedResource Include="Html\script.js" />
-    <EmbeddedResource Include="Html\style.css" />
-    <EmbeddedResource Include="Resources\please.webp" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.7.1" />
     <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="3.7.301" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.415.9" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="3.7.401.26" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.72" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
@@ -52,10 +36,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ReusableUtilities\ReusableUtilities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,8 @@
 using Amazon.S3;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
-using Iter9;
-using Iter9.Controllers;
+using Iter9.Middleware;
+using Iter9.Services;
 using System.Diagnostics;
 
 if (Debugger.IsAttached)
@@ -27,22 +27,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddAWSService<IAmazonS3>();
-builder.Services.AddTransient<IDataStoreService, S3ResourceService>();
-builder.Services.AddTransient(x =>
+builder.Services.AddSwaggerGen(c =>
 {
-    return new Config
-    {
-        DataRoot = Environment.GetEnvironmentVariable("S3_BUCKET"),
-        DataPath = "snapshots"
-    };
+    c.OrderActionsBy((apiDesc) => apiDesc.RelativePath);
 });
 
+builder.Services.AddAWSService<IAmazonS3>();
+
+builder.Services.AddTransient<Iter9Service>();
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
