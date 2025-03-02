@@ -51,15 +51,16 @@ public partial class Iter9Service
 
     public async Task<bool> ExistsAsync(string key)
     {
-        var request = new ListObjectsV2Request
+        // List is only eventually consistent, we're dealt with this try/catch nastiness FN
+        try
         {
-            BucketName = bucketName,
-            Prefix = key,
-            MaxKeys = 1
-        };
-
-        var response = await s3Client.ListObjectsV2Async(request);
-        return response.S3Objects.SingleOrDefault()?.Key != null;
+            await s3Client.GetObjectMetadataAsync(bucketName, key);
+            return true; 
+        }
+        catch (Amazon.S3.AmazonS3Exception e) when (e.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return false;
+        }
     }
 
     private async Task CopyKeyAsync(string sourceBucket, string sourceKey, string destinationBucket, string destinationKey)
