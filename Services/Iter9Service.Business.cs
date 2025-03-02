@@ -186,7 +186,7 @@ public partial class Iter9Service
         return zipStream;
     }
 
-    private async Task UploadText(string project, string folder, string fileName, string code)
+    private async Task UploadText(string project, string folder, string fileName, string text)
     {
         var key = $"{project}/{folder}/{fileName}".Trim('/');
 
@@ -203,7 +203,7 @@ public partial class Iter9Service
             await CopyKeyAsync(bucketName, key, bucketName, backupKey);
         }
 
-        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(code));
+        using var stream = new MemoryStream(Encoding.UTF8.GetBytes(text));
         var response = await s3Client.PutObjectAsync(new PutObjectRequest
         {
             BucketName = bucketName,
