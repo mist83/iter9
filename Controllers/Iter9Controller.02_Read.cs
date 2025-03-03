@@ -23,6 +23,7 @@ public partial class Iter9Controller
 
         return Ok(new
         {
+            Name = project,
             Previous = index > 0 ? projects[index - 1] : null,
             Next = index < projects.Count - 1 ? projects[index + 1] : null,
             details.Folders
@@ -50,7 +51,7 @@ public partial class Iter9Controller
     [HttpGet("{project}/{folder}/{**fileName}")]
     public async Task<IActionResult> ReadFileAsync(string project = "*", string folder = "*", string fileName = "*")
     {
-        var file = await iter9Service.GetFileAsync($"{project}/{folder}/", fileName);
+        var file = await iter9Service.GetFileAsync(project, folder, fileName);
 
         if (file == null)
         {

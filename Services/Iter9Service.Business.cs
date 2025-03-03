@@ -75,7 +75,7 @@ public partial class Iter9Service
         return new ProjectDetail(project, folders.ToArray());
     }
 
-    public async Task<FileDetail> GetFileAsync(string project, string resourceName)
+    public async Task<FileDetail> GetFileAsync(string project, string folder, string fileName)
     {
         if (project == "*")
         {
@@ -84,19 +84,19 @@ public partial class Iter9Service
         }
 
         var details = await GetProjectDetailsAsync(project);
-        if (resourceName == "*")
+        if (folder == "*")
         {
             var resource = details.Folders.OrderBy(x => Guid.NewGuid()).First();
         }
-        else if (!details.Folders.Any(x => x.Name == resourceName))
+        else if (!details.Folders.Any(x => x.Name == folder))
         {
             return null;
         }
 
-        var key = $"{project}/{resourceName}";
+        var key = $"{project}/{folder}/{fileName}";
         var contentType = "text/plain";
 
-        switch (resourceName.Split(".").Last().ToLower())
+        switch (fileName.Split(".").Last().ToLower())
         {
             case "html":
                 contentType = "text/html";
