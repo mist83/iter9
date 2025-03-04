@@ -3,7 +3,7 @@ const urlBase = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.o
 document.addEventListener("DOMContentLoaded", async function () {
     const grid = document.getElementById("grid");
     try {
-        const response = await fetch(`${urlBase}?format=json`);
+        const response = await fetch(`${urlBase}`);
         if (!response.ok) throw new Error("Failed to fetch data");
 
         const items = await response.json();

@@ -58,7 +58,7 @@ function setProjectName(projectName) {
             return;
         }
 
-        event.target.style.color = "unset";
+        event.target.style.color = "var(--text-light)";
         localStorage.setItem("projectName", event.target.value);
     }
 
@@ -107,38 +107,28 @@ async function fetchData(projectFullName) {
 
         const mainContainer = document.createElement('div');
 
-        if (data.length > 0) {
-            const trackedFileHeader = document.createElement("div");
-            mainContainer.appendChild(trackedFileHeader);
-
-            trackedFileHeader.style.display = "grid";
-            trackedFileHeader.style.gridTemplate = "1fr / 1fr auto auto 1fr";
-
-            trackedFileHeader.appendChild(document.createElement("span"));
-
-            const fileGroupHeader = document.createElement("h2");
-            trackedFileHeader.appendChild(fileGroupHeader);
-            fileGroupHeader.textContent = "Project files";
-
-            const openDashboardButton = document.createElement("i");
-            //trackedFileHeader.appendChild(openDashboardButton);
-
-            const openDashboardIcon = document.createElement("i");
-            openDashboardButton.appendChild(openDashboardIcon);
-            openDashboardIcon.classList.add("ti", "ti-dots");
-            openDashboardButton.title = "Track file";
-            openDashboardButton.onclick = () => {
-                const project = document.getElementById("project-name").value.split('/')[0];
-                chrome.tabs.create({ url: `scoop/index.html?project=${project}` });
-            }
-        }
-
+        document.getElementById("view-dashboard").style.display = "grid";
         for (let i = 0; i < data.length; i++) {
             const div = document.createElement("div");
             div.className = "tracked-file";
             div.innerText = data[i].name;
 
-            mainContainer.appendChild(div);
+            const item = [...document.getElementsByTagName("input")].filter(x => x.value == data[i].name)[0];
+            if (!item) {
+                // tracked, just not with the file name on screen
+                const warning = document.createElement("h4");
+                warning.style.color = "limegreen";
+                warning.innerText = data[i].name;
+                mainContainer.appendChild(warning);
+
+                continue;
+            }
+
+            const itemParent = item.parentElement;
+
+            itemParent.title = "this item is (probably) tracked - based on file name only lol";
+            item.style.color = "yellow";
+            itemParent.style.backgroundColor = "yellow";
         }
 
         const content = document.getElementById('code-snippet-area');
@@ -150,11 +140,13 @@ async function fetchData(projectFullName) {
     }
 }
 
-(async () => await fetchData())();
+document.addEventListener("DOMContentLoaded", async function () {
+    await fetchData("pomegranate");
+});
 
 const allCodeBlocks = [];
 
-const saveAll = async () => {
+const saveAll = async (only) => {
     const project = document.getElementById("project-name").value;
 
     try {
@@ -168,6 +160,12 @@ const saveAll = async () => {
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
+            if (only) {
+                if (file.name !== only) {
+                    continue;
+                }
+            }
+
             if (!fileName) {
                 fileName = file.name;
             }
@@ -197,13 +195,13 @@ const saveAll = async () => {
     }
 };
 
-document.getElementById("smart-launch").addEventListener("click", async () => {
-    const items = await saveAll();
+document.getElementById("view-dashboard").addEventListener("click", async () => {
+    const items = document.getElementById("project-name").value.split('/');
+
     const projectName = items[0];
     const folderName = items[1];
-    const fileName = items[2];
 
-    chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+    chrome.tabs.create({ url: `scoop/index.html?project=${projectName}&folderName=${folderName}` });
 });
 
 // Close alert function
@@ -221,12 +219,6 @@ const getHTML = async (response) => {
 
     const mainContainer = document.createElement('div');
 
-    if (response.codeBlocks.length > 0) {
-        const fileGroupHeader = document.createElement("h2");
-        fileGroupHeader.textContent = "Found code";
-        mainContainer.appendChild(fileGroupHeader);
-    }
-
     const gridContainer = document.createElement('div');
     mainContainer.appendChild(gridContainer);
     gridContainer.style.display = 'grid';
@@ -242,13 +234,17 @@ const getHTML = async (response) => {
         return acc;
     }, {});
 
-
-
+    const fileCount = {};
     for (let i = 0; i < response.codeBlocks.length; i++) {
-        let suffix = groupedByType[response.codeBlocks[i].type].length > 1 ? `_${i}` : "";
+        let suffix = "";
 
-        if (i === response.codeBlocks.length - 1) {
-            suffix = "";
+        codeBlockType = response.codeBlocks[i].type;
+
+        if (!fileCount[codeBlockType]) {
+            fileCount[codeBlockType] = 1;
+        } else {
+            fileCount[codeBlockType]++;
+            suffix = `_${fileCount[codeBlockType]}`;
         }
 
         const untrackedFileDiv = document.createElement("div");
@@ -266,7 +262,6 @@ const getHTML = async (response) => {
 
         const trackFileIcon = document.createElement("i");
         trackFileButton.appendChild(trackFileIcon)
-        trackFileIcon.classList.add("ti", "ti-cloud-up");
 
         const fileNameInput = document.createElement("input");
         fileNameInput.type = "text";
@@ -276,30 +271,102 @@ const getHTML = async (response) => {
         switch (response.codeBlocks[i].type) {
             case "html": fileNameInput.value = `index${suffix}.html`; break;
             case "css": fileNameInput.value = `styles${suffix}.css`; break;
+            case "c": fileNameInput.value = `main${suffix}.c`; break;
+            case "cpp":
+            case "c++":
+            case "cxx": fileNameInput.value = `main${suffix}.cpp`; break;
+            case "csharp":
+            case "cs": fileNameInput.value = `class${suffix}.cs`; break;
+            case "java": fileNameInput.value = `Main${suffix}.java`; break;
             case "javascript":
             case "js": fileNameInput.value = `script${suffix}.js`; break;
-            case "python": fileNameInput.value = `script${suffix}.py`; break;
-            case "java": fileNameInput.value = `Main${suffix}.java`; break;
-            case "ruby": fileNameInput.value = `script${suffix}.rb`; break;
-            case "php": fileNameInput.value = `script${suffix}.php`; break;
+            case "json": fileNameInput.value = `data{suffix}.json`; break;
+            case "typescript":
+            case "ts": fileNameInput.value = `script${suffix}.ts`; break;
+            case "python":
+            case "py": fileNameInput.value = `script${suffix}.py`; break;
+            case "php": fileNameInput.value = `index${suffix}.php`; break;
+            case "ruby":
+            case "rb": fileNameInput.value = `script${suffix}.rb`; break;
+            case "swift": fileNameInput.value = `main${suffix}.swift`; break;
+            case "kotlin":
+            case "kt": fileNameInput.value = `Main${suffix}.kt`; break;
+            case "go":
+            case "golang": fileNameInput.value = `main${suffix}.go`; break;
+            case "rust":
+            case "rs": fileNameInput.value = `main${suffix}.rs`; break;
+            case "bash":
+            case "sh": fileNameInput.value = `script${suffix}.sh`; break;
             case "sql": fileNameInput.value = `query${suffix}.sql`; break;
-            case "c": fileNameInput.value = `program${suffix}.c`; break;
-            case "cpp": fileNameInput.value = `program${suffix}.cpp`; break;
-            case "bash": fileNameInput.value = `script${suffix}.sh`; break;
-            case "swift": fileNameInput.value = `Main${suffix}.swift`; break;
-            case "go": fileNameInput.value = `main${suffix}.go`; break;
-            case "typescript": fileNameInput.value = `script${suffix}.ts`; break;
             case "r": fileNameInput.value = `script${suffix}.r`; break;
-            case "matlab": fileNameInput.value = `script${suffix}.m`; break;
-            case "kotlin": fileNameInput.value = `Main${suffix}.kt`; break;
+            case "perl":
+            case "pl": fileNameInput.value = `script${suffix}.pl`; break;
             case "lua": fileNameInput.value = `script${suffix}.lua`; break;
-            case "json": fileNameInput.value = `data${suffix}.json`; break;
-            case "xml": fileNameInput.value = `data${suffix}.xml`; break;
-            default: break;
+            case "dart": fileNameInput.value = `main${suffix}.dart`; break;
+            case "scala": fileNameInput.value = `Main${suffix}.scala`; break;
+            case "objective-c":
+            case "objc":
+            case "m": fileNameInput.value = `main${suffix}.m`; break;
+            case "haskell":
+            case "hs": fileNameInput.value = `Main${suffix}.hs`; break;
+            case "julia": fileNameInput.value = `script${suffix}.jl`; break;
+            case "elixir": fileNameInput.value = `script${suffix}.ex`; break;
+            case "fortran":
+            case "f90":
+            case "f95":
+            case "f77": fileNameInput.value = `main${suffix}.f90`; break;
+            case "cobol":
+            case "cbl": fileNameInput.value = `program${suffix}.cbl`; break;
+            case "pascal":
+            case "p": fileNameInput.value = `program${suffix}.pas`; break;
+            case "zsh": fileNameInput.value = `script${suffix}.zsh`; break;
+            case "assembly":
+            case "asm": fileNameInput.value = `program${suffix}.asm`; break;
+            case "prolog":
+            case "plg": fileNameInput.value = `program${suffix}.plg`; break;
+            case "smalltalk":
+            case "st": fileNameInput.value = `program${suffix}.st`; break;
+            case "fsharp":
+            case "fs": fileNameInput.value = `script${suffix}.fs`; break;
+            case "lisp":
+            case "common-lisp":
+            case "cl": fileNameInput.value = `script${suffix}.lisp`; break;
+            case "scheme":
+            case "scm": fileNameInput.value = `script${suffix}.scm`; break;
+            case "racket":
+            case "rkt": fileNameInput.value = `script${suffix}.rkt`; break;
+            case "tcl": fileNameInput.value = `script${suffix}.tcl`; break;
+            case "ocaml":
+            case "ml": fileNameInput.value = `script${suffix}.ml`; break;
+            case "j": fileNameInput.value = `script${suffix}.ijs`; break;
+            case "brainfuck":
+            case "bf": fileNameInput.value = `program${suffix}.bf`; break;
+            case "xslt":
+            case "xsl": fileNameInput.value = `template${suffix}.xsl`; break;
+            default: fileNameInput.value = `file${suffix}.txt`; break;
         }
 
-        trackFileButton.onclick = () => {
-            alert("track " + fileNameInput.value)
+        const launchable = fileNameInput.value.indexOf(".html") !== -1;
+        if (launchable && trackFileIcon.parentElement.backgroundColor === "yellow") {
+            trackFileIcon.classList.add("ti", "ti-rocket");
+        } else {
+            trackFileIcon.classList.add("ti", "ti-cloud-up");
+        }
+
+        trackFileButton.onclick = async () => {
+            const projectName1 = document.getElementById("project-name").value;
+            const items = projectName1.split('/');
+
+            const projectName = items[0];
+            const folderName = items[1];
+            const fileName = fileNameInput.value;
+
+            await saveAll(fileName);
+            trackFileButton.parentElement.style.backgroundColor = "yellow";
+
+            if (launchable) {
+                chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+            }
         }
 
         untrackedFileDiv.appendChild(fileNameInput);

@@ -10,8 +10,8 @@
         }
 
         body {
-            width: 400px;
-            padding-bottom: 24px;
+            width: 480px;
+            padding-bottom: 4px;
             /*height: 300px;*/
         }
 
@@ -51,13 +51,14 @@
             font-size: 24px;
             color: var(--text-light);
             border: none;
-            background-color: transparent;
+            background-color: var(--background-dark);
             width: 100%;
             min-width: 160px;
             box-sizing: border-box; /* Ensures padding does not break the layout */
             overflow: hidden;
             resize: horizontal; /* This allows horizontal resizing by the user */
             outline: none;
+            padding: 4px;
         }
 
         .ti {
@@ -75,13 +76,28 @@
             }
 
         .untracked-file {
+            border-radius: 4px;
+            background-color: var(--background-lightest);
+            padding: 4px;
+            padding-left: 8px;
         }
 
+            .untracked-file i {
+                color: var(--background-medium);
+            }
+
+                .untracked-file i:hover {
+                    color: var(--background-dark);
+                }
 
         .tracked-file {
             font-size: 18px;
             padding: 4px;
             color: var(--text-light);
+        }
+
+        #randomize:hover {
+            color: red;
         }
     </style>
 </head>
@@ -91,8 +107,8 @@
             <i class="ti ti-camera-plus"></i>
         </button>
         <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
-        <button id="smart-launch" title="Smart launch">
-            <i class="ti ti-rocket"></i>
+        <button id="view-dashboard" title="Dashboard" style="display: none;">
+            <i class="ti ti-dots"></i>
         </button>
     </div>
     <div style="margin-top: 80px;">

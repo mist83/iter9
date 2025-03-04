@@ -16,21 +16,27 @@ public partial class Iter9Service
 
     public async Task<string[]> GetProjectNamesAsync()
     {
-        var keys = new List<string>();
+        var keys = new HashSet<string>();
+        string continuationToken = null;
 
-        var response = await s3Client.ListObjectsV2Async(new ListObjectsV2Request
+        do
         {
-            BucketName = bucketName
-        });
+            var response = await s3Client.ListObjectsV2Async(new ListObjectsV2Request
+            {
+                BucketName = bucketName,
+                ContinuationToken = continuationToken
+            });
 
-        foreach (var obj in response.S3Objects)
-        {
-            keys.Add(obj.Key);
+            foreach (var obj in response.S3Objects)
+            {
+                keys.Add(obj.Key.Split('/')[0]);
+            }
+
+            continuationToken = response.NextContinuationToken;
         }
+        while (!string.IsNullOrEmpty(continuationToken));
 
-        keys = keys.Select(x => x.Split('/')[0]).Distinct().OrderBy(x => x).ToList();
-
-        return keys.ToArray();
+        return keys.OrderBy(x => x).ToArray();
     }
 
     public async Task<ProjectDetail> GetProjectDetailsAsync(string project)
