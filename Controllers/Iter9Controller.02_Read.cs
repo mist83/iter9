@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace Iter9.Controllers;
 
@@ -62,10 +63,32 @@ public partial class Iter9Controller
         Response.Headers.Add("X-Folder", folder);
         Response.Headers.Add("X-Resource", file.Name);
 
+        string fileContent = file.Content;
+        var manifest = ReadEmbeddedResource("Iter9.Resources.manifest.json");
+        if (file.Name.EndsWith(".html"))
+        {
+            fileContent = file.Content.Replace("<head>", "<head><link rel=\"manifest\" href=\"manifest.json\">");
+        }
+
         return new ContentResult
         {
             ContentType = file.ContentType,
-            Content = file.Content
+            Content = fileContent
         };
+    }
+
+    private static string ReadEmbeddedResource(string resourceName)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+        {
+            if (stream == null)
+                throw new FileNotFoundException($"Resource '{resourceName}' not found.");
+
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
+        }
     }
 }

@@ -30,6 +30,7 @@ document.getElementById("show-code-button").onclick = (e) => {
         frame.style.display = "none"
         editArea.style.display = "grid";
 
+        document.getElementById("make-pwa").style.display = "grid";
         document.getElementById("view-app-qr-button").style.display = "none";
 
         button.children[0].classList.remove("ti-code");

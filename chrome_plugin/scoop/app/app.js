@@ -60,6 +60,10 @@ document.getElementById("edit-save-button").addEventListener("click", async () =
     document.getElementById("preview-frame").style.display = "grid"
     document.getElementById("edit-area").style.display = "none";
     document.getElementById("edit-save-button").style.display = "none";
+
+    // TODO: this seems like it should be automatic and shown from the folder page
+    document.getElementById("make-pwa").style.display = "none";
+
     document.getElementById("view-app-qr-button").style.display = "grid";
 });
 

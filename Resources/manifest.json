@@ -1,0 +1,13 @@
+{
+  "name": "<ITER9_APPLICATION>",
+  "short_name": "<ITER9_APP>",
+  "start_url": "./",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

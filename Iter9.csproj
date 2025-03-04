@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Resources\manifest.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Defaults\default.css" />
     <None Remove="Defaults\default.html" />
     <None Remove="Defaults\default.js" />
@@ -20,6 +24,7 @@
     <EmbeddedResource Include="Defaults\default.css" />
     <EmbeddedResource Include="Defaults\default.js" />
     <EmbeddedResource Include="Defaults\default.html" />
+    <EmbeddedResource Include="Resources\manifest.json" />
   </ItemGroup>
 
   <ItemGroup>

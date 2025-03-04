@@ -67,10 +67,17 @@ async function loadProject() {
                     e.preventDefault();
 
                     // can't drag to same group
-                    if (e.target.innerText === originatingDragFolder) {
+                    console.log(e.target)
+                    console.log(e.target.parentElement)
+                    console.log(e.target.parentElement.parentElement)
+
+                    // todo: this is NASTY AF
+                    if (e.target.parentElement.parentElement.parentElement.parentElement.parentElement === container) {
                         e.dataTransfer.dropEffect = 'none';
+                        container.style.backgroundColor = "red";
                         return;
                     }
+                    container.style.backgroundColor = "unset";
 
                     // can't drag backups (TODO: is there a way to make this easier?)
                     if (originatingDragFileName.indexOf(".backup.") !== -1) {
@@ -206,6 +213,9 @@ async function loadProject() {
                     addNewFile.style.cursor = "pointer";
                     addNewFile.title = "Create new file";
                     addNewFile.onclick = async () => {
+                        await alert("TODO: Create new file");
+                        return;
+
                         const newName = await prompt("New file name");
                         if (!newName) {
                             return;
