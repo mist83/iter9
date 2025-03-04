@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iter9</title>
+    <!-- seems really slow, may have to ditch -->
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.26.0/dist/tabler-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="./colors.css" />
+    <link rel="stylesheet" type="text/css" href="./scrollbars.css" />
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+</head>
+<body>
+    <div style="display: none; position: fixed; top: 200px; bottom: 0; right: 0; place-items: center; background-color: white; padding: 20px; z-index: 1;">
+        <!-- trash -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-trash"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+        <!-- label -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-label"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M16.52 7h-10.52a2 2 0 0 0 -2 2v6a2 2 0 0 0 2 2h10.52a1 1 0 0 0 .78 -.375l3.7 -4.625l-3.7 -4.625a1 1 0 0 0 -.78 -.375" /></svg>
+        <!-- plus -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 5l0 14" /><path d="M5 12l14 0" /></svg>
+        <!-- left -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-left"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l14 0" /><path d="M5 12l6 6" /><path d="M5 12l6 -6" /></svg>
+        <!-- right -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-right"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" /></svg>
+        <!-- code  -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-code"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M7 8l-4 4l4 4" /><path d="M17 8l4 4l-4 4" /><path d="M14 4l-4 16" /></svg>
+        <!-- eye -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+        <!-- disk -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-device-floppy"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" /><path d="M12 14m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M14 4l0 4l-6 0l0 -4" /></svg>
+    </div>
+    <div id="sidebar" class="sidebar">
+        <div class="top-links">
+            <a href="./index.html">Directory</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 8px; ">
+            <h1 id="project-title">Loading...</h1>
+            <button id="show-backup-file-toggle" style="display: none;" title="Hide / show backup files">
+                <i class="ti ti-eye-off"></i>
+                <i style="display: none;" class="ti ti-eye"></i>
+            </button>
+        </div>
+        <div id="resource-container" class="content-scroll"></div>
+        <div class="nav-container">
+            <i class="ti ti-caret-left"></i>
+            <a id="prev-link" href=""></a>
+            <a id="next-link" style="display: grid; place-self: end;" href=""></a>
+            <i class="ti ti-caret-right"></i>
+            <span></span>
+        </div>
+    </div>
+    <div id="preview" class="preview">
+        <div id="content-header-area" style="display: grid; visibility: collapse; place-self: stretch; place-items: center; gap: 8px; grid-template: 1fr / auto auto 1fr auto">
+            <button id="show-code-button" title="Show code">
+                <i class="ti ti-code"></i>
+            </button>
+            <button id="show-copy-paste-refactoring-modal" title="Show copy / paste refactoring suggestions" class="todo">
+                <i class="ti ti-brand-openai"></i>
+            </button>
+            <div id="open-in-new-tab-container" style="overflow: hidden;">
+                <a id="open-in-new-tab" href="#" target="_blank">Open in new tab</a>
+            </div>
+            <button id="edit-save-button" style="display: none;" title="Save changes">
+                <i class="ti ti-device-floppy"></i>
+            </button>
+            <button id="view-app-qr-button" title="View QR">
+                <i class="ti ti-qrcode"></i>
+            </button>
+        </div>
+        <div style="grid-template: 1fr / 1fr;">
+            <pre id="edit-area" contenteditable="true" style="display: none;"></pre>
+            <iframe id="preview-frame" src="" sandbox="allow-scripts allow-same-origin allow-modals allow-popups allow-forms" allow="clipboard-read; clipboard-write;"></iframe>
+        </div>
+    </div>
+    <div id="qr-code-element" style="display: none;" title="Show QR code for hosted file"></div>
+    <div class="grid-container" id="grid"></div>
+    <script src="./app/functions/list.js"></script>
+    <script src="./app/framework/alert.js"></script>
+    <script src="./app/framework/prompt.js"></script>
+    <script src="./app/framework/confirm.js"></script>
+    <script src="./app/framework/modal.js"></script>
+    <script src="./app/framework/toggleButton.js"></script>
+    <script src="./app/functions/expandCollapse.js"></script>
+    <script src="./app/functions/toggleBackupFileVisibility.js"></script>
+    <script src="./app/functions/updateNavLinks.js"></script>
+    <script src="./app/functions/toggleCode.js"></script>
+    <script src="./app/functions/deleteFile.js"></script>
+    <script src="./app/functions/changeFileName.js"></script>
+    <script src="./app/functions/viewAppQrCode.js"></script>
+    <script src="./app/functions/loadProject.js"></script>
+    <script src="./app/app.js"></script>
+    <script src="./script.js"></script>
+    <script src="./init.js"></script>
+</body>
+</html>

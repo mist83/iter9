@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Iter9</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="scoop/colors.css">
+    <style>
+        html {
+            background-color: var(--background-dark);
+        }
+
+        body {
+            width: 320px;
+            height: 480px;
+        }
+
+        h2 {
+            display: grid;
+            place-self: center;
+            color: var(--text-light);
+        }
+
+        button {
+            display: grid;
+            align-self: center;
+            padding: 10px;
+            background: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #header-bar {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            display: grid;
+            grid-template: 1fr / auto 1fr auto;
+            gap: 8px;
+            padding: 8px;
+            border-bottom: 2px solid var(--background-lightest);
+        }
+
+        input[type="text"] {
+            font-size: 24px;
+            color: var(--text-light);
+            border: none;
+            background-color: transparent;
+            width: 100%;
+            min-width: 160px;
+            box-sizing: border-box; /* Ensures padding does not break the layout */
+            overflow: hidden;
+            resize: horizontal; /* This allows horizontal resizing by the user */
+            outline: none;
+        }
+
+        .ti {
+            font-size: 32px;
+        }
+
+        .tracked-file {
+            font-size: 16px;
+            color: var(--text-light);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="header-bar">
+        <button id="randomize" title="Randomize project name">
+            <i class="ti ti-camera-plus"></i>
+        </button>
+        <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
+        <button id="smart-launch" title="Smart launch">
+            <i class="ti ti-rocket"></i>
+        </button>
+    </div>
+    <div style="margin-top: 80px;">
+        <div id="code-snippet-area"></div>
+    </div>
+    <button id="open-dashboard" style="position: fixed; bottom: 0; right: 0; margin: 16px;">
+        <i class="ti ti-dots"></i>
+    </button>
+    <script src="popup.js"></script>
+</body>
+</html>

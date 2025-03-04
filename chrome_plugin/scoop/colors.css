@@ -1,0 +1,19 @@
+:root {
+    --background-dark: dodgerblue;
+    --background-light: ghostwhite;
+    --background-medium: lightgray;
+    --background-lightest: white;
+    --primary-color: dodgerblue;
+    --secondary-color: white;
+    --primary-hover: white;
+    --primary-hover-bg: dodgerblue;
+    --secondary-hover-bg: deeppink;
+    --tertiary-hover-bg: springgreen;
+    --border-color: silver;
+    --default-text: black;
+    --text-light: white;
+    --text-medium: lightgray;
+    --scrollbar-width: 10px;
+    --scrollbar-thumb-bg: lightgray;
+    --scrollbar-thumb-hover: springgreen;
+}

@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Iter9",
+  "description": "Iterate++",
+  "version": "1.0",
+  "host_permissions": [ "*://chatgpt.com/*" ],
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "*://chatgpt.com/*" ],
+      "js": [ "content.js" ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icons/red.png"
+    }
+  }
+}
