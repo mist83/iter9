@@ -10,8 +10,9 @@
         }
 
         body {
-            width: 320px;
-            height: 480px;
+            width: 400px;
+            padding-bottom: 24px;
+            /*height: 300px;*/
         }
 
         h2 {
@@ -43,6 +44,7 @@
             gap: 8px;
             padding: 8px;
             border-bottom: 2px solid var(--background-lightest);
+            background-color: var(--background-dark);
         }
 
         input[type="text"] {
@@ -62,16 +64,30 @@
             font-size: 32px;
         }
 
+        .track-file {
+            color: var(--primary-hover-bg);
+            cursor: pointer;
+            transition: 200ms all ease-in-out;
+        }
+
+            .track-file:hover {
+                color: var(--secondary-color);
+            }
+
+        .untracked-file {
+        }
+
+
         .tracked-file {
-            font-size: 16px;
+            font-size: 18px;
+            padding: 4px;
             color: var(--text-light);
-            opacity: 0.5;
         }
     </style>
 </head>
 <body>
     <div id="header-bar">
-        <button id="randomize" title="Randomize project name">
+        <button id="randomize" title="Get a random project name">
             <i class="ti ti-camera-plus"></i>
         </button>
         <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
@@ -82,9 +98,6 @@
     <div style="margin-top: 80px;">
         <div id="code-snippet-area"></div>
     </div>
-    <button id="open-dashboard" style="position: fixed; bottom: 0; right: 0; margin: 16px;">
-        <i class="ti ti-dots"></i>
-    </button>
     <script src="popup.js"></script>
 </body>
 </html>

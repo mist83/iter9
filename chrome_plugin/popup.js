@@ -108,9 +108,29 @@ async function fetchData(projectFullName) {
         const mainContainer = document.createElement('div');
 
         if (data.length > 0) {
+            const trackedFileHeader = document.createElement("div");
+            mainContainer.appendChild(trackedFileHeader);
+
+            trackedFileHeader.style.display = "grid";
+            trackedFileHeader.style.gridTemplate = "1fr / 1fr auto auto 1fr";
+
+            trackedFileHeader.appendChild(document.createElement("span"));
+
             const fileGroupHeader = document.createElement("h2");
-            fileGroupHeader.textContent = "Tracked files";
-            mainContainer.appendChild(fileGroupHeader);
+            trackedFileHeader.appendChild(fileGroupHeader);
+            fileGroupHeader.textContent = "Project files";
+
+            const openDashboardButton = document.createElement("i");
+            //trackedFileHeader.appendChild(openDashboardButton);
+
+            const openDashboardIcon = document.createElement("i");
+            openDashboardButton.appendChild(openDashboardIcon);
+            openDashboardIcon.classList.add("ti", "ti-dots");
+            openDashboardButton.title = "Track file";
+            openDashboardButton.onclick = () => {
+                const project = document.getElementById("project-name").value.split('/')[0];
+                chrome.tabs.create({ url: `scoop/index.html?project=${project}` });
+            }
         }
 
         for (let i = 0; i < data.length; i++) {
@@ -186,11 +206,6 @@ document.getElementById("smart-launch").addEventListener("click", async () => {
     chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
 });
 
-document.getElementById("open-dashboard").addEventListener("click", async () => {
-    const project = document.getElementById("project-name").value.split('/')[0];
-    chrome.tabs.create({ url: `scoop/index.html?project=${project}` });
-});
-
 // Close alert function
 function closeAlert() {
     document.getElementById("custom-alert").style.display = "none";
@@ -208,14 +223,14 @@ const getHTML = async (response) => {
 
     if (response.codeBlocks.length > 0) {
         const fileGroupHeader = document.createElement("h2");
-        fileGroupHeader.textContent = "Untracked files";
+        fileGroupHeader.textContent = "Found code";
         mainContainer.appendChild(fileGroupHeader);
     }
 
     const gridContainer = document.createElement('div');
     mainContainer.appendChild(gridContainer);
     gridContainer.style.display = 'grid';
-    gridContainer.style.gridTemplateColumns = '1fr';
+    gridContainer.style.gridTemplateColumns = '1fr 1fr';
     gridContainer.style.width = '100%';
     gridContainer.style.gap = '8px';
 
@@ -236,9 +251,27 @@ const getHTML = async (response) => {
             suffix = "";
         }
 
+        const untrackedFileDiv = document.createElement("div");
+        gridContainer.appendChild(untrackedFileDiv);
+
+        untrackedFileDiv.className = "untracked-file";
+        untrackedFileDiv.style.display = "grid";
+        untrackedFileDiv.style.gridTemplate = "1fr / auto 1fr";
+        untrackedFileDiv.style.gap = "8px";
+
+        const trackFileButton = document.createElement("i");
+        untrackedFileDiv.appendChild(trackFileButton);
+        trackFileButton.classList.add("track-file");
+        trackFileButton.title = "Track file";
+
+        const trackFileIcon = document.createElement("i");
+        trackFileButton.appendChild(trackFileIcon)
+        trackFileIcon.classList.add("ti", "ti-cloud-up");
+
         const fileNameInput = document.createElement("input");
         fileNameInput.type = "text";
         fileNameInput.placeholder = "File name";
+        fileNameInput.title = response.codeBlocks[i].code;
 
         switch (response.codeBlocks[i].type) {
             case "html": fileNameInput.value = `index${suffix}.html`; break;
@@ -265,7 +298,11 @@ const getHTML = async (response) => {
             default: break;
         }
 
-        gridContainer.appendChild(fileNameInput);
+        trackFileButton.onclick = () => {
+            alert("track " + fileNameInput.value)
+        }
+
+        untrackedFileDiv.appendChild(fileNameInput);
 
         response.codeBlocks[i].input = fileNameInput;
 
