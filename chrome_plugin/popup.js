@@ -53,6 +53,7 @@ const saveFile = async (only) => {
     }
 };
 
+console.log("popup");
 document.getElementById("view-dashboard").addEventListener("click", async () => {
     const items = document.getElementById("project-name").value.split('/');
 
@@ -62,7 +63,9 @@ document.getElementById("view-dashboard").addEventListener("click", async () => 
     chrome.tabs.create({ url: `scoop/index.html?project=${projectName}&folderName=${folderName}` });
 });
 
-chrome.runtime.sendMessage({ action: 'getHTML' }, (response) => getHTML(response));
+chrome.runtime.sendMessage({ action: 'getHTML' }, async (response) => {
+    await getHTML(response);
+});
 
 document.addEventListener("DOMContentLoaded", async function () {
     await loadTrackedCodeSnippets("pomegranate");

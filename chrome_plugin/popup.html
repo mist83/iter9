@@ -11,6 +11,7 @@
 
         body {
             width: 300px;
+            padding: 4px;
             padding-bottom: 4px;
             /*height: 300px;*/
         }
@@ -91,14 +92,50 @@
                 }
 
         .tracked-file {
-            font-size: 18px;
+            border-radius: 4px;
+            background-color: var(--background-lightest);
             padding: 4px;
-            color: var(--text-light);
+            color: var(--primary-color);
+            padding-left: 8px;
+            cursor: pointer;
+            transition: 200ms all ease-in-out;
         }
+
+            .tracked-file:hover {
+                transform: scale(1.05);
+            }
+
+            .tracked-file > input {
+                font-size: 18px;
+                padding: 4px;
+                color: var(--primary-color);
+                background-color: var(--text-light);
+                pointer-events: none;
+            }
 
         #randomize:hover {
             color: red;
         }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background-color: var(--background-dark);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            /*background: linear-gradient(180deg, var(--background-dark), var(--background-medium));*/
+            background-color: var(--background-medium);
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                /*background: linear-gradient(180deg, var(--background-dark), var(--background-medium));*/
+                background-color: var(--background-lightest);
+            }
     </style>
 </head>
 <body>

@@ -1,24 +1,4 @@
 // background.js
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'getHTML') {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            const activeTab = tabs[0];
-            if (activeTab) {
-                console.log("Active tab:", activeTab.url);
-                chrome.tabs.sendMessage(activeTab.id, { action: 'getHTML' }, (response) => {
-                    sendResponse(response);
-                });
-            } else {
-                console.log("No active tab found.");
-            }
-            return true;  // Keep the response asynchronous
-        });
-
-        // Return true to indicate that the response is asynchronous
-        return true;
-    }
-});
-
 let icons = ["icons/red.png", "icons/blue.png", "icons/yellow.png", "icons/green.png"];
 let currentIndex = 0;
 

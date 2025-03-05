@@ -66,18 +66,10 @@ async function loadProject() {
                 folderDiv.addEventListener('dragover', (e) => {
                     e.preventDefault();
 
-                    // can't drag to same group
-                    console.log(e.target)
-                    console.log(e.target.parentElement)
-                    console.log(e.target.parentElement.parentElement)
-
-                    // todo: this is NASTY AF
-                    if (e.target.parentElement.parentElement.parentElement.parentElement.parentElement === container) {
+                    if (folder.name === originatingDragFolder) {
                         e.dataTransfer.dropEffect = 'none';
-                        container.style.backgroundColor = "red";
                         return;
                     }
-                    container.style.backgroundColor = "unset";
 
                     // can't drag backups (TODO: is there a way to make this easier?)
                     if (originatingDragFileName.indexOf(".backup.") !== -1) {

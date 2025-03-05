@@ -24,7 +24,9 @@ const getHTML = async (response) => {
     }, {});
 
     const fileCount = {};
-    for (let i = 0; i < response.codeBlocks.length; i++) {
+    const codeBlocks = response.codeBlocks;
+
+    for (let i = 0; i < codeBlocks.length; i++) {
         let suffix = "";
 
         codeBlockType = response.codeBlocks[i].type;
@@ -140,41 +142,35 @@ const getHTML = async (response) => {
             default: fileNameInput.value = `file${suffix}.txt`; break;
         }
 
-        const launchable = fileNameInput.value.indexOf(".html") !== -1;
-
         const codeBlock = response.codeBlocks[i];
-
         trackFileButton.onclick = async () => {
-            const projectName1 = document.getElementById("project-name").value;
-            const items = projectName1.split('/');
-
-            const projectName = items[0];
-            const folderName = items[1];
             const fileName = fileNameInput.value;
-
             await saveFile(fileName, codeBlock);
 
-            fileDiv.style.backgroundColor = "yellow";
+            const trackFileIcon = document.createElement("i");
+            trackFileButton.parentElement.prepend(trackFileIcon)
+            trackFileIcon.classList.add("ti", "ti-check");
 
+            trackFileButton.parentElement.classList.remove("untracked-file");
+            trackFileButton.parentElement.classList.add("tracked-file");
+
+            trackFileButton.parentElement.removeChild(trackFileButton);
+
+            const launchable = fileName.indexOf(".html") !== -1;
             if (launchable) {
-                chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+                fileDiv.onclick = () => {
+                    const projectNameValue = document.getElementById("project-name").value;
+                    const parts = projectNameValue.split('/');
+
+                    const projectName = parts[0];
+                    const folderName = parts[1];
+
+                    chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+                }
             }
         }
 
         fileDiv.appendChild(fileNameInput);
-
-        if (launchable) {
-            const launchFileButton = document.createElement("i");
-            fileDiv.appendChild(launchFileButton);
-            fileDiv.style.gridTemplate = "1fr / auto 1fr auto";
-
-            launchFileButton.classList.add("track-file");
-            launchFileButton.title = "Launch file";
-
-            const launchFileIcon = document.createElement("i");
-            launchFileIcon.classList.add("ti", "ti-rocket");
-            launchFileButton.appendChild(launchFileIcon)
-        }
 
         response.codeBlocks[i].input = fileNameInput;
 
