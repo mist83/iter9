@@ -9,8 +9,8 @@ const saveFile = async (only) => {
     try {
         const files = allCodeBlocks
             .map(x => ({
-                name: x.input.value,
-                content: x.code
+                name: x.code.input.value,
+                content: x.code.code
             }));
 
         let fileName;
