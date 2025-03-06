@@ -13,7 +13,8 @@ document.getElementById("rename-project").onclick = async (sender) => {
             .replace(`?project=${projectTitle}`, `?project=${newName}`)
         ;
 
-    window.location.href = newUrl;
+    await alert(newUrl);
+    //window.location.href = newUrl;
 }
 
 document.getElementById("edit-area").addEventListener("keyup", () => {

@@ -195,26 +195,24 @@ async function loadProject() {
                     addNewFile.style.cursor = "pointer";
                     addNewFile.title = "Create new file";
                     addNewFile.onclick = async () => {
-                        await alert("TODO: Create new file");
-                        return;
-
-                        const newName = await prompt("New file name");
+                        const newName = await prompt("New file name", "example.html");
                         if (!newName) {
                             return;
                         }
 
-                        const url = `${urlBase}/${projectName}/${folderDetail.name}/${encodeURIComponent(newName)}`;
+                        const url = `${urlBase}/${projectName}/${folderDetail.name}`;
                         const response = await fetch(url, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
+                                name: newName,
                                 content: "This code intentionally left blank"
                             })
                         });
 
-                        window.location.reload();
+                        //window.location.reload();
                     }
                     div.appendChild(addNewFile);
 

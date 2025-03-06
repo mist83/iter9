@@ -22,7 +22,7 @@ public partial class Iter9Controller
 
     private static string SanitizeString(string input)
     {
-        string output = string.Concat(input.Select(c => char.IsLetterOrDigit(c) ? char.ToLower(c) : '_')).ToLower();
+        string output = string.Concat(input.Select((c, i) => (i == 0 && c == '.') ? '.' : (char.IsLetterOrDigit(c) ? char.ToLower(c) : '_'))).ToLower();
 
         while (output.Contains("__"))
         {

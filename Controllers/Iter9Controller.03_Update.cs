@@ -7,7 +7,7 @@ public partial class Iter9Controller
     [HttpPut("{project}")]
     public async Task<IActionResult> UpdateProjectNameAsync(string project, [FromQuery] string newProjectName, [FromQuery] string operation = "move")
     {
-        newProjectName= SanitizeString(newProjectName);
+        newProjectName = SanitizeString(newProjectName);
         if (newProjectName == project)
         {
             return NoContent();
