@@ -73,11 +73,7 @@ a, div {
 }
 
 .todo {
-    background-color: var(--primary-hover-bg);
-}
-
-.todo_c {
-    background-color: var(--secondary-hover-bg);
+    background-color: var(--background-medium);
 }
 
 .nav-container {
@@ -302,3 +298,13 @@ iframe {
 .hide {
     display: none !important;
 }
+
+#rename-project {
+    display: grid;
+    place-self: center;
+    color: var(--background-medium);
+    cursor: pointer;
+}
+    #rename-project:hover {
+        color: var(--primary-color) ;
+    }

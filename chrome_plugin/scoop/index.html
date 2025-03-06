@@ -34,7 +34,8 @@
         <div class="top-links">
             <a href="./index.html">Directory</a>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr auto auto; gap: 8px; ">
+        <div style="display: grid; grid-template-columns: auto 1fr auto auto; gap: 8px;">
+            <i id="rename-project" class="ti ti-label" title="rename"></i>
             <h1 id="project-title">Loading...</h1>
             <button id="show-backup-file-toggle" style="display: none;" title="Hide / show backup files">
                 <i class="ti ti-eye-off"></i>
@@ -61,7 +62,7 @@
             <div id="open-in-new-tab-container" style="overflow: hidden;">
                 <a id="open-in-new-tab" href="#" target="_blank">Open in new tab</a>
             </div>
-            <button id="make-pwa" style="display: none;" title="Make PWA">
+            <button id="make-pwa" style="display: none;" title="Make PWA" class="todo">
                 <i class="ti ti-package"></i>
             </button>
             <button id="edit-save-button" style="display: none;" title="Save changes">
@@ -89,7 +90,10 @@
     <script src="./app/functions/updateNavLinks.js"></script>
     <script src="./app/functions/toggleCode.js"></script>
     <script src="./app/functions/deleteFile.js"></script>
-    <script src="./app/functions/changeFileName.js"></script>
+    <script src="./app/functions/deleteFolder.js"></script>
+    <script src="./app/functions/renameProject.js"></script>
+    <script src="./app/functions/renameFolder.js"></script>
+    <script src="./app/functions/renameFile.js"></script>
     <script src="./app/functions/viewAppQrCode.js"></script>
     <script src="./app/functions/loadProject.js"></script>
     <script src="./app/app.js"></script>

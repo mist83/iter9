@@ -1,24 +1,21 @@
-const moveItem = async (project, folder, fileName, newFileName) => {
-    const apiUrl = `${urlBase}/${project}`;
+document.getElementById("rename-project").onclick = async (sender) => {
+    const projectTitle = document.getElementById("project-title").innerText;
 
-    try {
-        const response = await fetch(`${apiUrl}/${folder}/${fileName}?newRevision=${encodeURIComponent(newFileName)}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        });
-
-        if (!response.ok) {
-            alert(`HTTP error! Status: ${response.status}`);
-        }
-
-        //window.location.reload();
-    } catch (error) {
-        alert(`Error moving file: ${error.message}`);
+    const newName = await prompt("Project name", projectTitle)
+    if (!newName || newName === projectTitle) {
+        return;
     }
-};
+
+    await renameProject(projectTitle, newName);
+
+    const newUrl =
+        window.location.href
+            .replace(`?project=${projectTitle}`, `?project=${newName}`)
+        ;
+
+    await alert(newUrl);
+    //    window.location.href = newUrl;
+}
 
 document.getElementById("edit-area").addEventListener("keyup", () => {
     document.getElementById("edit-save-button").style.display = "grid";

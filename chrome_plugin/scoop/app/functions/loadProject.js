@@ -47,7 +47,7 @@ async function loadProject() {
 
         // FOREACH FOLDER
         for (let i = 0; i < project.folders.length; i++) {
-            const folder = project.folders[i];
+            const folderDetail = project.folders[i];
 
             const folderDiv = document.createElement('div');
             const folderHeaderDiv = document.createElement('div');
@@ -59,14 +59,14 @@ async function loadProject() {
             {
                 folderDiv.draggable = true;
                 folderDiv.addEventListener('dragstart', (e) => {
-                    console.warn('dragging folder', folder.name);
-                    e.dataTransfer.setData('text/plain', folder.name);
+                    console.warn('dragging folder', folderDetail.name);
+                    e.dataTransfer.setData('text/plain', folderDetail.name);
                 });
 
                 folderDiv.addEventListener('dragover', (e) => {
                     e.preventDefault();
 
-                    if (folder.name === originatingDragFolder) {
+                    if (folderDetail.name === originatingDragFolder) {
                         e.dataTransfer.dropEffect = 'none';
                         return;
                     }
@@ -87,7 +87,7 @@ async function loadProject() {
                     folderDiv.style.color = null;
                 });
 
-                folderDiv.addEventListener('drop', (e) => {
+                folderDiv.addEventListener('drop', async (e) => {
                     e.preventDefault();
 
                     if (e.target.innerText === originatingDragFolder) {
@@ -99,7 +99,8 @@ async function loadProject() {
 
                     const originalKey = e.dataTransfer.getData('text/plain');
                     const split = originalKey.split('/');
-                    moveItem(originalKey, `${e.target.innerText}/${split[split.length - 1]}`);
+                    await renameFile(originalKey, `${e.target.innerText}/${split[split.length - 1]}`);
+                    window.location.reload();
                 });
             }
 
@@ -119,30 +120,19 @@ async function loadProject() {
                 {
                     const renameFolderButton = document.createElement("i");
                     renameFolderButton.classList.add("ti", "ti-label");
-                    renameFolderButton.title = "Rename " + folder.name;
+                    renameFolderButton.title = "Rename " + folderDetail.name;
 
                     folderHeaderDiv.appendChild(renameFolderButton);
 
                     renameFolderButton.onclick = async (e) => {
                         e.stopPropagation();
-                        const newName = await prompt("Folder name", folder.Name);
+                        const newName = await prompt("Folder name", folderDetail.name);
                         if (!newName) {
                             return;
                         }
 
-                        fetch(`${urlBase}/${project.Name}/${folder.Name}?newName=${encodeURIComponent(newName)}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: {}
-                        })
-                            .then(response => {
-                                //    return response.json();
-                            })
-                            .then(data => {
-                                window.location.reload();
-                            })
+                        await renameFolder(project.name, folderDetail.name, newName);
+                        window.location.reload();
                     }
                 }
 
@@ -151,7 +141,7 @@ async function loadProject() {
 
                     const headerText = document.createElement('h2');
                     folderHeaderDiv.append(headerText);
-                    headerText.textContent = folder.name;
+                    headerText.textContent = folderDetail.name;
 
                     folderDiv.appendChild(folderHeaderDiv);
                 }
@@ -159,18 +149,18 @@ async function loadProject() {
                 // BUTTON: COPY
                 {
                     const copyGroupButton = document.createElement("i");
-                    copyGroupButton.title = "Copy contents of " + folder.name + " to new folder";
+                    copyGroupButton.title = "Copy contents of " + folderDetail.name + " to new folder";
                     copyGroupButton.classList.add("ti", "ti-copy-plus-filled");
                     folderHeaderDiv.appendChild(copyGroupButton);
 
                     copyGroupButton.onclick = async (e) => {
                         e.stopPropagation();
-                        const copyName = await prompt("Copy all files to new folder", `${folder.name} (copy)`);
+                        const copyName = await prompt("Copy all files to new folder", `${folderDetail.name} (copy)`);
                         if (!copyName) {
                             return;
                         }
 
-                        fetch(`${urlBase}/${projectName}/${folder.name}?newName=${encodeURIComponent(copyName)}&keep=true`, {
+                        fetch(`${urlBase}/${projectName}/${folderDetail.name}?newName=${encodeURIComponent(copyName)}&keep=true`, {
                             method: 'PUT',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -213,7 +203,7 @@ async function loadProject() {
                             return;
                         }
 
-                        const url = `${urlBase}/${projectName}/${folder.name}/${encodeURIComponent(newName)}`;
+                        const url = `${urlBase}/${projectName}/${folderDetail.name}/${encodeURIComponent(newName)}`;
                         const response = await fetch(url, {
                             method: 'POST',
                             headers: {
@@ -235,8 +225,8 @@ async function loadProject() {
 
                 // EXISTING FILES
                 {
-                    for (let i = 0; i < folder.files.length; i++) {
-                        const fileDetail = folder.files[i];
+                    for (let i = 0; i < folderDetail.files.length; i++) {
+                        const fileDetail = folderDetail.files[i];
                         const listItem = document.createElement('li');
 
                         const div = document.createElement("div");
@@ -257,12 +247,13 @@ async function loadProject() {
                                 return;
                             }
 
-                            const newName = await prompt("Item name", fileDetail.name);
+                            const newName = await prompt("File name", fileDetail.name);
                             if (!newName || newName === fileDetail.name) {
                                 return;
                             }
 
-                            alert("todo: copyItem(project, folder, fileDetail.name, newName, shouldDelete);");
+                            await renameFile(project.name, folderDetail.name, fileDetail.name, newName);
+                            window.location.reload();
                         }
 
                         renameFileLabel.onmouseenter = (sender) => {
@@ -285,7 +276,7 @@ async function loadProject() {
                         // FILE LINK
                         const link = document.createElement('a');
 
-                        const src = `${urlBase}/${projectName}/${folder.name}/${fileDetail.name}`
+                        const src = `${urlBase}/${projectName}/${folderDetail.name}/${fileDetail.name}`
                         link.href = src;
 
                         link.textContent = fileDetail.name;
@@ -317,7 +308,7 @@ async function loadProject() {
                             const image = `url("https://3y5fdemhmbauwcyo7jc2eib5te0zsuer.lambda-url.us-west-2.on.aws/Image/qr?value=${encodeURIComponent(frame.src)}")`;
                             qr.style.backgroundImage = image;
 
-                            openLink.textContent = `${project.name} / ${folder.name} / ${fileDetail.name}`;
+                            openLink.textContent = `${project.name} / ${folderDetail.name} / ${fileDetail.name}`;
                             openLink.href = frame.src;
                             openLink.style.display = "block";
                         }
@@ -354,7 +345,7 @@ async function loadProject() {
                                 return;
                             }
 
-                            const url = `${urlBase}/${project.name}/${folder.name}/${fileDetail.name}`;
+                            const url = `${urlBase}/${project.name}/${folderDetail.name}/${fileDetail.name}`;
                             fetch(url, {
                                 method: 'DELETE',
                                 headers: {

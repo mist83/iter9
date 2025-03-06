@@ -15,22 +15,22 @@ const getHTML = async (response) => {
     gridContainer.style.width = '100%';
     gridContainer.style.gap = '8px';
 
-    const groupedByType = response.codeBlocks.reduce((acc, codeBlock) => {
-        if (!acc[codeBlock.type]) {
-            acc[codeBlock.type] = [];
+    response.codeBlocks.reduce((acc, codeBlock) => {
+        if (!acc[codeBlock.code.type]) {
+            acc[codeBlock.code.type] = [];
         }
-        acc[codeBlock.type].push(codeBlock);
+        acc[codeBlock.code.type].push(codeBlock);
         return acc;
     }, {});
 
     const fileCount = {};
     const codeBlocks = response.codeBlocks;
-
+    console.log(codeBlocks);
     for (let i = 0; i < codeBlocks.length; i++) {
+        const codeBlock = response.codeBlocks[i];
+        codeBlockType = codeBlock.type;
+
         let suffix = "";
-
-        codeBlockType = response.codeBlocks[i].type;
-
         if (!fileCount[codeBlockType]) {
             fileCount[codeBlockType] = 1;
         } else {
@@ -142,7 +142,6 @@ const getHTML = async (response) => {
             default: fileNameInput.value = `file${suffix}.txt`; break;
         }
 
-        const codeBlock = response.codeBlocks[i];
         trackFileButton.onclick = async () => {
             const fileName = fileNameInput.value;
             await saveFile(fileName, codeBlock);
@@ -174,7 +173,10 @@ const getHTML = async (response) => {
 
         response.codeBlocks[i].input = fileNameInput;
 
-        allCodeBlocks.push(response.codeBlocks[i]);
+        allCodeBlocks.push({
+            elementPath: "foo/bar/baz",
+            code: response.codeBlocks[i]
+        });
     }
 
     // Append the grid container to the content div
