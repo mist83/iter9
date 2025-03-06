@@ -1,0 +1,130 @@
+html {
+    background-color: var(--background-dark);
+}
+
+body {
+    width: 300px;
+    padding: 4px;
+    padding-bottom: 4px;
+    /*height: 300px;*/
+}
+
+h2 {
+    display: grid;
+    place-self: center;
+    color: var(--text-light);
+}
+
+button {
+    display: grid;
+    align-self: center;
+    padding: 10px;
+    background: var(--primary-color);
+    color: var(--text-light);
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#header-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: grid;
+    grid-template: 1fr / auto 1fr auto;
+    gap: 8px;
+    padding: 8px;
+    border-bottom: 2px solid var(--background-lightest);
+    background-color: var(--background-dark);
+}
+
+input[type="text"] {
+    font-size: 24px;
+    color: var(--text-light);
+    border: none;
+    background-color: var(--background-dark);
+    width: 100%;
+    /*min-width: 160px;*/
+    box-sizing: border-box; /* Ensures padding does not break the layout */
+    overflow: hidden;
+    resize: horizontal; /* This allows horizontal resizing by the user */
+    outline: none;
+    padding: 4px;
+}
+
+.ti {
+    font-size: 32px;
+}
+
+.track-file {
+    color: var(--primary-hover-bg);
+    cursor: pointer;
+    transition: 200ms all ease-in-out;
+}
+
+    .track-file:hover {
+        color: var(--secondary-color);
+    }
+
+.untracked-file {
+    border-radius: 4px;
+    background-color: var(--background-lightest);
+    padding: 4px;
+    padding-left: 8px;
+}
+
+    .untracked-file i {
+        color: var(--background-medium);
+    }
+
+        .untracked-file i:hover {
+            color: var(--background-dark);
+        }
+
+.tracked-file {
+    border-radius: 4px;
+    background-color: var(--background-lightest);
+    padding: 4px;
+    color: var(--primary-color);
+    padding-left: 8px;
+    cursor: pointer;
+    transition: 200ms all ease-in-out;
+}
+
+    .tracked-file:hover {
+        transform: scale(1.05);
+    }
+
+    .tracked-file > input {
+        font-size: 18px;
+        padding: 4px;
+        color: var(--primary-color);
+        background-color: var(--text-light);
+        pointer-events: none;
+    }
+
+#randomize:hover {
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--background-dark);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    /*background: linear-gradient(180deg, var(--background-dark), var(--background-medium));*/
+    background-color: var(--background-medium);
+    border-radius: 10px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        /*background: linear-gradient(180deg, var(--background-dark), var(--background-medium));*/
+        background-color: var(--background-lightest);
+    }
