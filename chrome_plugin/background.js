@@ -29,4 +29,4 @@ function sendGenericActionMessage() {
 }
 
 // Run every 10 seconds (adjust as needed)
-setInterval(sendGenericActionMessage, 3000);
+//setInterval(sendGenericActionMessage, 3000);

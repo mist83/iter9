@@ -1,3 +1,4 @@
+console.log("Adding chrome listener");
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.action) {
         case "getHTML":

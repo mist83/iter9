@@ -3,7 +3,7 @@
   "name": "Iter9",
   "description": "Iterate++",
   "version": "1.0",
-  "host_permissions": [ "*://chatgpt.com/*" ],
+  "host_permissions": [ "*://*/*" ],
   "permissions": [
     "tabs",
     "activeTab",
@@ -14,7 +14,7 @@
   },
   "content_scripts": [
     {
-      "matches": [ "*://chatgpt.com/*" ],
+      "matches": [ "*://*/*" ],
       "js": [ "content.js" ]
     }
   ],

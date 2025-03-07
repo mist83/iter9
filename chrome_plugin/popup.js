@@ -1,3 +1,5 @@
+console.log("Popup opened");
+
 const urlBase = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/iter9";
 //const urlBase = https://localhost:7171/iter9;
 
@@ -53,7 +55,6 @@ const saveFile = async (only) => {
     }
 };
 
-console.log("popup");
 document.getElementById("view-dashboard").addEventListener("click", async () => {
     const items = document.getElementById("project-name").value.split('/');
 
@@ -63,10 +64,19 @@ document.getElementById("view-dashboard").addEventListener("click", async () => 
     chrome.tabs.create({ url: `scoop/index.html?project=${projectName}&folderName=${folderName}` });
 });
 
-chrome.runtime.sendMessage({ action: 'getHTML' }, async (response) => {
-    await getHTML(response);
+console.log("Popup (outer): getHTML");
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs.length === 0) return; // No active tab
+    chrome.tabs.sendMessage(tabs[0].id, { action: 'getHTML' }, async (response) => {
+        console.log("Popup (inner): getHTML");
+
+        const codeFound = await getHTML(response);
+
+        if (codeFound) {
+            document.body.style.height = "unset";
+        }
+    });
 });
 
-document.addEventListener("DOMContentLoaded", async function () {
-    await loadTrackedCodeSnippets("pomegranate");
-});
+document.addEventListener("DOMContentLoaded", () => loadTrackedCodeSnippets("pomegranate"));
+

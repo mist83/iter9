@@ -1,4 +1,6 @@
 const getHTML = async (response) => {
+    console.log("inside getHTML", response);
+
     const content = document.getElementById('code-snippet-area');
     content.innerHTML = "";
 
@@ -182,8 +184,5 @@ const getHTML = async (response) => {
     // Append the grid container to the content div
     content.appendChild(mainContainer);
 
-    // Styling the columns (auto-shrink for most columns, expand 'code' column)
-    let style = document.createElement('style');
-
-    document.head.appendChild(style);
+    return codeBlocks.length > 0;
 }

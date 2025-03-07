@@ -53,7 +53,7 @@ document.getElementById("randomize").onclick = () => {
     setProjectName();
 
     const content = document.getElementById('code-snippet-area');
-    content.innerHTML = "";
+    document.body.style.height = "44px";
 };
 
 setProjectName(localStorage.getItem("projectName"));

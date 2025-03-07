@@ -6,7 +6,7 @@ body {
     width: 300px;
     padding: 4px;
     padding-bottom: 4px;
-    /*height: 300px;*/
+    height: 44px;
 }
 
 h2 {
@@ -53,6 +53,10 @@ input[type="text"] {
     resize: horizontal; /* This allows horizontal resizing by the user */
     outline: none;
     padding: 4px;
+}
+
+#code-snippet-area {
+    margin-top: 80px;
 }
 
 .ti {

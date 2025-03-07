@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Amazon.Lambda.RuntimeSupport.Helpers;
+using Iter9.Model;
+using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
 namespace Iter9.Controllers;
@@ -44,7 +46,7 @@ public partial class Iter9Controller
     public async Task<IActionResult> ReadProjectFolderAsync(string project, string folder)
     {
         var projectDetails = await iter9Service.GetProjectDetailsAsync(project);
-        var fileDetails = projectDetails.Folders.Single(x => x.Name == folder).Files;
+        var fileDetails = projectDetails.Folders.SingleOrDefault(x => x.Name == folder)?.Files ?? Array.Empty<FileDetail>();
 
         return Ok(fileDetails);
     }
