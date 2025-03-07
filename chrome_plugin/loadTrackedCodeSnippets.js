@@ -1,4 +1,4 @@
-async function loadTrackedCodeSnippets(projectFullName) {
+const loadTrackedCodeSnippets = async () => {
     const fullProjectName = localStorage.getItem("projectName");
 
     const url = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/Iter9/${fullProjectName}`;
@@ -13,12 +13,16 @@ async function loadTrackedCodeSnippets(projectFullName) {
         });
 
         if (!response.ok) {
-            // likely empty
+            // likely empty, e.g. no snippets
+            console.error(response)
         }
 
         const data = await response.json();
 
         const mainContainer = document.createElement('div');
+
+        const inputs = [...document.getElementsByTagName("input")];
+        console.log("ALL INPUTS", inputs);
 
         document.getElementById("view-dashboard").style.display = "grid";
         for (let i = 0; i < data.length; i++) {
@@ -30,7 +34,7 @@ async function loadTrackedCodeSnippets(projectFullName) {
                 continue;
             }
 
-            const item = [...document.getElementsByTagName("input")].filter(x => x.value == data[i].name)[0];
+            const item = inputs.filter(x => x.value == data[i].name)[0];
             if (!item) {
                 // tracked, just not with the file name on screen
                 const warning = document.createElement("h1");

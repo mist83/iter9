@@ -35,24 +35,28 @@ body {
 }
 
 .grid-item {
-    background: var(--primary-color); /* Blue buttons */
-    padding: 15px;
-    border-radius: 5px;
-    text-align: center;
-    font-weight: bold;
-    color: var(--text-light); /* White text */
-    cursor: pointer;
-    border: 2px solid var(--border-color);
-    transition: transform 0.2s ease, background-color 0.3s ease, color 0.3s ease;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    display: flex; /* Maintain layout */
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
 }
 
+    .grid-item span {
+        display: block; /* Ensures text behaves */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 90%; /* Adjust width for padding */
+    }
+
+
     .grid-item:hover {
-        transform: scale(1.05);
-        background-color: var(--primary-hover-bg); /* Deep pink on hover */
+        transform: scale(1.05); /* Keeps hover effect */
+        background-color: var(--primary-hover-bg); /* Maintain color change */
         color: var(--primary-hover);
     }
+
 
 #sidebar {
     background: var(--background-light);

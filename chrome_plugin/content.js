@@ -1,5 +1,8 @@
-console.log("Adding chrome listener");
+console.log("Adding Chrome listener");
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("Inside Chrome listener");
+
     switch (request.action) {
         case "getHTML":
             console.log(new Date() + ": Sending response");
