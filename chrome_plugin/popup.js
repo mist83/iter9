@@ -74,8 +74,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
         if (codeFound) {
             document.body.style.height = "unset";
+            await loadTrackedCodeSnippets();
         }
 
-        await loadTrackedCodeSnippets();
     });
 });

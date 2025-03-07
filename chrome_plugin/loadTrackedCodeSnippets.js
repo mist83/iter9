@@ -24,7 +24,6 @@ const loadTrackedCodeSnippets = async () => {
         const inputs = [...document.getElementsByTagName("input")];
         console.log("ALL INPUTS", inputs);
 
-        document.getElementById("view-dashboard").style.display = "grid";
         for (let i = 0; i < data.length; i++) {
             const div = document.createElement("div");
             div.className = "tracked-file";
@@ -34,20 +33,24 @@ const loadTrackedCodeSnippets = async () => {
                 continue;
             }
 
-            const item = inputs.filter(x => x.value == data[i].name)[0];
+            // .title is where we store the actual code, so we can use it doubly for matching
+            const item = inputs.filter(x => x.title == data[i].content)[0];
             if (!item) {
-                // tracked, just not with the file name on screen
-                const warning = document.createElement("h1");
-                warning.style.color = "Yellow";
+                // The fact that we got here means that one of the items is tracked, just not with one of the auto-generated file names on the screen
+                const warning = document.createElement("h2");
+                warning.className = "warning";
 
-                // TODO
-                warning.innerText = "RENAME: " + data[i].name;
+                warning.innerText = `(not shown: ${data[i].name})`;
+                warning.title = data[i].content;
                 mainContainer.appendChild(warning);
 
                 continue;
             }
 
             const fileDiv = item.parentElement;
+
+            // In case the tracked version of the file is named differently from the auto-incremented name
+            fileDiv.children[1].value = data[i].name;
 
             fileDiv.classList.remove("untracked-file");
             fileDiv.classList.add("tracked-file");

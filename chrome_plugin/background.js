@@ -1,5 +1,5 @@
 // background.js
-let icons = ["icons/red.png", "icons/blue.png", "icons/yellow.png", "icons/green.png"];
+let icons = ["icons/iter9.png"];
 let currentIndex = 0;
 
 function changeIcon() {

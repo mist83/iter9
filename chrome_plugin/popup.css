@@ -9,10 +9,10 @@ body {
     height: 44px;
 }
 
-h2 {
-    display: grid;
+.warning {
+    font-style: italic;
     place-self: center;
-    color: var(--text-light);
+    color: var(--text-warning);
 }
 
 button {
