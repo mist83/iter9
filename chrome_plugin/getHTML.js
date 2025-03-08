@@ -141,6 +141,9 @@ const getHTML = async (response) => {
             case "bf": fileNameInput.value = `program${suffix}.bf`; break;
             case "xslt":
             case "xsl": fileNameInput.value = `template${suffix}.xsl`; break;
+            case "yaml":
+            case "yml":
+                fileNameInput.value = `config${suffix}.yaml`; break;
             default: fileNameInput.value = `file${suffix}.txt`; break;
         }
 

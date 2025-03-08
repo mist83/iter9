@@ -42,6 +42,9 @@
                 <i class="ti ti-eye-off"></i>
                 <i style="display: none;" class="ti ti-eye"></i>
             </button>
+            <button id="zip-package" title="Download package" class="todo">
+                <i class="ti ti-download"></i>
+            </button>
         </div>
         <div id="resource-container" class="content-scroll"></div>
         <div class="nav-container">
@@ -53,12 +56,15 @@
         </div>
     </div>
     <div id="preview" class="preview">
-        <div id="content-header-area" style="display: grid; grid-template: 1fr / auto auto 1fr auto auto; visibility: collapse; place-self: stretch; place-items: center; gap: 8px; ">
+        <div id="content-header-area" style="display: grid; grid-template: 1fr / auto auto auto 1fr auto auto; visibility: collapse; place-self: stretch; place-items: center; gap: 8px; ">
             <button id="show-code-button" title="Show code">
                 <i class="ti ti-code"></i>
             </button>
             <button id="show-copy-paste-refactoring-modal" title="Show copy / paste refactoring suggestions" class="todo">
                 <i class="ti ti-brand-openai"></i>
+            </button>
+            <button id="restore-backup" title="Restore backup" class="todo">
+                <i class="ti ti-file-upload"></i>
             </button>
             <div id="open-in-new-tab-container" style="overflow: hidden;">
                 <a id="open-in-new-tab" href="#" target="_blank">Open in new tab</a>
@@ -86,6 +92,7 @@
     <script src="./app/framework/confirm.js"></script>
     <script src="./app/framework/modal.js"></script>
     <script src="./app/framework/toggleButton.js"></script>
+    <script src="./app/framework/keys.js"></script>
     <script src="./app/functions/expandCollapse.js"></script>
     <script src="./app/functions/toggleBackupFileVisibility.js"></script>
     <script src="./app/functions/updateNavLinks.js"></script>

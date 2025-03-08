@@ -51,8 +51,8 @@ document.getElementById("edit-save-button").addEventListener("click", async () =
             frame.setAttribute("src", src + (src.includes("?") ? "&" : "?") + "t=" + new Date().getTime());
         })
 
-    document.getElementById("show-code-button").children[0].classList.remove("ti-code");
-    document.getElementById("show-code-button").children[0].classList.add("ti-eye");
+    document.getElementById("show-code-button").children[0].classList.remove("ti-eye");
+    document.getElementById("show-code-button").children[0].classList.add("ti-code");
 
     document.getElementById("preview-frame").style.display = "grid"
     document.getElementById("edit-area").style.display = "none";

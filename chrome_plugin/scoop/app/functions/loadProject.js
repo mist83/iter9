@@ -136,19 +136,11 @@ async function loadProject() {
                     }
                 }
 
-                // TEXT: HEADER
-                {
-
-                    const headerText = document.createElement('h2');
-                    folderHeaderDiv.append(headerText);
-                    headerText.textContent = folderDetail.name;
-
-                    folderDiv.appendChild(folderHeaderDiv);
-                }
-
                 // BUTTON: COPY
                 {
                     const copyGroupButton = document.createElement("i");
+                    copyGroupButton.style.display = "none";
+
                     copyGroupButton.title = "Copy contents of " + folderDetail.name + " to new folder";
                     copyGroupButton.classList.add("ti", "ti-copy-plus-filled");
                     folderHeaderDiv.appendChild(copyGroupButton);
@@ -174,6 +166,16 @@ async function loadProject() {
                                 window.location.reload();
                             })
                     }
+                }
+
+                // TEXT: HEADER
+                {
+
+                    const headerText = document.createElement('h2');
+                    folderHeaderDiv.append(headerText);
+                    headerText.textContent = folderDetail.name;
+
+                    folderDiv.appendChild(folderHeaderDiv);
                 }
             }
 
@@ -233,6 +235,7 @@ async function loadProject() {
                         div.style.gridTemplate = "1fr / auto 1fr auto auto auto";
 
                         // RENAME FILE
+                        const link = document.createElement('a');
                         const renameFileLabel = document.createElement("i");
                         renameFileLabel.classList.add("ti", "ti-label");
                         renameFileLabel.style.color = "var(--background-light)";
@@ -251,7 +254,8 @@ async function loadProject() {
                             }
 
                             await renameFile(project.name, folderDetail.name, fileDetail.name, newName);
-                            window.location.reload();
+
+                            link.textContent = newName;
                         }
 
                         renameFileLabel.onmouseenter = (sender) => {
@@ -272,7 +276,7 @@ async function loadProject() {
                         }
 
                         // FILE LINK
-                        const link = document.createElement('a');
+                        //const link = document.createElement('a');
 
                         const src = `${urlBase}/${projectName}/${folderDetail.name}/${fileDetail.name}`
                         link.href = src;
@@ -338,9 +342,11 @@ async function loadProject() {
                         deleteFileLabel.style.cursor = "pointer";
                         deleteFileLabel.title = "Delete " + fileDetail.name;
                         deleteFileLabel.onclick = async () => {
-                            const confirmDelete = await confirm("Delete " + fileDetail.name + "?");
-                            if (!confirmDelete) {
-                                return;
+                            if (!window.shift) {
+                                const confirmDelete = await confirm("Delete " + fileDetail.name + "?");
+                                if (!confirmDelete) {
+                                    return;
+                                }
                             }
 
                             const url = `${urlBase}/${project.name}/${folderDetail.name}/${fileDetail.name}`;
@@ -354,7 +360,7 @@ async function loadProject() {
                                     //    return response.json();
                                 })
                                 .then(data => {
-                                    window.location.reload();
+                                    deleteFileLabel.parentElement.parentElement.removeChild(deleteFileLabel.parentElement);
                                 })
                         }
 
