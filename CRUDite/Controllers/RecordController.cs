@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
 [ApiController]
-[Route("api/records")]
+[Route("[controller]")]
 public class RecordController : ControllerBase
 {
     private readonly AppDbContext _db;
@@ -16,6 +17,7 @@ public class RecordController : ControllerBase
     }
 
     [HttpPost("{shapeName}")]
+    [SwaggerRequestExample(typeof(JsonObject), typeof(ExampleShape))]
     public async Task<IActionResult> CreateRecord(string shapeName, [FromBody] JsonObject data)
     {
         var shape = await _db.Shapes.FindAsync(shapeName);

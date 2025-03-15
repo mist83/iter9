@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 
 [ApiController]
-[Route("api/admin")]
+[Route("[controller]")]
 public class AdminController : ControllerBase
 {
     private readonly AppDbContext _db;
