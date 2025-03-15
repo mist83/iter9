@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CRUDite\**" />
-    <Content Remove="CRUDite\**" />
-    <EmbeddedResource Remove="CRUDite\**" />
-    <None Remove="CRUDite\**" />
+    <Compile Remove="cruddite\**" />
+    <Content Remove="cruddite\**" />
+    <EmbeddedResource Remove="cruddite\**" />
+    <None Remove="cruddite\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,7 +12,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{6276
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "..\Test\Test.csproj", "{4BF1EDB7-16DF-46D3-8E4E-D899649FB76B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRUDite", "CRUDite\CRUDite.csproj", "{FE43CC66-A089-47D3-8F93-62027035DD7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cruddite", "..\cruddite\Cruddite.csproj", "{61994841-87B5-4FDB-A83B-63B1E4A9095C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +28,10 @@ Global
 		{4BF1EDB7-16DF-46D3-8E4E-D899649FB76B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BF1EDB7-16DF-46D3-8E4E-D899649FB76B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BF1EDB7-16DF-46D3-8E4E-D899649FB76B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FE43CC66-A089-47D3-8F93-62027035DD7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FE43CC66-A089-47D3-8F93-62027035DD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FE43CC66-A089-47D3-8F93-62027035DD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FE43CC66-A089-47D3-8F93-62027035DD7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61994841-87B5-4FDB-A83B-63B1E4A9095C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61994841-87B5-4FDB-A83B-63B1E4A9095C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61994841-87B5-4FDB-A83B-63B1E4A9095C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61994841-87B5-4FDB-A83B-63B1E4A9095C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
