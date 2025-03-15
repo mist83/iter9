@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+namespace CRUDite.Controllers;
+
 [ApiController]
 [Route("[controller]")]
 public class AdminController : ControllerBase
@@ -17,14 +19,14 @@ public class AdminController : ControllerBase
     {
         var shapeCount = await appDbContext.Shapes.CountAsync();
         var recordCount = await appDbContext.Records.CountAsync();
-        var dbFileInfo = new System.IO.FileInfo("crudite.db");
+        var dbFileInfo = new FileInfo("crudite.db");
         var dbSizeKB = dbFileInfo.Exists ? dbFileInfo.Length / 1024 : 0;
 
         return Ok(new { totalShapes = shapeCount, totalRecords = recordCount, databaseSizeKB = dbSizeKB });
     }
 
     [HttpPost("sql")]
-    public async Task<IActionResult> ExecuteSql([FromBody] string sql="select * from Shapes")
+    public async Task<IActionResult> ExecuteSql([FromBody] string sql = "select * from Shapes")
     {
         if (sql.Trim().ToLower().StartsWith("select"))
         {
@@ -50,20 +52,20 @@ public class AdminController : ControllerBase
         }
     }
 
-    [HttpDelete("purge/{shapeName}")]
-    public async Task<IActionResult> PurgeShape(string shapeName)
+    [HttpDelete("purge/{typeName}")]
+    public async Task<IActionResult> PurgeShape(string typeName)
     {
-        var recordsToDelete = appDbContext.Records.Where(r => r.ShapeName == shapeName);
+        var recordsToDelete = appDbContext.Records.Where(r => r.TypeName == typeName);
         appDbContext.Records.RemoveRange(recordsToDelete);
         var deleted = await appDbContext.SaveChangesAsync();
-        return Ok(new { message = $"Purged {deleted} records for '{shapeName}'." });
+        return Ok(new { message = $"Purged {deleted} records for '{typeName}'." });
     }
 
     [HttpDelete("cleanup")]
     public async Task<IActionResult> CleanupShapes()
     {
-        var usedShapeNames = await appDbContext.Records.Select(r => r.ShapeName).Distinct().ToListAsync();
-        var shapesToDelete = appDbContext.Shapes.Where(s => !usedShapeNames.Contains(s.Name));
+        var usedTypeNames = await appDbContext.Records.Select(r => r.TypeName).Distinct().ToListAsync();
+        var shapesToDelete = appDbContext.Shapes.Where(s => !usedTypeNames.Contains(s.Name));
         appDbContext.Shapes.RemoveRange(shapesToDelete);
         var deleted = await appDbContext.SaveChangesAsync();
         return Ok(new { message = $"Removed {deleted} unused shapes." });

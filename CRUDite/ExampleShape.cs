@@ -2,9 +2,11 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Nodes;
 
-public class ExampleShape : IExamplesProvider<JsonObject>
+namespace CRUDite;
+
+public class ExampleShapeProvider : IExamplesProvider<object>
 {
-    public JsonObject GetExamples()
+    public object GetExamples()
     {
         var items = new List<object>();
         items.Add(new { id = "brain_biscuits", name = "Brain Biscuits", description = "Crunchy snacks infused with the knowledge of the ancients. Tastes like wisdom!", price = 4.99 });

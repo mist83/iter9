@@ -1,0 +1,164 @@
+{
+  "Categories": {
+    "Snacks": [
+      {
+        "id": "brain_biscuits",
+        "name": "Brain Biscuits",
+        "description": "Crunchy snacks infused with knowledge.",
+        "price": 4.99
+      },
+      {
+        "id": "ghoul_granola",
+        "name": "Ghoul Granola",
+        "description": "A spooky mix of oats and eerie energy.",
+        "price": 5.49
+      },
+      {
+        "id": "phantom_chips",
+        "name": "Phantom Chips",
+        "description": "Ghostly thin and hauntingly good.",
+        "price": 3.49
+      },
+      {
+        "id": "mummy_munchies",
+        "name": "Mummy Munchies",
+        "description": "Wrapped up in flavor!",
+        "price": 4.79
+      },
+      {
+        "id": "shadow_snaps",
+        "name": "Shadow Snaps",
+        "description": "Disappear with every bite.",
+        "price": 3.99
+      }
+    ],
+    "Cereals": [
+      {
+        "id": "phantom_puffs",
+        "name": "Phantom Puffs",
+        "description": "So light, they disappear in your mouth.",
+        "price": 3.99
+      },
+      {
+        "id": "werewolf_wheaties",
+        "name": "Werewolf Wheaties",
+        "description": "Keeps you full until the next full moon.",
+        "price": 6.66
+      },
+      {
+        "id": "zombie_zucaritas",
+        "name": "Zombie Zucaritas",
+        "description": "Sweet and scary delicious.",
+        "price": 5.99
+      },
+      {
+        "id": "haunted_honey_oats",
+        "name": "Haunted Honey Oats",
+        "description": "Bewitching honey goodness.",
+        "price": 4.49
+      },
+      {
+        "id": "creepy_crunch",
+        "name": "Creepy Crunch",
+        "description": "A terrifyingly tasty breakfast.",
+        "price": 4.99
+      }
+    ],
+    "Breakfast": [
+      {
+        "id": "ectoplasm_eggos",
+        "name": "Ectoplasm Eggos",
+        "description": "These waffles glow in the dark!",
+        "price": 7.77
+      },
+      {
+        "id": "vampire_pancakes",
+        "name": "Vampire Pancakes",
+        "description": "Drenched in bloody good syrup.",
+        "price": 8.49
+      },
+      {
+        "id": "ghostly_grits",
+        "name": "Ghostly Grits",
+        "description": "Hauntingly smooth texture.",
+        "price": 3.99
+      },
+      {
+        "id": "witchy_waffles",
+        "name": "Witchy Waffles",
+        "description": "Brewed to perfection.",
+        "price": 6.25
+      },
+      {
+        "id": "pumpkin_porridge",
+        "name": "Pumpkin Porridge",
+        "description": "A fall favorite all year long.",
+        "price": 5.49
+      }
+    ],
+    "Desserts": [
+      {
+        "id": "spooky_sundae",
+        "name": "Spooky Sundae",
+        "description": "Ghostly cold and devilishly sweet.",
+        "price": 5.99
+      },
+      {
+        "id": "monster_mousse",
+        "name": "Monster Mousse",
+        "description": "A fluffy nightmare of chocolate.",
+        "price": 4.99
+      },
+      {
+        "id": "cursed_cupcake",
+        "name": "Cursed Cupcake",
+        "description": "Frosted with forbidden magic.",
+        "price": 3.49
+      },
+      {
+        "id": "black_cat_brownie",
+        "name": "Black Cat Brownie",
+        "description": "Luckiest bite you’ll ever take.",
+        "price": 4.25
+      },
+      {
+        "id": "ghastly_gelato",
+        "name": "Ghastly Gelato",
+        "description": "A chilling, ghostly delight.",
+        "price": 5.75
+      }
+    ],
+    "Beverages": [
+      {
+        "id": "midnight_mocha",
+        "name": "Midnight Mocha",
+        "description": "Dark as the night, rich as a dream.",
+        "price": 4.99
+      },
+      {
+        "id": "witches_brew_tea",
+        "name": "Witches' Brew Tea",
+        "description": "Enchanted herbal infusion.",
+        "price": 3.99
+      },
+      {
+        "id": "vampire_venom",
+        "name": "Vampire Venom",
+        "description": "A crimson energy drink.",
+        "price": 5.49
+      },
+      {
+        "id": "spectral_smoothie",
+        "name": "Spectral Smoothie",
+        "description": "Ethereal fruit blend.",
+        "price": 6.25
+      },
+      {
+        "id": "lycanthrope_latte",
+        "name": "Lycanthrope Latte",
+        "description": "Transforms your morning.",
+        "price": 4.79
+      }
+    ]
+  }
+}

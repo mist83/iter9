@@ -5,6 +5,8 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 
+namespace CRUDite.Controllers;
+
 [ApiController]
 [Route("[controller]")]
 public class RecordController : ControllerBase
@@ -16,11 +18,11 @@ public class RecordController : ControllerBase
         this.appDbContext = appDbContext;
     }
 
-    [HttpPost("{shapeName}")]
-    [SwaggerRequestExample(typeof(JsonObject), typeof(ExampleShape))]
-    public async Task<IActionResult> CreateRecord(string shapeName, [FromBody] JsonObject data)
+    [HttpPost("{typeName}")]
+    [SwaggerRequestExample(typeof(JsonObject), typeof(ExampleShapeProvider))]
+    public async Task<IActionResult> CreateRecord(string typeName, [FromBody] JsonObject data)
     {
-        var shape = await appDbContext.Shapes.FindAsync(shapeName);
+        var shape = await appDbContext.Shapes.FindAsync(typeName);
         if (shape == null)
             return BadRequest("Shape not registered.");
 
@@ -34,30 +36,30 @@ public class RecordController : ControllerBase
         var record = new Record
         {
             Id = Guid.NewGuid().ToString(),
-            ShapeName = shapeName,
+            TypeName = typeName,
             Data = data.ToJsonString()
         };
         appDbContext.Records.Add(record);
         await appDbContext.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetRecord), new { shapeName, id = record.Id }, new { id = record.Id });
+        return CreatedAtAction(nameof(GetRecord), new { typeName, id = record.Id }, new { id = record.Id });
     }
 
-    [HttpGet("{shapeName}/{id}")]
-    public async Task<IActionResult> GetRecord(string shapeName, string id)
+    [HttpGet("{typeName}/{id}")]
+    public async Task<IActionResult> GetRecord(string typeName, string id)
     {
         var record = await appDbContext.Records.FindAsync(id);
-        if (record == null || record.ShapeName != shapeName)
+        if (record == null || record.TypeName != typeName)
             return NotFound();
 
         var jsonData = JsonSerializer.Deserialize<JsonObject>(record.Data);
         return Ok(jsonData);
     }
 
-    [HttpPut("{shapeName}/{id}")]
-    public async Task<IActionResult> UpdateRecord(string shapeName, string id, [FromBody] JsonObject data)
+    [HttpPut("{typeName}/{id}")]
+    public async Task<IActionResult> UpdateRecord(string typeName, string id, [FromBody] JsonObject data)
     {
         var record = await appDbContext.Records.FindAsync(id);
-        if (record == null || record.ShapeName != shapeName)
+        if (record == null || record.TypeName != typeName)
             return NotFound();
 
         record.Data = data.ToJsonString();
@@ -66,11 +68,11 @@ public class RecordController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete("{shapeName}/{id}")]
-    public async Task<IActionResult> DeleteRecord(string shapeName, string id)
+    [HttpDelete("{typeName}/{id}")]
+    public async Task<IActionResult> DeleteRecord(string typeName, string id)
     {
         var record = await appDbContext.Records.FindAsync(id);
-        if (record == null || record.ShapeName != shapeName)
+        if (record == null || record.TypeName != typeName)
             return NotFound();
 
         appDbContext.Records.Remove(record);
@@ -78,10 +80,10 @@ public class RecordController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("{shapeName}")]
-    public async Task<IActionResult> QueryRecords(string shapeName, [FromQuery] string? query)
+    [HttpGet("{typeName}")]
+    public async Task<IActionResult> QueryRecords(string typeName, [FromQuery] string query)
     {
-        var records = await appDbContext.Records.Where(r => r.ShapeName == shapeName).ToListAsync();
+        var records = await appDbContext.Records.Where(r => r.TypeName == typeName).ToListAsync();
         var results = new List<JsonObject>();
 
         foreach (var record in records)

@@ -1,4 +1,8 @@
-﻿public class DynamoDbLockMiddleware
+﻿using CRUDite;
+
+namespace CRUDite;
+
+public class DynamoDbLockMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly DynamoDbLockManager _lockManager;
@@ -22,7 +26,7 @@
         // dangerous, can force out-of-sync with SQL
         if (context.Request.Path.ToString().ToLower().StartsWith("/admin/"))
         {
-            isWriteOperation = false;
+            //isWriteOperation = false;
         }
 
         if (isWriteOperation)

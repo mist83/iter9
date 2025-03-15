@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-// -----------------------
-// EF Core Models and DbContext
-// -----------------------
+
+namespace CRUDite;
 
 public class Shape
 {

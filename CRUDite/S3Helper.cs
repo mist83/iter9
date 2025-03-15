@@ -2,6 +2,8 @@
 using Amazon.S3.Model;
 using Microsoft.EntityFrameworkCore;
 
+namespace CRUDite;
+
 public class S3Helper
 {
     private readonly IAmazonS3 _s3Client;

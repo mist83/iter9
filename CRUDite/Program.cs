@@ -5,6 +5,7 @@ using Amazon.Extensions.NETCore.Setup;
 using System.Runtime.InteropServices;
 using Swashbuckle.AspNetCore.Filters;
 using System.Reflection;
+using CRUDite;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.ExampleFilters(); // Ensure Swagger can use example providers
+    options.ParameterFilter<DynamicNameParameterFilter>();
+    options.OperationFilter<DynamicExampleFilter>(); 
 });
 
 builder.Services.AddSwaggerExamplesFromAssemblies(Assembly.GetExecutingAssembly()); // Registers ExampleShape
