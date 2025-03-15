@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CRUDite\**" />
+    <Content Remove="CRUDite\**" />
+    <EmbeddedResource Remove="CRUDite\**" />
+    <None Remove="CRUDite\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Resources\manifest.json" />
   </ItemGroup>
 

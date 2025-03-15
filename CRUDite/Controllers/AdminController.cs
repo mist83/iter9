@@ -5,30 +5,30 @@ using Microsoft.EntityFrameworkCore;
 [Route("[controller]")]
 public class AdminController : ControllerBase
 {
-    private readonly AppDbContext _db;
+    private readonly AppDbContext appDbContext;
 
-    public AdminController(AppDbContext db)
+    public AdminController(AppDbContext appDbContext)
     {
-        _db = db;
+        this.appDbContext = appDbContext;
     }
 
     [HttpGet("stats")]
     public async Task<IActionResult> GetStats()
     {
-        var shapeCount = await _db.Shapes.CountAsync();
-        var recordCount = await _db.Records.CountAsync();
-        var dbFileInfo = new System.IO.FileInfo("shapes.db");
+        var shapeCount = await appDbContext.Shapes.CountAsync();
+        var recordCount = await appDbContext.Records.CountAsync();
+        var dbFileInfo = new System.IO.FileInfo("crudite.db");
         var dbSizeKB = dbFileInfo.Exists ? dbFileInfo.Length / 1024 : 0;
 
         return Ok(new { totalShapes = shapeCount, totalRecords = recordCount, databaseSizeKB = dbSizeKB });
     }
 
     [HttpPost("sql")]
-    public async Task<IActionResult> ExecuteSql([FromBody] string sql)
+    public async Task<IActionResult> ExecuteSql([FromBody] string sql="select * from Shapes")
     {
         if (sql.Trim().ToLower().StartsWith("select"))
         {
-            var conn = _db.Database.GetDbConnection();
+            var conn = appDbContext.Database.GetDbConnection();
             await conn.OpenAsync();
             using var cmd = conn.CreateCommand();
             cmd.CommandText = sql;
@@ -45,7 +45,7 @@ public class AdminController : ControllerBase
         }
         else
         {
-            var affectedRows = await _db.Database.ExecuteSqlRawAsync(sql);
+            var affectedRows = await appDbContext.Database.ExecuteSqlRawAsync(sql);
             return Ok(new { message = "SQL executed.", affectedRows });
         }
     }
@@ -53,26 +53,26 @@ public class AdminController : ControllerBase
     [HttpDelete("purge/{shapeName}")]
     public async Task<IActionResult> PurgeShape(string shapeName)
     {
-        var recordsToDelete = _db.Records.Where(r => r.ShapeName == shapeName);
-        _db.Records.RemoveRange(recordsToDelete);
-        var deleted = await _db.SaveChangesAsync();
+        var recordsToDelete = appDbContext.Records.Where(r => r.ShapeName == shapeName);
+        appDbContext.Records.RemoveRange(recordsToDelete);
+        var deleted = await appDbContext.SaveChangesAsync();
         return Ok(new { message = $"Purged {deleted} records for '{shapeName}'." });
     }
 
     [HttpDelete("cleanup")]
     public async Task<IActionResult> CleanupShapes()
     {
-        var usedShapeNames = await _db.Records.Select(r => r.ShapeName).Distinct().ToListAsync();
-        var shapesToDelete = _db.Shapes.Where(s => !usedShapeNames.Contains(s.Name));
-        _db.Shapes.RemoveRange(shapesToDelete);
-        var deleted = await _db.SaveChangesAsync();
+        var usedShapeNames = await appDbContext.Records.Select(r => r.ShapeName).Distinct().ToListAsync();
+        var shapesToDelete = appDbContext.Shapes.Where(s => !usedShapeNames.Contains(s.Name));
+        appDbContext.Shapes.RemoveRange(shapesToDelete);
+        var deleted = await appDbContext.SaveChangesAsync();
         return Ok(new { message = $"Removed {deleted} unused shapes." });
     }
 
     [HttpPost("optimize")]
     public async Task<IActionResult> OptimizeDatabase()
     {
-        await _db.Database.ExecuteSqlRawAsync("VACUUM;");
+        await appDbContext.Database.ExecuteSqlRawAsync("VACUUM;");
         return Ok(new { message = "Database optimized." });
     }
 }
