@@ -99,15 +99,14 @@ input[type="text"] {
 }
 
     .tracked-file:hover {
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
 
     .tracked-file > input {
-        font-size: 18px;
-        padding: 4px;
         color: var(--primary-color);
         background-color: var(--text-light);
         pointer-events: none;
+        user-select: none;
     }
 
 #randomize:hover {

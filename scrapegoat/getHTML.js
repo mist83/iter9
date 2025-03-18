@@ -196,10 +196,7 @@ const getHTML = async (response) => {
 
         response.codeBlocks[i].input = fileNameInput;
 
-        allCodeBlocks.push({
-            elementPath: "foo/bar/baz",
-            code: response.codeBlocks[i]
-        });
+        allCodeBlocks.push(response.codeBlocks[i]);
     }
 
     // Append the grid container to the content div

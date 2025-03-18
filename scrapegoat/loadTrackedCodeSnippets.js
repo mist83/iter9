@@ -34,8 +34,8 @@ const loadTrackedCodeSnippets = async () => {
             }
 
             // .title is where we store the actual code, so we can use it doubly for matching
-            const item = inputs.filter(x => x.title == data[i].content)[0];
-            if (!item) {
+            const filenameInput = inputs.filter(x => x.title == data[i].content)[0];
+            if (!filenameInput) {
                 // The fact that we got here means that one of the items is tracked, just not with one of the auto-generated file names on the screen
                 const warning = document.createElement("h2");
                 warning.className = "warning";
@@ -47,13 +47,14 @@ const loadTrackedCodeSnippets = async () => {
                 continue;
             }
 
-            const fileDiv = item.parentElement;
+            const fileDiv = filenameInput.parentElement;
 
             // In case the tracked version of the file is named differently from the auto-incremented name
             fileDiv.children[1].value = data[i].name;
 
             fileDiv.classList.remove("untracked-file");
             fileDiv.classList.add("tracked-file");
+            filenameInput.setAttribute("tabindex", "-1");
 
             const launchable = data[i].name.indexOf(".html") !== -1;
             if (launchable) {
