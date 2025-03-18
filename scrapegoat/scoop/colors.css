@@ -1,20 +1,26 @@
+/*popup, all*/
 :root {
-    --background-dark: dodgerblue;
-    --background-light: ghostwhite;
-    --background-medium: lightgray;
-    --background-lightest: white;
+    --background-color: #222;
     --primary-color: dodgerblue;
-    --secondary-color: white;
-    --primary-hover: white;
-    --primary-hover-bg: dodgerblue;
-    --secondary-hover-bg: deeppink;
-    --tertiary-hover-bg: springgreen;
-    --border-color: silver;
-    --default-text: black;
-    --text-light: white;
+    --secondary-color: deeppink;
+    --tertiary-color: springgreen;
+    --primary-hover-background-color: dodgerblue;
+    --primary-hover-color: white;
+
+    --secondary-hover-bg: pink;
+    --tertiary-hover-bg: green;
+    --border-color: lightgray;
+    --default-text: #222;
+    --text-light: lightgray;
     --text-warning: lightgray;
     --text-medium: lightgray;
     --scrollbar-width: 10px;
     --scrollbar-thumb-bg: lightgray;
-    --scrollbar-thumb-hover: springgreen;
+}
+
+:root {
+    --background-light: ghostwhite;
+    --background-medium: lightgray;
+    --background-lightest: white;
+    --scrollbar-thumb-hover: deeppink;
 }

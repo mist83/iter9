@@ -1,31 +1,20 @@
+// Do you need a POC to prove that the grass is greener when you let AI rewrite it? Choose from one of these pastures.
 const projectNames = [
-    // Fruits
-    'apple', 'apricot', 'avocado', 'banana', 'blackberry', 'blueberry', 'boysenberry', 'breadfruit',
-    'cantaloupe', 'carambola', 'cherry', 'cloudberry', 'coconut', 'cranberry', 'currant', 'date',
-    'dragonfruit', 'durian', 'elderberry', 'feijoa', 'fig', 'gooseberry', 'grape', 'grapefruit',
-    'guava', 'hackberry', 'honeydew', 'huckleberry', 'jabuticaba', 'jackfruit', 'jambul', 'jostaberry',
-    'jujube', 'kiwi', 'kumquat', 'lemon', 'lime', 'longan', 'loquat', 'lychee', 'mandarin', 'mango',
-    'mangosteen', 'maracuja', 'marionberry', 'melon', 'mulberry', 'nance', 'nectarine', 'olive',
-    'orange', 'papaya', 'passionfruit', 'pawpaw', 'peach', 'pear', 'persimmon', 'physalis', 'pineapple',
-    'pitaya', 'plantain', 'plum', 'pomegranate', 'pomelo', 'pricklypear', 'quince', 'rambutan',
-    'raspberry', 'redcurrant', 'roseapple', 'salak', 'satsuma', 'soursop', 'starfruit', 'strawberry',
-    'tamarillo', 'tangerine', 'tomato', 'watermelon', 'yumberry', 'zucchini',
-
-    // Vegetables
-    'artichoke', 'arugula', 'asparagus', 'beet', 'broccoli', 'brussels', 'cabbage', 'carrot',
-    'cauliflower', 'celery', 'chard', 'chicory', 'collard', 'cucumber', 'daikon', 'dill',
-    'edamame', 'eggplant', 'endive', 'fennel', 'garlic', 'ginger', 'horseradish', 'jicama',
-    'kale', 'kohlrabi', 'leek', 'lettuce', 'mushroom', 'mustard', 'okra', 'onion',
-    'parsnip', 'pea', 'peanut', 'pepper', 'potato', 'pumpkin', 'radish', 'rhubarb',
-    'shallot', 'spinach', 'squash', 'turnip', 'wasabi', 'yam', 'yucca',
-
-    // Nuts & Seeds
-    'almond', 'beech', 'brazilnut', 'cashew', 'chestnut', 'chia', 'coconut', 'flaxseed',
-    'hazelnut', 'hempseed', 'macadamia', 'pecan', 'pistachio', 'sesame', 'sunflower', 'walnut',
-
-    // Grains & Legumes
-    'amaranth', 'barley', 'buckwheat', 'chickpea', 'corn', 'farro', 'lentil', 'millet',
-    'oat', 'quinoa', 'rice', 'rye', 'sorghum', 'spelt', 'teff', 'wheat'
+    'alkali', 'arizona', 'bahia', 'banner', 'barnyard', 'beaked', 'bent', 'big', 'bluejoint',
+    'bluestem', 'brome', 'buffalo', 'buffel', 'bulbous', 'canada', 'carpet', 'celebration',
+    'chewings', 'colonial', 'couch', 'crab', 'creeping', 'crowfoot', 'dallis', 'dawson',
+    'desert', 'dogtooth', 'durar', 'el', 'empire', 'fall', 'field', 'fine', 'florida',
+    'foxtail', 'geo', 'giant', 'goose', 'green', 'gulf', 'hairy', 'hard', 'highland',
+    'houndstongue', 'hybrid', 'indian', 'innovation', 'jamestown', 'japanese', 'johnson',
+    'kentucky', 'korean', 'latitude', 'lehmann', 'little', 'love', 'maiden', 'manila',
+    'marsh', 'meadow', 'meyer', 'miscanthus', 'mountain', 'napier', 'nevada', 'northbridge',
+    'orchard', 'palisades', 'panic', 'paspalum', 'pennington', 'perennial', 'plains',
+    'prairie', 'princess', 'purpletop', 'quack', 'red', 'reed', 'rescue', 'rhodes',
+    'rough', 'rye', 'sahara', 'saint', 'salt', 'sand', 'scribner', 'seashore', 'sheep',
+    'sharpblue', 'sideoats', 'signal', 'silver', 'slender', 'slough', 'spike', 'suborbital',
+    'sugarcane', 'switch', 'Tahoma', 'tall', 'texas', 'thin', 'timothy', 'tifton',
+    'tifway', 'tifTuf', 'turf-type', 'velvet', 'virginia', 'water', 'weeping', 'wheat',
+    'witch', 'yellow', 'zeon', 'zoysia'
 ];
 
 function setProjectName(projectName) {
@@ -49,11 +38,20 @@ function setProjectName(projectName) {
     localStorage.setItem("projectName", projectName);
 }
 
-document.getElementById("randomize").onclick = () => {
+document.getElementById("randomize").onclick = (sender) => {
+    if (!confirm("Randomize project name?")) {
+        return;
+    }
+
     setProjectName();
 
-    const content = document.getElementById('code-snippet-area');
-    document.body.style.height = "44px";
+    sender.target.parentElement.style.display = "none";
+    document.getElementById("close").style.display = "grid";
+};
+
+document.getElementById("close").onclick = (sender) => {
+    sender.target.parentElement.style.display = "none";
+    document.getElementById("randomize").style.display = "grid";
 };
 
 setProjectName(localStorage.getItem("projectName"));

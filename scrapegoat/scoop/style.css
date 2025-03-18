@@ -53,8 +53,8 @@ body {
 
     .grid-item:hover {
         transform: scale(1.05); /* Keeps hover effect */
-        background-color: var(--primary-hover-bg); /* Maintain color change */
-        color: var(--primary-hover);
+        background-color: var(--primary-hover-background-color); /* Maintain color change */
+        color: var(--primary-hover-color);
     }
 
 
@@ -130,7 +130,7 @@ span {
     }
 
     .folder-header:hover {
-        background-color: var(--primary-hover-bg);
+        background-color: var(--primary-hover-background-color);
     }
 
     .folder-header i {
@@ -180,8 +180,8 @@ h2 {
 
         .resource-list a:hover,
         .resource-list a.active {
-            color: var(--primary-hover);
-            background-color: var(--primary-hover-bg);
+            color: var(--primary-hover-color);
+            background-color: var(--primary-hover-background-color);
         }
 
 .content-scroll {

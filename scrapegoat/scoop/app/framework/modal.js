@@ -33,18 +33,19 @@
 
     modalCloseButton.textContent = "Close";
     modalCloseButton.style.padding = "10px 20px";
-    modalCloseButton.style.background = "var(--primary-color, #007bff)";
+    modalCloseButton.style.background = "var(--primary-color)";
     modalCloseButton.style.color = "var(--text-light, #fff)";
     modalCloseButton.style.border = "none";
     modalCloseButton.style.cursor = "pointer";
     modalCloseButton.style.borderRadius = "4px";
 
     modalCloseButton.addEventListener("mouseover", () => {
-        modalCloseButton.style.background = "var(--primary-hover-bg, #0056b3)";
+        modalCloseButton.style.color = "var(--primary-hover-color)";
+        modalCloseButton.style.backgroundColor = "var(--primary-hover-background-color)";
     });
 
     modalCloseButton.addEventListener("mouseout", () => {
-        modalCloseButton.style.background = "var(--primary-color, #007bff)";
+        modalCloseButton.style.background = "var(--primary-color)";
     });
 
     // Append elements

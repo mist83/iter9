@@ -64,8 +64,23 @@ document.getElementById("view-dashboard").addEventListener("click", async () => 
     chrome.tabs.create({ url: `scoop/index.html?project=${projectName}&folderName=${folderName}` });
 });
 
+const showSplashScreen = async () => {
+    alert("splash");
+}
+
 console.log("Popup (outer): processHTML");
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
+    const startupName = document.getElementById("project-name").value.split('/');
+    if (startupName[0] == "system") {
+        if (startupName[1] == "splash") {
+            await showSplashScreen();
+            return;
+        }
+
+        await alert("Unknown system screen: " + startupName[1]);
+        return;
+    }
+
     if (tabs.length === 0) return; // No active tab
     chrome.tabs.sendMessage(tabs[0].id, {
         action: 'getHTML'

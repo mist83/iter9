@@ -35,8 +35,8 @@
     modalButton.style.cursor = "pointer";
 
     modalButton.addEventListener("mouseover", () => {
-        modalButton.style.background = "var(--primary-hover-bg)";
-        modalButton.style.color = "var(--primary-hover)";
+        modalButton.style.background = "var(--primary-hover-background-color)";
+        modalButton.style.color = "var(--primary-color-hover)";
     });
 
     modalButton.addEventListener("mouseout", () => {

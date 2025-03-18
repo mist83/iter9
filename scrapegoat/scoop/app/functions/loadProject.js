@@ -11,7 +11,8 @@ async function loadProject() {
 
         projectTitle.addEventListener('dragover', (e) => {
             e.preventDefault();
-            projectTitle.style.backgroundColor = "var(--primary-hover-bg)";
+            projectTitle.style.color = "var(--primary-hover-color)";
+            projectTitle.style.backgroundColor = "var(--primary-hover-background-color)";
             projectTitle.style.color = "var(--text-light)";
         });
 

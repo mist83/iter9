@@ -3,19 +3,22 @@
 <head>
     <title>Iter9</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <link rel="stylesheet" href="https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/iter9/.system/app/colors.css" />
+    <!--    <link rel="stylesheet" href="https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/iter9/.system/app/colors.css" />-->
     <!--    <link rel="stylesheet" href="https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/iter9/.system/app/popup.css" />-->
     <link rel="stylesheet" href="./scoop/colors.css" />
     <link rel="stylesheet" href="./popup.css" />
 </head>
 <body>
     <div id="header-bar">
-        <button id="randomize" title="Get a random project name">
-            <i class="ti ti-refresh"></i>
+        <button id="view-dashboard" title="View details">
+            <i class="ti ti-dots"></i>
         </button>
         <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
-        <button id="view-dashboard" title="View project details">
-            <i class="ti ti-dots"></i>
+        <button id="randomize" title="Generate a random pasture (project name/folder)" style="display: none;">
+            <i class="ti ti-tractor"></i>
+        </button>
+        <button id="close" title="Close">
+            <i class="ti ti-x"></i>
         </button>
     </div>
     <div id="code-snippet-area"></div>
