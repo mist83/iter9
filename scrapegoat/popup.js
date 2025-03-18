@@ -55,6 +55,10 @@ const saveFile = async (only) => {
     }
 };
 
+document.getElementById("upload-all").addEventListener("click", async () => {
+    await alert("TODO: Upload all files");
+});
+
 document.getElementById("view-dashboard").addEventListener("click", async () => {
     const items = document.getElementById("project-name").value.split('/');
 
@@ -64,15 +68,15 @@ document.getElementById("view-dashboard").addEventListener("click", async () => 
     chrome.tabs.create({ url: `scoop/index.html?project=${projectName}&folderName=${folderName}` });
 });
 
-console.log("Popup (outer): getHTML");
+console.log("Popup (outer): processHTML");
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length === 0) return; // No active tab
     chrome.tabs.sendMessage(tabs[0].id, {
         action: 'getHTML'
     }, async (response) => {
-        console.log("Popup (inner): getHTML");
+        console.log("Popup (inner): processHTML");
 
-        const codeFound = await getHTML(response);
+        const codeFound = await processHTML(response);
 
         if (codeFound) {
             document.body.style.height = "unset";

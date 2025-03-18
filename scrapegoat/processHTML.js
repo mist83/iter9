@@ -1,7 +1,7 @@
 const nameof = (fn) => fn.name;
 
-const getHTML = async (response) => {
-    console.log(`Inside ${nameof(getHTML)}`, response);
+const processHTML = async (response) => {
+    console.log(`Inside ${nameof(processHTML)}`, response);
 
     const content = document.getElementById('code-snippet-area');
     content.innerHTML = "";
@@ -179,19 +179,6 @@ const getHTML = async (response) => {
             trackFileButton.parentElement.classList.add("tracked-file");
 
             trackFileButton.parentElement.removeChild(trackFileButton);
-
-            const launchable = fileName.indexOf(".html") !== -1;
-            if (launchable) {
-                fileDiv.onclick = () => {
-                    const projectNameValue = document.getElementById("project-name").value;
-                    const parts = projectNameValue.split('/');
-
-                    const projectName = parts[0];
-                    const folderName = parts[1];
-
-                    chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
-                }
-            }
         }
 
         response.codeBlocks[i].input = fileNameInput;

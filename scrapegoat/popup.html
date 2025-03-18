@@ -10,17 +10,20 @@
 </head>
 <body>
     <div id="header-bar">
+        <button id="upload-all" title="Upload all files">
+            <i class="ti ti-cloud-up"></i>
+        </button>
+        <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
         <button id="randomize" title="Get a random project name">
             <i class="ti ti-refresh"></i>
         </button>
-        <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
         <button id="view-dashboard" title="View project details">
             <i class="ti ti-dots"></i>
         </button>
     </div>
     <div id="code-snippet-area"></div>
     <!--<script src="scoop/app/framework/alert.js"></script>-->
-    <script src="getHTML.js"></script>
+    <script src="processHTML.js"></script>
     <script src="projectNaming.js"></script>
     <script src="loadTrackedCodeSnippets.js"></script>
     <script src="popup.js"></script>

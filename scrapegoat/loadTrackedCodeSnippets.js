@@ -72,8 +72,24 @@ const loadTrackedCodeSnippets = async () => {
                     const projectName = parts[0];
                     const folderName = parts[1];
 
+                    // hack - not even working, just got bored/distracted and need to stop
+                    const xPath = "//body/div[1]";
+
+                    chrome.tabs.query({
+                        active: true, currentWindow: true
+                    }, (tabs) => {
+                        if (tabs.length === 0) return; // No active tab
+                        chrome.tabs.sendMessage(tabs[0].id, {
+                            action: 'scrollToElement',
+                            xPath: xPath
+                        }, async (response) => {
+                            // don't think this works...
+                            //console.log("scrolled to: " + response.xPath);
+                        });
+                    });
+
                     const fileName = div.innerText;
-                    chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+                    //chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
                 }
             } else {
                 const trackFileButton = fileDiv.children[0];
