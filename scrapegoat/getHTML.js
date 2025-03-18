@@ -1,5 +1,7 @@
+const nameof = (fn) => fn.name;
+
 const getHTML = async (response) => {
-    console.log("inside getHTML", response);
+    console.log(`Inside ${nameof(getHTML)}`, response);
 
     const content = document.getElementById('code-snippet-area');
     content.innerHTML = "";
@@ -61,9 +63,27 @@ const getHTML = async (response) => {
 
         const fileNameInput = document.createElement("input");
         {
+            fileDiv.appendChild(fileNameInput);
             fileNameInput.type = "text";
             fileNameInput.placeholder = "File name";
             fileNameInput.title = response.codeBlocks[i].code;
+
+            fileNameInput.addEventListener("focus", () => {
+                console.log("Input was focused!");
+
+                chrome.tabs.query({
+                    active: true, currentWindow: true
+                }, (tabs) => {
+                    if (tabs.length === 0) return; // No active tab
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: 'scrollToElement',
+                        xPath: response.codeBlocks[i].xPath
+                    }, async (response) => {
+                        // don't think this works...
+                        //console.log("scrolled to: " + response.xPath);
+                    });
+                });
+            });
         }
 
         switch (response.codeBlocks[i].type) {
@@ -173,8 +193,6 @@ const getHTML = async (response) => {
                 }
             }
         }
-
-        fileDiv.appendChild(fileNameInput);
 
         response.codeBlocks[i].input = fileNameInput;
 

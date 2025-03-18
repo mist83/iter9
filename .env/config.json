@@ -8,5 +8,5 @@
   "function-handler": "Iter9",
   "function-name": "iter9", // the AWS function name 
   "environment-variables": "DATA_BUCKET=iter9",
-  "function-url-enable": true // this gets resolved to:  https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/
+  "function-url-enable": true // this gets resolved to: https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/
 }

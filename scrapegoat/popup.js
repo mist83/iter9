@@ -12,7 +12,7 @@ const saveFile = async (only) => {
         const files = allCodeBlocks
             .map(x => ({
                 name: x.code.input.value,
-                content: x.code.code
+                content: x.code.code,
             }));
 
         let fileName;
@@ -67,7 +67,9 @@ document.getElementById("view-dashboard").addEventListener("click", async () => 
 console.log("Popup (outer): getHTML");
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs.length === 0) return; // No active tab
-    chrome.tabs.sendMessage(tabs[0].id, { action: 'getHTML' }, async (response) => {
+    chrome.tabs.sendMessage(tabs[0].id, {
+        action: 'getHTML'
+    }, async (response) => {
         console.log("Popup (inner): getHTML");
 
         const codeFound = await getHTML(response);

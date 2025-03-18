@@ -17,6 +17,35 @@ document.getElementById("rename-project").onclick = async (sender) => {
     //window.location.href = newUrl;
 }
 
+document.getElementById("zip-package").onclick = async () => {
+    const project = document.getElementById("project-title").innerText;
+    const url = `${urlBase}/${project}/zip`;
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = `${project}.zip`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+        console.error("Error downloading the file:", error);
+    }
+};
+
 document.getElementById("edit-area").addEventListener("keyup", () => {
     document.getElementById("edit-save-button").style.display = "grid";
 });

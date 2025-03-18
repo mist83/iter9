@@ -1,9 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Iter9",
-  "description": "Iterate++",
+  "name": "ScrapeGOAT",
+  "description": "Copy paste your way to blame or fame",
   "version": "1.0",
-  "host_permissions": [ "*://chatgpt.com/*" ],
+  "host_permissions": [
+    "<all_urls>"
+
+  ],
   "permissions": [
     "tabs",
     "activeTab",
@@ -14,7 +17,9 @@
   },
   "content_scripts": [
     {
-      "matches": [ "*://chatgpt.com/*" ],
+      "matches": [
+        "<all_urls>"
+      ],
       "js": [ "content.js" ]
     }
   ],
