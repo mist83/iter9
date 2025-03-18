@@ -1,5 +1,3 @@
-const nameof = (fn) => fn.name;
-
 const processHTML = async (response) => {
     console.log(`Inside ${nameof(processHTML)}`, response);
 
@@ -70,20 +68,12 @@ const processHTML = async (response) => {
             fileNameInput.placeholder = "File name";
             fileNameInput.title = response.codeBlocks[i].code;
 
-            fileNameInput.addEventListener("focus", () => {
+            fileNameInput.addEventListener("focus", async () => {
                 console.log("Input was focused!");
 
-                chrome.tabs.query({
-                    active: true, currentWindow: true
-                }, (tabs) => {
-                    if (tabs.length === 0) return; // No active tab
-                    chrome.tabs.sendMessage(tabs[0].id, {
-                        action: 'scrollToElement',
-                        xPath: response.codeBlocks[i].xPath
-                    }, async (response) => {
-                        // don't think this works...
-                        //console.log("scrolled to: " + response.xPath);
-                    });
+                await sendMessageToActiveTab({
+                    action: 'scrollToElement',
+                    xPath: response.codeBlocks[i].xPath
                 });
             });
         }

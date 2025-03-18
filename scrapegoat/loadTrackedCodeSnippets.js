@@ -75,7 +75,7 @@ const loadTrackedCodeSnippets = async () => {
                 trackFileIcon.classList.add("ti", "ti-check");
             }
 
-            fileDiv.onclick = () => {
+            fileDiv.onclick = async () => {
                 const projectNameValue = document.getElementById("project-name").value;
                 const parts = projectNameValue.split('/');
 
@@ -85,17 +85,9 @@ const loadTrackedCodeSnippets = async () => {
                 // hack - not even working, just got bored/distracted and need to stop
                 const xPath = fileDiv.dataset.xPath;
 
-                chrome.tabs.query({
-                    active: true, currentWindow: true
-                }, (tabs) => {
-                    if (tabs.length === 0) return; // No active tab
-                    chrome.tabs.sendMessage(tabs[0].id, {
-                        action: 'scrollToElement',
-                        xPath: xPath
-                    }, async (response) => {
-                        // don't think this works...
-                        //console.log("scrolled to: " + response.xPath);
-                    });
+                await sendMessageToActiveTab({
+                    action: 'scrollToElement',
+                    xPath: xPath
                 });
 
                 const fileName = div.innerText;
