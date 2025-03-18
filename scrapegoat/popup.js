@@ -55,10 +55,6 @@ const saveFile = async (only) => {
     }
 };
 
-document.getElementById("upload-all").addEventListener("click", async () => {
-    await alert("TODO: Upload all files");
-});
-
 document.getElementById("view-dashboard").addEventListener("click", async () => {
     const items = document.getElementById("project-name").value.split('/');
 

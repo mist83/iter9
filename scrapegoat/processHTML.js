@@ -65,6 +65,8 @@ const processHTML = async (response) => {
         {
             fileDiv.appendChild(fileNameInput);
             fileNameInput.type = "text";
+            fileDiv.dataset.xPath = response.codeBlocks[i].xPath;
+
             fileNameInput.placeholder = "File name";
             fileNameInput.title = response.codeBlocks[i].code;
 

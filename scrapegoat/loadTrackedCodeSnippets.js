@@ -65,32 +65,6 @@ const loadTrackedCodeSnippets = async () => {
                 fileDiv.prepend(trackFileIcon);
 
                 trackFileIcon.classList.add("ti", "ti-rocket");
-                fileDiv.onclick = () => {
-                    const projectNameValue = document.getElementById("project-name").value;
-                    const parts = projectNameValue.split('/');
-
-                    const projectName = parts[0];
-                    const folderName = parts[1];
-
-                    // hack - not even working, just got bored/distracted and need to stop
-                    const xPath = "//body/div[1]";
-
-                    chrome.tabs.query({
-                        active: true, currentWindow: true
-                    }, (tabs) => {
-                        if (tabs.length === 0) return; // No active tab
-                        chrome.tabs.sendMessage(tabs[0].id, {
-                            action: 'scrollToElement',
-                            xPath: xPath
-                        }, async (response) => {
-                            // don't think this works...
-                            //console.log("scrolled to: " + response.xPath);
-                        });
-                    });
-
-                    const fileName = div.innerText;
-                    //chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
-                }
             } else {
                 const trackFileButton = fileDiv.children[0];
                 fileDiv.removeChild(trackFileButton);
@@ -99,6 +73,36 @@ const loadTrackedCodeSnippets = async () => {
                 fileDiv.prepend(trackFileIcon);
 
                 trackFileIcon.classList.add("ti", "ti-check");
+            }
+
+            fileDiv.onclick = () => {
+                const projectNameValue = document.getElementById("project-name").value;
+                const parts = projectNameValue.split('/');
+
+                const projectName = parts[0];
+                const folderName = parts[1];
+
+                // hack - not even working, just got bored/distracted and need to stop
+                const xPath = fileDiv.dataset.xPath;
+
+                chrome.tabs.query({
+                    active: true, currentWindow: true
+                }, (tabs) => {
+                    if (tabs.length === 0) return; // No active tab
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: 'scrollToElement',
+                        xPath: xPath
+                    }, async (response) => {
+                        // don't think this works...
+                        //console.log("scrolled to: " + response.xPath);
+                    });
+                });
+
+                const fileName = div.innerText;
+
+                if (launchable) {
+                    chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+                }
             }
         }
 
