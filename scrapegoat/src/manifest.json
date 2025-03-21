@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ScrapeGOAT",
-  "description": "Copy paste your way to blame or fame",
+  "description": "Copy paste your way to fame or blame",
   "version": "1.0",
   "host_permissions": [
     "<all_urls>"

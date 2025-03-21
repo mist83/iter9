@@ -398,3 +398,6 @@ FodyWeavers.xsd
 *.sln.iml
 .aider*
 *.db*
+scrapegoat/scrapegoat.pem
+scrapegoat/dist
+scrapegoat/build
