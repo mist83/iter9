@@ -17,10 +17,10 @@ const projectNames = [
     'zeon', 'zoysia'
 ];
 
-function randomizeProjectName(projectName) {
+function launchProject() {
+    const projectName = localStorage.getItem("projectName");
     if (!projectName) {
-        var randomProjectName = projectNames[Math.floor(Math.random() * projectNames.length)];
-        projectName = randomProjectName + "/" + (1000 + Math.floor(Math.random() * 10000));;
+        return;
     }
 
     const validateInput = (target) => {
@@ -31,38 +31,68 @@ function randomizeProjectName(projectName) {
             return;
         }
 
+        target.style.color = null;
+
         document.getElementById("graze-button").disabled = false;
         localStorage.setItem("projectName", target.value);
     }
 
-    document.getElementById("project-name").value = projectName;
+    document.getElementById("splash-screen").style.display = "none";
+    document.getElementById("header-bar").style.display = "grid";
+    document.getElementById("code-scrape-screen").style.display = "grid";
+
     document.getElementById("project-name").oninput = (event) => {
         validateInput(event.target);
     }
 
     // should always work, we just set it programmatically
     validateInput(document.getElementById("project-name"))
-
-    localStorage.setItem("projectName", projectName);
 }
 
-document.getElementById("randomize-pasture-name").onclick = (sender) => {
-    randomizeProjectName();
+document.getElementById("randomize-pasture-name").onclick = () => {
+    const projectName = projectNames[Math.floor(Math.random() * projectNames.length)] + "/" + Math.floor(1000 + Math.random() * 9000);
+    document.getElementById("project-name").value = projectName;
+
 }
 
 document.getElementById("graze-button").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "grid";
-    document.getElementById("code-snippet-area").style.display = "grid";
+    document.getElementById("code-scrape-screen").style.display = "grid";
     document.getElementById("close").style.display = "grid";
     document.getElementById("splash-screen").style.display = "none";
 
     document.getElementById("pasture-name").innerText = document.getElementById("project-name").value;
+
+    const projectFullName = document.getElementById("project-name").value;
+    const projectName = projectFullName.split('/')[0];
+    localStorage.setItem("projectName", projectName);
+};
+
+document.getElementById("splash-launch").onclick = (sender) => {
+    const a = document.createElement("a");
+    a.href = "scoop/index.html";
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+};
+
+document.getElementById("settings-button").onclick = (sender) => {
+    document.getElementById("splash-screen").style.display = "none";
+    document.getElementById("settings-screen").style.display = "grid";
+};
+
+document.getElementById("back-button").onclick = (sender) => {
+    document.getElementById("splash-screen").style.display = "grid";
+    document.getElementById("settings-screen").style.display = "none";
 };
 
 document.getElementById("close").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "none";
-    document.getElementById("code-snippet-area").style.display = "none";
+    document.getElementById("code-scrape-screen").style.display = "none";
     document.getElementById("splash-screen").style.display = "grid";
+
+    localStorage.removeItem("projectName");
 };
 
-randomizeProjectName(localStorage.getItem("projectName"));
+launchProject();

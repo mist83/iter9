@@ -1,7 +1,7 @@
 const processHTML = async (response) => {
     console.log(`Inside ${nameof(processHTML)}`, response);
 
-    const content = document.getElementById('code-snippet-area');
+    const content = document.getElementById('code-scrape-screen');
     content.innerHTML = "";
 
     if (!response || response.codeBlocks.length === 0) {

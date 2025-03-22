@@ -98,7 +98,7 @@ const loadTrackedCodeSnippets = async () => {
             }
         }
 
-        const content = document.getElementById('code-snippet-area');
+        const content = document.getElementById('code-scrape-screen');
         content.appendChild(mainContainer);
 
         return data;
