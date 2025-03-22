@@ -8,9 +8,17 @@
 
   <ItemGroup>
     <Compile Remove="cruddite\**" />
+    <Compile Remove="scrapegoat\build\**" />
+    <Compile Remove="scrapegoat\dist\**" />
     <Content Remove="cruddite\**" />
+    <Content Remove="scrapegoat\build\**" />
+    <Content Remove="scrapegoat\dist\**" />
     <EmbeddedResource Remove="cruddite\**" />
+    <EmbeddedResource Remove="scrapegoat\build\**" />
+    <EmbeddedResource Remove="scrapegoat\dist\**" />
     <None Remove="cruddite\**" />
+    <None Remove="scrapegoat\build\**" />
+    <None Remove="scrapegoat\dist\**" />
   </ItemGroup>
 
   <ItemGroup>

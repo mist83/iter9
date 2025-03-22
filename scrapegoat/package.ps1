@@ -39,14 +39,6 @@ New-Item -ItemType Directory -Path $UnpackedDir | Out-Null
 Write-Host "Copying files to build directory..."
 Copy-Item -Path "$SrcDir\*" -Destination $BuildDir -Recurse -Force
 
-# (Optional) Minify JavaScript
-Write-Host "Minifying JavaScript files..."
-Get-ChildItem -Path $BuildDir -Filter "*.js" -Recurse | ForEach-Object {
-    $fileContent = Get-Content $_.FullName -Raw
-    $minifiedContent = $fileContent -replace "\s+", " "  # Simple minify (remove excessive spaces)
-    Set-Content -Path $_.FullName -Value $minifiedContent
-}
-
 # (Optional) Modify manifest.json for production
 $manifestPath = "$BuildDir\manifest.json"
 if (Test-Path $manifestPath) {

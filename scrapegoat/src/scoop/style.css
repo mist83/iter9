@@ -309,6 +309,7 @@ iframe {
     color: var(--background-medium);
     cursor: pointer;
 }
+
     #rename-project:hover {
-        color: var(--primary-color) ;
+        color: var(--primary-color);
     }

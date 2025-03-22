@@ -38,20 +38,23 @@ function setProjectName(projectName) {
     localStorage.setItem("projectName", projectName);
 }
 
-document.getElementById("randomize").onclick = (sender) => {
-    if (!confirm("Randomize project name?")) {
+document.getElementById("new-project").onclick = (sender) => {
+    if (!confirm("Create new project name?")) {
         return;
     }
 
     setProjectName();
 
-    sender.target.parentElement.style.display = "none";
+    document.getElementById("header-bar").style.display = "grid";
+    document.getElementById("code-snippet-area").style.display = "grid";
     document.getElementById("close").style.display = "grid";
+    document.getElementById("splash-screen").style.display = "none";
 };
 
 document.getElementById("close").onclick = (sender) => {
-    sender.target.parentElement.style.display = "none";
-    document.getElementById("randomize").style.display = "grid";
+    document.getElementById("header-bar").style.display = "none";
+    document.getElementById("code-snippet-area").style.display = "none";
+    document.getElementById("splash-screen").style.display = "grid";
 };
 
 setProjectName(localStorage.getItem("projectName"));

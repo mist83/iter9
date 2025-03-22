@@ -7,7 +7,6 @@
     "<all_urls>"
   ],
   "permissions": [
-    "tabs",
     "activeTab",
     "storage"
   ],

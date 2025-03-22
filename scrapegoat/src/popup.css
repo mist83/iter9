@@ -54,9 +54,9 @@ input[type="text"] {
     padding: 4px;
 }
 
-input[type="text"]:focus {
-    color: var(--primary-color);
-}
+    input[type="text"]:focus {
+        color: var(--primary-color);
+    }
 
 #code-snippet-area {
     margin-top: 80px;
@@ -133,4 +133,17 @@ input[type="text"]:focus {
     ::-webkit-scrollbar-thumb:hover {
         /*background: linear-gradient(180deg, var(--background-color), var(--background-medium));*/
         background-color: var(--background-lightest);
+    }
+
+#splash-screen {
+    width: 320px;
+    height: 240px;
+    display: none;
+    padding: 48px;
+}
+
+    #splash-screen div {
+        align-self: center;
+        gap: 48px;
+        align-items: center;
     }

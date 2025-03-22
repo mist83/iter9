@@ -14,14 +14,19 @@
             <i class="ti ti-dots"></i>
         </button>
         <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
-        <button id="randomize" title="Generate a random pasture (project name/folder)" style="display: none;">
-            <i class="ti ti-tractor"></i>
-        </button>
         <button id="close" title="Close">
             <i class="ti ti-x"></i>
         </button>
     </div>
     <div id="code-snippet-area"></div>
+    <div id="splash-screen">
+        <div style="display: grid; grid-template: 1fr / auto 1fr;">
+            <button id="new-project" title="Generate">
+                <i class="ti ti-tractor"></i>
+            </button>
+            <span>Begin grazing</span>
+        </div>
+    </div>
     <!--<script src="scoop/app/framework/alert.js"></script>-->
     <script src="scoop/app/framework/nameof.js"></script>
     <script src="projectNaming.js"></script>
