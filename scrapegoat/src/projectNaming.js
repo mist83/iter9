@@ -32,8 +32,6 @@ function randomizeProjectName(projectName) {
         }
 
         document.getElementById("graze-button").disabled = false;
-
-        target.style.color = "var(--text-light)";
         localStorage.setItem("projectName", target.value);
     }
 
