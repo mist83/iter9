@@ -10,21 +10,25 @@
 </head>
 <body>
     <div id="header-bar">
-        <button id="view-dashboard" title="View details">
-            <i class="ti ti-dots"></i>
-        </button>
-        <input id="project-name" title="Project name / folder" type="text" placeholder="Project name / folder" value="<something is broken>" />
-        <button id="close" title="Close">
+        <div id="pasture-name"></div>
+        <button id="close" title="Finish grazing">
             <i class="ti ti-x"></i>
         </button>
     </div>
     <div id="code-snippet-area"></div>
     <div id="splash-screen">
-        <div style="display: grid; grid-template: 1fr / auto 1fr;">
-            <button id="new-project" title="Generate">
+        <div id="splash-header">ScrapeGOAT</div>
+        <div id="new-pasture" style="display: grid; grid-template: 1fr / 1fr auto;">
+            <input id="project-name" title="Enter a unique pasture name / ID" type="text" placeholder="Pasture name / ID" value="<something is broken>" />
+            <button id="graze-button" title="Start grazing">
                 <i class="ti ti-tractor"></i>
             </button>
-            <span>Begin grazing</span>
+        </div>
+        <div style="display: grid; place-self: stretch; grid-auto-flow: column; place-items: center;">
+            <i id="randomize-pasture-name" class="ti ti-refresh" title="Randomize name"></i>
+            <a id="splash-launch" href="scoop/index.html" target="_blank" title="View all pastures">
+                <i class="ti ti-fence"></i>
+            </a>
         </div>
     </div>
     <!--<script src="scoop/app/framework/alert.js"></script>-->
@@ -34,5 +38,6 @@
     <script src="scoop/app/functions/sendMessageToActiveTab.js"></script>
     <script src="loadTrackedCodeSnippets.js"></script>
     <script src="popup.js"></script>
+    <script src="scoop/splash.js"></script>
 </body>
 </html>

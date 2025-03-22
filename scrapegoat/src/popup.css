@@ -4,9 +4,13 @@ html {
 
 body {
     width: 320px;
+    min-height: 240px;
+    display: grid;
+    margin: 0;
     padding: 4px;
     padding-bottom: 4px;
 }
+
 
 .warning {
     font-style: italic;
@@ -28,12 +32,12 @@ button {
 }
 
 #header-bar {
+    display: none;
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
-    display: grid;
-    grid-template: 1fr / auto 1fr auto;
+    grid-template: 1fr / 1fr auto;
     gap: 8px;
     padding: 8px;
     border-bottom: 2px solid var(--background-lightest);
@@ -60,6 +64,7 @@ input[type="text"] {
 
 #code-snippet-area {
     margin-top: 80px;
+    display: none;
 }
 
 .ti {
@@ -136,14 +141,86 @@ input[type="text"] {
     }
 
 #splash-screen {
-    width: 320px;
-    height: 240px;
-    display: none;
-    padding: 48px;
+    display: grid;
+    grid-template: auto 1fr auto / 1fr;
+    padding: 12px;
+    justify-items: center;
+    user-select: none;
 }
 
     #splash-screen div {
         align-self: center;
-        gap: 48px;
+        gap: 4px;
         align-items: center;
+        justify-items: center;
+    }
+
+
+#splash-header {
+    font-size: 48px;
+    color: var(--text-color);
+    transition: 2000ms all ease-in-out;
+}
+
+    #splash-header:hover {
+        color: var(--primary-color);
+    }
+
+#randomize-pasture-name {
+    color: var(--text-color);
+}
+
+    #randomize-pasture-name:hover {
+        color: var(--primary-color);
+    }
+
+#new-pasture {
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+/*    #new-pasture:hover {
+        color: var(--title-hover-color);
+        border: 2px solid var(--primary-color);
+    }
+*/
+#project-name {
+    border: 2px solid var(--text-color);
+    padding: 10px;
+}
+
+    #project-name:hover {
+        border: 2px solid var(--primary-color);
+    }
+
+    #project-name:focus {
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+    }
+
+#splash-launch {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 10px;
+}
+
+    #splash-launch:hover {
+        color: var(--primary-color);
+    }
+
+#pasture-name {
+    display: grid;
+    align-self: center;
+    color: var(--text-color);
+    font-size: 24px;
+}
+
+#graze-button:disabled {
+    background-color: var(--background-color-error);
+}
+
+    #graze-button:disabled i {
+        /*color: var(--text-error);*/
     }

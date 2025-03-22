@@ -13,42 +13,52 @@ const projectNames = [
     'rough', 'rye', 'sahara', 'saint', 'salt', 'sand', 'scribner', 'seashore', 'sheep',
     'sharpblue', 'sideoats', 'signal', 'silver', 'slender', 'slough', 'spike', 'suborbital',
     'sugarcane', 'switch', 'Tahoma', 'tall', 'texas', 'thin', 'timothy', 'tifton',
-    'tifway', 'tifTuf', 'turf-type', 'velvet', 'virginia', 'water', 'weeping', 'wheat',
-    'witch', 'yellow', 'zeon', 'zoysia'
+    'tifway', 'turf', 'velvet', 'virginia', 'water', 'weeping', 'wheat', 'witch', 'yellow',
+    'zeon', 'zoysia'
 ];
 
-function setProjectName(projectName) {
+function randomizeProjectName(projectName) {
     if (!projectName) {
         var randomProjectName = projectNames[Math.floor(Math.random() * projectNames.length)];
         projectName = randomProjectName + "/" + (1000 + Math.floor(Math.random() * 10000));;
     }
 
-    document.getElementById("project-name").value = projectName;
-    document.getElementById("project-name").oninput = (event) => {
-        const isValid = /^[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+$/.test(event.target.value);
+    const validateInput = (target) => {
+        const isValid = /^[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+$/.test(target.value);
         if (!isValid) {
-            event.target.style.color = "red";
+            target.style.color = "red";
+            document.getElementById("graze-button").disabled = true;
             return;
         }
 
-        event.target.style.color = "var(--text-light)";
-        localStorage.setItem("projectName", event.target.value);
+        document.getElementById("graze-button").disabled = false;
+
+        target.style.color = "var(--text-light)";
+        localStorage.setItem("projectName", target.value);
     }
+
+    document.getElementById("project-name").value = projectName;
+    document.getElementById("project-name").oninput = (event) => {
+        validateInput(event.target);
+    }
+
+    // should always work, we just set it programmatically
+    validateInput(document.getElementById("project-name"))
 
     localStorage.setItem("projectName", projectName);
 }
 
-document.getElementById("new-project").onclick = (sender) => {
-    if (!confirm("Create new project name?")) {
-        return;
-    }
+document.getElementById("randomize-pasture-name").onclick = (sender) => {
+    randomizeProjectName();
+}
 
-    setProjectName();
-
+document.getElementById("graze-button").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "grid";
     document.getElementById("code-snippet-area").style.display = "grid";
     document.getElementById("close").style.display = "grid";
     document.getElementById("splash-screen").style.display = "none";
+
+    document.getElementById("pasture-name").innerText = document.getElementById("project-name").value;
 };
 
 document.getElementById("close").onclick = (sender) => {
@@ -57,4 +67,4 @@ document.getElementById("close").onclick = (sender) => {
     document.getElementById("splash-screen").style.display = "grid";
 };
 
-setProjectName(localStorage.getItem("projectName"));
+randomizeProjectName(localStorage.getItem("projectName"));

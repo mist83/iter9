@@ -6,13 +6,17 @@
     --tertiary-color: springgreen;
     --primary-hover-background-color: dodgerblue;
     --primary-hover-color: white;
-
+    --text-color: white;
+    --title-hover-color: dodgerblue;
     --secondary-hover-bg: pink;
     --tertiary-hover-bg: green;
     --border-color: lightgray;
     --default-text: #222;
     --text-light: lightgray;
     --text-warning: lightgray;
+    --text-disabled: lightgray;
+    --text-error: red;
+    --background-color-error: red;
     --text-medium: lightgray;
     --scrollbar-width: 10px;
     --scrollbar-thumb-bg: lightgray;

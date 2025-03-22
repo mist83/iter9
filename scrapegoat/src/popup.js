@@ -55,15 +55,6 @@ const saveFile = async (only) => {
     }
 };
 
-document.getElementById("view-dashboard").addEventListener("click", async () => {
-    const items = document.getElementById("project-name").value.split('/');
-
-    const projectName = items[0];
-    const folderName = items[1];
-
-    chrome.tabs.create({ url: `scoop/index.html?project=${projectName}&folderName=${folderName}` });
-});
-
 const showSplashScreen = async () => {
     alert("splash");
 }
@@ -90,9 +81,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         const codeFound = await processHTML(response);
 
         if (codeFound) {
-            document.body.style.height = "unset";
             await loadTrackedCodeSnippets();
         }
-
     });
 });

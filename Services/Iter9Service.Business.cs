@@ -148,7 +148,7 @@ public partial class Iter9Service
             var response = await s3Client.ListObjectsV2Async(request);
             continuationToken = response.NextContinuationToken;
 
-            // Regex pattern to match "xxxxx/yyyyyyy.zzz"
+            // Regex pattern to match "xxxxx/yyyyy"
             var validPattern = new Regex(@"^[^/]+/[^/]+/[^/]+\.[^/]+$");
 
             // Filter out anomalous files
