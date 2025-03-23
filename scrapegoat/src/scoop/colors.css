@@ -2,13 +2,13 @@
 :root {
     --background-color: #111;
     --input-background-color: #222;
-    --primary-color: dodgerblue;
-    --secondary-color: deeppink;
-    --tertiary-color: springgreen;
-    --primary-hover-background-color: dodgerblue;
+    --primary-color: mediumseagreen;
+    --secondary-color: lime;
+    --tertiary-color: mediumseagreen;
+    --primary-hover-background-color: mediumseagreen;
     --primary-hover-color: white;
     --text-color: white;
-    --title-hover-color: dodgerblue;
+    --title-hover-color: mediumseagreen;
     --secondary-hover-bg: pink;
     --tertiary-hover-bg: green;
     --border-color: lightgray;

@@ -18,18 +18,23 @@ const projectNames = [
 ];
 
 function setupSplashScreen() {
+    document.getElementById("project-name").value = localStorage.getItem("projectName");
+
     document.getElementById("project-name").oninput = (event) => {
         validateInput(event.target);
     }
 }
 
 function launchProject() {
-    const projectName = localStorage.getItem("projectName");
-    if (!projectName) {
+    const fullPastureName = localStorage.getItem("activeProjectName");
+    if (!fullPastureName) {
         return;
     }
 
-    document.getElementById("pasture-name").innerText = projectName;
+    document.getElementById("pasture-name").innerText = fullPastureName;
+    const parts = fullPastureName.split('/');
+    const pastureName = parts[0];
+    document.getElementById("pasture-name").href = `/scoop/index.html?project=${pastureName}`;
 
     document.getElementById("splash-screen").style.display = "none";
     document.getElementById("header-bar").style.display = "grid";
@@ -49,6 +54,7 @@ const validateInput = (target) => {
     console.log("VALID!");
     target.style.color = null;
 
+    localStorage.setItem("projectName", target.value);
     document.getElementById("graze-button").disabled = false;
 }
 
@@ -63,14 +69,12 @@ document.getElementById("randomize-pasture-name").onclick = () => {
 document.getElementById("graze-button").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "grid";
     document.getElementById("code-scrape-screen").style.display = "grid";
-    document.getElementById("close").style.display = "grid";
     document.getElementById("splash-screen").style.display = "none";
 
-    document.getElementById("pasture-name").innerText = document.getElementById("project-name").value;
-
-    const projectFullName = document.getElementById("project-name").value;
-    const projectName = projectFullName.split('/')[0];
-    localStorage.setItem("projectName", projectName);
+    const pastureName = document.getElementById("project-name").value;
+    document.getElementById("pasture-name").innerText = pastureName;
+    localStorage.setItem("projectName", pastureName);
+    localStorage.setItem("activeProjectName", pastureName);
 };
 
 document.getElementById("splash-launch").onclick = (sender) => {
@@ -92,12 +96,14 @@ document.getElementById("back-button").onclick = (sender) => {
     document.getElementById("settings-screen").style.display = "none";
 };
 
-document.getElementById("close").onclick = (sender) => {
+document.getElementById("close-pasture").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "none";
     document.getElementById("code-scrape-screen").style.display = "none";
     document.getElementById("splash-screen").style.display = "grid";
+    document.getElementById("project-name").value = document.getElementById("pasture-name").innerText;
 
-    localStorage.removeItem("projectName");
+    localStorage.setItem("projectName", localStorage.getItem("projectName"));
+    localStorage.removeItem("activeProjectName");
 };
 
 setupSplashScreen();

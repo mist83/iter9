@@ -94,7 +94,7 @@ const loadTrackedCodeSnippets = async () => {
                 const fileName = div.innerText;
 
                 if (launchable) {
-                    chrome.tabs.create({ url: `${urlBase}/${projectName}/${folderName}/${fileName}` });
+                    chrome.tabs.create({ url: `${urlBase}/iter9/${projectName}/${folderName}/${fileName}` });
                 }
             }
         }

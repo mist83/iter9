@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="./popup.css" />
 </head>
 <body>
-    <div id="header-bar">
-        <button id="close" title="Finish grazing">
-            <i class="ti ti-arrow-back-up"></i>
-        </button>
-        <a id="pasture-name" href=""></a>
-    </div>
     <div id="splash-screen">
         <div id="splash-header">ScrapeGOAT</div>
         <div id="new-pasture" class="input-container">
@@ -20,19 +14,23 @@
             <input id="project-name" title="A unique name for your code" type="text" placeholder="Pasture name / ID" />
         </div>
         <div style="display: grid; place-self: stretch; grid-auto-flow: column; place-items: center;">
-            <i id="settings-button" class="ti ti-dots icon-button" title="Settings"></i>
-            <i id="graze-button" class="ti ti-tractor icon-button-dark" title="Start grazing"></i>
+            <i id="settings-button" class="ti ti-settings icon-button" title="Settings"></i>
+            <i id="graze-button" class="ti ti-tractor icon-button icon-button-dark" title="Start"></i>
         </div>
     </div>
     <div id="settings-screen">
         <div id="settings-header">Settings</div>
         <div id="server-url" style="display: grid; grid-template: 1fr / 1fr auto; gap: 4px;">
-            <input id="server-url-input" title="P" type="text" placeholder="Server URL" value="https://localhost:1234" />
+            <input id="server-url-input" title="Server URL" type="text" placeholder="Server URL" value="https://localhost:1234" />
         </div>
         <div style="display: grid; place-self: stretch; grid-auto-flow: column; place-items: center;">
             <i id="back-button" class="ti ti-arrow-back-up icon-button" title="Back"></i>
-            <i id="splash-launch" class="ti ti-brand-github icon-button" title="About"></i>
+            <i id="splash-launch" class="ti ti-dots icon-button" title="Directory"></i>
         </div>
+    </div>
+    <div id="header-bar">
+        <i id="close-pasture" title="Back" class="ti ti-arrow-back-up icon-button"></i>
+        <a id="pasture-name" href="#" target="_blank" title="View scrape dashboard"></a>
     </div>
     <div id="code-scrape-screen">
     </div>

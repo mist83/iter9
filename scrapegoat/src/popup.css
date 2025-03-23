@@ -50,12 +50,9 @@ input[type="text"] {
     border: none;
     background-color: var(--input-background-color);
     width: 100%;
-    /*min-width: 160px;*/
     box-sizing: border-box; /* Ensures padding does not break the layout */
     overflow: hidden;
-    resize: horizontal; /* This allows horizontal resizing by the user */
     outline: none;
-    padding: 4px;
 }
 
     input[type="text"]:focus {
@@ -63,7 +60,8 @@ input[type="text"] {
     }
 
 #code-scrape-screen {
-    margin-top: 80px;
+    margin: 12px;
+    margin-top: 64px;
     display: none;
 }
 
@@ -166,19 +164,20 @@ input[type="text"] {
 .icon-button {
     color: var(--text-color);
     cursor: pointer;
+    transition: 200ms all ease-in-out;
 }
 
     .icon-button:hover {
         color: var(--primary-color);
+        transform: scale(1.2);
     }
 
 .icon-button-dark {
-    color: var(--text-color);
-    cursor: pointer;
+    color: var(--primary-color);
 }
 
     .icon-button-dark:hover {
-        color: var(--primary-color);
+        color: var(--secondary-color);
     }
 
 #new-pasture {
@@ -188,9 +187,21 @@ input[type="text"] {
     padding: 4px;
 }
 
-#server-url {
-    padding: 4px;
+#server-url-input {
+    border: 2px solid var(--text-color);
+    padding: 10px 10px 10px 40px;
+    font-size: 24px;
+    padding-left: 44px;
 }
+
+    #server-url-input:hover {
+        border: 2px solid var(--primary-color);
+    }
+
+    #server-url-input:focus {
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+    }
 
 #server-url-input {
     border: 2px solid var(--text-color);
@@ -214,12 +225,10 @@ input[type="text"] {
 }
 
 #project-name {
-    width: 100%;
     border: 2px solid var(--text-color);
-    padding: 10px 10px 10px 40px; /* right padding for icon */
+    padding: 10px 10px 10px 40px;
     font-size: 24px;
     padding-left: 44px;
-    box-sizing: border-box;
 }
 
     #project-name:hover {
@@ -240,7 +249,8 @@ input[type="text"] {
 
 #pasture-name {
     display: grid;
-    place-self: center;
+    padding-left: 8px;
+    align-self: center;
     color: var(--text-color);
     text-decoration: none;
     font-size: 28px;
@@ -266,6 +276,7 @@ input[type="text"] {
 
 #settings-screen {
     display: none;
+    justify-items: center;
     padding: 12px;
     grid-template: auto 1fr auto / 1fr;
     place-items: center;

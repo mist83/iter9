@@ -1,4 +1,4 @@
-const urlBase = localStorage.getItem("scrapegoat:url");
+const urlBase = localStorage.getItem("scrapegoat:url") + "/iter9";
 
 document.addEventListener("DOMContentLoaded", async function () {
     const grid = document.getElementById("grid");
