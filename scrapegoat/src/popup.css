@@ -37,7 +37,7 @@ button {
     left: 0;
     right: 0;
     top: 0;
-    grid-template: 1fr / 1fr auto;
+    grid-template: 1fr / auto 1fr;
     gap: 8px;
     padding: 8px;
     border-bottom: 2px solid var(--background-lightest);
@@ -48,7 +48,7 @@ input[type="text"] {
     font-size: 24px;
     color: var(--text-light);
     border: none;
-    background-color: var(--background-color);
+    background-color: var(--input-background-color);
     width: 100%;
     /*min-width: 160px;*/
     box-sizing: border-box; /* Ensures padding does not break the layout */
@@ -163,30 +163,21 @@ input[type="text"] {
     color: var(--text-color);
 }
 
-#randomize-pasture-name {
+.icon-button {
     color: var(--text-color);
     cursor: pointer;
 }
 
-    #randomize-pasture-name:hover {
+    .icon-button:hover {
         color: var(--primary-color);
     }
 
-#settings-button {
+.icon-button-dark {
     color: var(--text-color);
     cursor: pointer;
 }
 
-    #settings-button:hover {
-        color: var(--primary-color);
-    }
-
-#back-button {
-    color: var(--text-color);
-    cursor: pointer;
-}
-
-    #back-button:hover {
+    .icon-button-dark:hover {
         color: var(--primary-color);
     }
 
@@ -216,9 +207,19 @@ input[type="text"] {
     }
 
 
+.input-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
 #project-name {
+    width: 100%;
     border: 2px solid var(--text-color);
-    padding: 10px;
+    padding: 10px 10px 10px 40px; /* right padding for icon */
+    font-size: 24px;
+    padding-left: 44px;
+    box-sizing: border-box;
 }
 
     #project-name:hover {
@@ -229,6 +230,13 @@ input[type="text"] {
         color: var(--primary-color);
         border: 2px solid var(--primary-color);
     }
+
+#randomize-pasture-name {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+}
 
 #pasture-name {
     display: grid;
@@ -244,12 +252,8 @@ input[type="text"] {
     }
 
 #graze-button:disabled {
-    background-color: var(--background-color-error);
+    color: var(--error-color) !important;
 }
-
-    #graze-button:disabled i {
-        /*color: var(--text-error);*/
-    }
 
 #settings {
     color: var(--text-color);

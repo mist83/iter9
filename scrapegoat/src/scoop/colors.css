@@ -1,6 +1,7 @@
 /*popup, all*/
 :root {
-    --background-color: #222;
+    --background-color: #111;
+    --input-background-color: #222;
     --primary-color: dodgerblue;
     --secondary-color: deeppink;
     --tertiary-color: springgreen;
@@ -16,7 +17,7 @@
     --text-warning: lightgray;
     --text-disabled: lightgray;
     --text-error: red;
-    --background-color-error: red;
+    --error-color: red;
     --text-medium: lightgray;
     --scrollbar-width: 10px;
     --scrollbar-thumb-bg: lightgray;

@@ -12,10 +12,16 @@ const projectNames = [
     'prairie', 'princess', 'purpletop', 'quack', 'red', 'reed', 'rescue', 'rhodes',
     'rough', 'rye', 'sahara', 'saint', 'salt', 'sand', 'scribner', 'seashore', 'sheep',
     'sharpblue', 'sideoats', 'signal', 'silver', 'slender', 'slough', 'spike', 'suborbital',
-    'sugarcane', 'switch', 'Tahoma', 'tall', 'texas', 'thin', 'timothy', 'tifton',
+    'sugarcane', 'switch', 'tahoma', 'tall', 'texas', 'thin', 'timothy', 'tifton',
     'tifway', 'turf', 'velvet', 'virginia', 'water', 'weeping', 'wheat', 'witch', 'yellow',
     'zeon', 'zoysia'
 ];
+
+function setupSplashScreen() {
+    document.getElementById("project-name").oninput = (event) => {
+        validateInput(event.target);
+    }
+}
 
 function launchProject() {
     const projectName = localStorage.getItem("projectName");
@@ -25,36 +31,33 @@ function launchProject() {
 
     document.getElementById("pasture-name").innerText = projectName;
 
-    const validateInput = (target) => {
-        const isValid = /^[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+$/.test(target.value);
-        if (!isValid) {
-            target.style.color = "red";
-            document.getElementById("graze-button").disabled = true;
-            return;
-        }
-
-        target.style.color = null;
-
-        document.getElementById("graze-button").disabled = false;
-        localStorage.setItem("projectName", target.value);
-    }
-
     document.getElementById("splash-screen").style.display = "none";
     document.getElementById("header-bar").style.display = "grid";
     document.getElementById("code-scrape-screen").style.display = "grid";
+}
 
-    document.getElementById("project-name").oninput = (event) => {
-        validateInput(event.target);
+const validateInput = (target) => {
+    const isValid = /^[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+$/.test(target.value);
+    if (!isValid) {
+        target.style.color = "red";
+        document.getElementById("graze-button").disabled = true;
+        console.error("INVALID!");
+
+        return;
     }
 
-    // should always work, we just set it programmatically
-    validateInput(document.getElementById("project-name"))
+    console.log("VALID!");
+    target.style.color = null;
+
+    document.getElementById("graze-button").disabled = false;
 }
 
 document.getElementById("randomize-pasture-name").onclick = () => {
     const projectName = projectNames[Math.floor(Math.random() * projectNames.length)] + "/" + Math.floor(1000 + Math.random() * 9000);
     document.getElementById("project-name").value = projectName;
 
+    // should always work, we just set it programmatically
+    validateInput(document.getElementById("project-name"))
 }
 
 document.getElementById("graze-button").onclick = (sender) => {
@@ -97,4 +100,5 @@ document.getElementById("close").onclick = (sender) => {
     localStorage.removeItem("projectName");
 };
 
+setupSplashScreen();
 launchProject();
