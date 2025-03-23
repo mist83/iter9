@@ -18,11 +18,19 @@ const projectNames = [
 ];
 
 function setupSplashScreen() {
-    document.getElementById("project-name").value = localStorage.getItem("projectName");
+    const splashHeaderLink = document.getElementById("splash-header");
+    splashHeaderLink.setAttribute("tabindex", "-1");
 
-    document.getElementById("project-name").oninput = (event) => {
+    const projectNameInput = document.getElementById("project-name");
+    projectNameInput.value = localStorage.getItem("projectName");
+    projectNameInput.oninput = (event) => {
         validateInput(event.target);
     }
+
+    document.getElementById("graze-button").setAttribute("tabindex", "2");
+
+    const randomizePastureNameButton = document.getElementById("randomize-pasture-name");
+    randomizePastureNameButton.setAttribute("tabindex", "3");
 }
 
 function launchProject() {

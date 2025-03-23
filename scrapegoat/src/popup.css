@@ -1,3 +1,7 @@
+i {
+    transition: all 200ms ease-in-out;
+}
+
 html {
     background-color: var(--background-color);
 }
@@ -59,6 +63,11 @@ input[type="text"] {
         color: var(--primary-color);
     }
 
+input::selection {
+    background: var(--primary-color);
+    color: var(--input-background-color);
+}
+
 #code-scrape-screen {
     margin: 12px;
     margin-top: 64px;
@@ -72,7 +81,6 @@ input[type="text"] {
 .track-file {
     color: var(--primary-hover-background-color);
     cursor: pointer;
-    transition: 200ms all ease-in-out;
 }
 
     .track-file:hover {
@@ -101,7 +109,6 @@ input[type="text"] {
     color: var(--primary-color);
     padding-left: 8px;
     cursor: pointer;
-    transition: 200ms all ease-in-out;
 }
 
     .tracked-file:hover {
@@ -170,7 +177,6 @@ input[type="text"] {
 .icon-button {
     color: var(--text-color);
     cursor: pointer;
-    transition: 200ms all ease-in-out;
 }
 
     .icon-button:hover {
@@ -178,12 +184,10 @@ input[type="text"] {
         transform: scale(1.5) translateY(-4px);
     }
 
-.icon-button-dark {
-    color: var(--primary-color);
-}
-
-    .icon-button-dark:hover {
-        color: var(--secondary-color);
+    .icon-button:focus {
+        outline: none;
+        color: var(--keyboard-selected-button-color);
+        transform: scale(1.5) translateY(-4px);
     }
 
 #new-pasture {
