@@ -154,7 +154,13 @@ input[type="text"] {
 #splash-header {
     font-size: 44px;
     color: var(--text-color);
+    text-decoration: none;
 }
+
+    #splash-header:hover {
+        color: var(--primary-color);
+        text-decoration: underline;
+    }
 
 #settings-header {
     font-size: 44px;
@@ -169,7 +175,7 @@ input[type="text"] {
 
     .icon-button:hover {
         color: var(--primary-color);
-        transform: scale(1.2);
+        transform: scale(1.5) translateY(-4px);
     }
 
 .icon-button-dark {
