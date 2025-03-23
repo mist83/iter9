@@ -1,8 +1,5 @@
 console.log("Popup opened");
 
-const urlBase = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/iter9";
-//const urlBase = https://localhost:7171/iter9;
-
 const allCodeBlocks = [];
 
 const saveFile = async (only) => {
@@ -85,3 +82,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
         }
     });
 });
+
+//const urlBase = https://localhost:7171/iter9;
+
+const urlBase = localStorage.getItem("scrapegoat:url");
+document.getElementById("server-url-input").value = urlBase;

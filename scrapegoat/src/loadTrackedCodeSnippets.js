@@ -1,7 +1,8 @@
 const loadTrackedCodeSnippets = async () => {
     const fullProjectName = localStorage.getItem("projectName");
 
-    const url = `https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/Iter9/${fullProjectName}`;
+    var base = localStorage.getItem("scrapegoat:url")
+    const url = `${urlBase}/Iter9/${fullProjectName}`;
 
     try {
         const response = await fetch(url, {

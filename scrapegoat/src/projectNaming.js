@@ -23,6 +23,8 @@ function launchProject() {
         return;
     }
 
+    document.getElementById("pasture-name").innerText = projectName;
+
     const validateInput = (target) => {
         const isValid = /^[a-zA-Z0-9_]+\/[a-zA-Z0-9_]+$/.test(target.value);
         if (!isValid) {

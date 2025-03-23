@@ -1,4 +1,4 @@
-const urlBase = "https://zrihfe7jqvlhlyrrh5lznnsbc40llfui.lambda-url.us-west-2.on.aws/iter9";
+const urlBase = localStorage.getItem("scrapegoat:url");
 
 document.addEventListener("DOMContentLoaded", async function () {
     const grid = document.getElementById("grid");
