@@ -1,185 +1,122 @@
+const createTrackedScrapeElement = (codeBlock, suffix) => {
+    const template = document.getElementById("scraped-item-template");
+    const clone = template.content.cloneNode(true);
+    const fileDiv = clone.querySelector(".untracked-file");
+
+    const fileNameInput = fileDiv.querySelector("input");
+    const trackFileButton = fileDiv.querySelector(".track-file");
+
+    // Set xPath and title
+    fileDiv.dataset.xPath = codeBlock.xPath;
+    fileNameInput.placeholder = "File name";
+    fileNameInput.title = codeBlock.code;
+
+    // Focus scroll event
+    fileNameInput.addEventListener("focus", async () => {
+        console.log("Input was focused!");
+
+        await sendMessageToActiveTab({
+            action: 'scrollToElement',
+            xPath: codeBlock.xPath
+        });
+    });
+
+    // Determine file name
+    const type = codeBlock.type.toLowerCase();
+    const fileNames = {
+        html: `index${suffix}.html`, css: `styles${suffix}.css`,
+        c: `main${suffix}.c`, cpp: `main${suffix}.cpp`, "c++": `main${suffix}.cpp`, cxx: `main${suffix}.cpp`,
+        csharp: `class${suffix}.cs`, cs: `class${suffix}.cs`,
+        java: `Main${suffix}.java`,
+        javascript: `script${suffix}.js`, js: `script${suffix}.js`,
+        json: `data${suffix}.json`, typescript: `script${suffix}.ts`, ts: `script${suffix}.ts`,
+        python: `script${suffix}.py`, py: `script${suffix}.py`,
+        php: `index${suffix}.php`, ruby: `script${suffix}.rb`, rb: `script${suffix}.rb`,
+        swift: `main${suffix}.swift`, kotlin: `Main${suffix}.kt`, kt: `Main${suffix}.kt`,
+        go: `main${suffix}.go`, golang: `main${suffix}.go`,
+        rust: `main${suffix}.rs`, rs: `main${suffix}.rs`,
+        bash: `script${suffix}.sh`, sh: `script${suffix}.sh`,
+        sql: `query${suffix}.sql`, r: `script${suffix}.r`, perl: `script${suffix}.pl`, pl: `script${suffix}.pl`,
+        lua: `script${suffix}.lua`, dart: `main${suffix}.dart`,
+        scala: `Main${suffix}.scala`, "objective-c": `main${suffix}.m`, objc: `main${suffix}.m`, m: `main${suffix}.m`,
+        haskell: `Main${suffix}.hs`, hs: `Main${suffix}.hs`,
+        julia: `script${suffix}.jl`, elixir: `script${suffix}.ex`,
+        fortran: `main${suffix}.f90`, f90: `main${suffix}.f90`, f95: `main${suffix}.f90`, f77: `main${suffix}.f90`,
+        cobol: `program${suffix}.cbl`, cbl: `program${suffix}.cbl`,
+        pascal: `program${suffix}.pas`, p: `program${suffix}.pas`,
+        zsh: `script${suffix}.zsh`, assembly: `program${suffix}.asm`, asm: `program${suffix}.asm`,
+        prolog: `program${suffix}.plg`, plg: `program${suffix}.plg`,
+        smalltalk: `program${suffix}.st`, st: `program${suffix}.st`,
+        fsharp: `script${suffix}.fs`, fs: `script${suffix}.fs`,
+        lisp: `script${suffix}.lisp`, "common-lisp": `script${suffix}.lisp`, cl: `script${suffix}.lisp`,
+        scheme: `script${suffix}.scm`, scm: `script${suffix}.scm`,
+        racket: `script${suffix}.rkt`, rkt: `script${suffix}.rkt`,
+        tcl: `script${suffix}.tcl`, ocaml: `script${suffix}.ml`, ml: `script${suffix}.ml`,
+        j: `script${suffix}.ijs`, brainfuck: `program${suffix}.bf`, bf: `program${suffix}.bf`,
+        xslt: `template${suffix}.xsl`, xsl: `template${suffix}.xsl`,
+        yaml: `config${suffix}.yaml`, yml: `config${suffix}.yaml`
+    };
+
+    fileNameInput.value = fileNames[type] || `file${suffix}.txt`;
+
+    // Click event
+    trackFileButton.onclick = async () => {
+        const fileName = fileNameInput.value;
+        await saveFile(fileName, codeBlock);
+
+        const checkIcon = document.createElement("i");
+        checkIcon.classList.add("ti", "ti-check");
+        trackFileButton.parentElement.prepend(checkIcon);
+
+        fileDiv.classList.remove("untracked-file");
+        fileDiv.classList.add("tracked-file");
+
+        trackFileButton.remove();
+    };
+
+    // Return both DOM node and input for tracking
+    return { fileDiv, fileNameInput };
+};
+
 const processHTML = async (response) => {
     console.log(`Inside ${nameof(processHTML)}`, response);
 
     const content = document.getElementById('code-scrape-screen');
     content.innerHTML = "";
 
-    if (!response || response.codeBlocks.length === 0) {
-        return;
-    }
+    if (!response || response.codeBlocks.length === 0) return;
 
     const mainContainer = document.createElement('div');
-
     const gridContainer = document.createElement('div');
     mainContainer.appendChild(gridContainer);
+
     gridContainer.style.display = 'grid';
     gridContainer.style.gridTemplateColumns = '1fr';
     gridContainer.style.width = '100%';
     gridContainer.style.gap = '8px';
 
-    response.codeBlocks.reduce((acc, codeBlock) => {
-        if (!acc[codeBlock.code.type]) {
-            acc[codeBlock.code.type] = [];
-        }
-        acc[codeBlock.code.type].push(codeBlock);
-        return acc;
-    }, {});
-
     const fileCount = {};
     const codeBlocks = response.codeBlocks;
-    console.log(codeBlocks);
     for (let i = 0; i < codeBlocks.length; i++) {
-        const codeBlock = response.codeBlocks[i];
-        codeBlockType = codeBlock.type;
+        const codeBlock = codeBlocks[i];
+        const type = codeBlock.type;
 
         let suffix = "";
-        if (!fileCount[codeBlockType]) {
-            fileCount[codeBlockType] = 1;
+        if (!fileCount[type]) {
+            fileCount[type] = 1;
         } else {
-            fileCount[codeBlockType]++;
-            suffix = `_${fileCount[codeBlockType]}`;
+            fileCount[type]++;
+            suffix = `_${fileCount[type]}`;
         }
 
-        const fileDiv = document.createElement("div");
+        const { fileDiv, fileNameInput } = createTrackedScrapeElement(codeBlock, suffix);
         gridContainer.appendChild(fileDiv);
 
-        fileDiv.className = "untracked-file";
-        fileDiv.style.display = "grid";
-        fileDiv.style.gridTemplate = "1fr / auto 1fr";
-        fileDiv.style.gap = "8px";
-
-        const trackFileButton = document.createElement("i");
-        {
-            fileDiv.appendChild(trackFileButton);
-            trackFileButton.classList.add("track-file");
-            trackFileButton.title = "Track file";
-
-            const trackFileIcon = document.createElement("i");
-            trackFileButton.appendChild(trackFileIcon)
-            trackFileIcon.classList.add("ti", "ti-cloud-up");
-        }
-
-        const fileNameInput = document.createElement("input");
-        {
-            fileDiv.appendChild(fileNameInput);
-            fileNameInput.type = "text";
-            fileDiv.dataset.xPath = response.codeBlocks[i].xPath;
-
-            fileNameInput.placeholder = "File name";
-            fileNameInput.title = response.codeBlocks[i].code;
-
-            fileNameInput.addEventListener("focus", async () => {
-                console.log("Input was focused!");
-
-                await sendMessageToActiveTab({
-                    action: 'scrollToElement',
-                    xPath: response.codeBlocks[i].xPath
-                });
-            });
-        }
-
-        switch (response.codeBlocks[i].type) {
-            case "html": fileNameInput.value = `index${suffix}.html`; break;
-            case "css": fileNameInput.value = `styles${suffix}.css`; break;
-            case "c": fileNameInput.value = `main${suffix}.c`; break;
-            case "cpp":
-            case "c++":
-            case "cxx": fileNameInput.value = `main${suffix}.cpp`; break;
-            case "csharp":
-            case "cs": fileNameInput.value = `class${suffix}.cs`; break;
-            case "java": fileNameInput.value = `Main${suffix}.java`; break;
-            case "javascript":
-            case "js": fileNameInput.value = `script${suffix}.js`; break;
-            case "json": fileNameInput.value = `data${suffix}.json`; break;
-            case "typescript":
-            case "ts": fileNameInput.value = `script${suffix}.ts`; break;
-            case "python":
-            case "py": fileNameInput.value = `script${suffix}.py`; break;
-            case "php": fileNameInput.value = `index${suffix}.php`; break;
-            case "ruby":
-            case "rb": fileNameInput.value = `script${suffix}.rb`; break;
-            case "swift": fileNameInput.value = `main${suffix}.swift`; break;
-            case "kotlin":
-            case "kt": fileNameInput.value = `Main${suffix}.kt`; break;
-            case "go":
-            case "golang": fileNameInput.value = `main${suffix}.go`; break;
-            case "rust":
-            case "rs": fileNameInput.value = `main${suffix}.rs`; break;
-            case "bash":
-            case "sh": fileNameInput.value = `script${suffix}.sh`; break;
-            case "sql": fileNameInput.value = `query${suffix}.sql`; break;
-            case "r": fileNameInput.value = `script${suffix}.r`; break;
-            case "perl":
-            case "pl": fileNameInput.value = `script${suffix}.pl`; break;
-            case "lua": fileNameInput.value = `script${suffix}.lua`; break;
-            case "dart": fileNameInput.value = `main${suffix}.dart`; break;
-            case "scala": fileNameInput.value = `Main${suffix}.scala`; break;
-            case "objective-c":
-            case "objc":
-            case "m": fileNameInput.value = `main${suffix}.m`; break;
-            case "haskell":
-            case "hs": fileNameInput.value = `Main${suffix}.hs`; break;
-            case "julia": fileNameInput.value = `script${suffix}.jl`; break;
-            case "elixir": fileNameInput.value = `script${suffix}.ex`; break;
-            case "fortran":
-            case "f90":
-            case "f95":
-            case "f77": fileNameInput.value = `main${suffix}.f90`; break;
-            case "cobol":
-            case "cbl": fileNameInput.value = `program${suffix}.cbl`; break;
-            case "pascal":
-            case "p": fileNameInput.value = `program${suffix}.pas`; break;
-            case "zsh": fileNameInput.value = `script${suffix}.zsh`; break;
-            case "assembly":
-            case "asm": fileNameInput.value = `program${suffix}.asm`; break;
-            case "prolog":
-            case "plg": fileNameInput.value = `program${suffix}.plg`; break;
-            case "smalltalk":
-            case "st": fileNameInput.value = `program${suffix}.st`; break;
-            case "fsharp":
-            case "fs": fileNameInput.value = `script${suffix}.fs`; break;
-            case "lisp":
-            case "common-lisp":
-            case "cl": fileNameInput.value = `script${suffix}.lisp`; break;
-            case "scheme":
-            case "scm": fileNameInput.value = `script${suffix}.scm`; break;
-            case "racket":
-            case "rkt": fileNameInput.value = `script${suffix}.rkt`; break;
-            case "tcl": fileNameInput.value = `script${suffix}.tcl`; break;
-            case "ocaml":
-            case "ml": fileNameInput.value = `script${suffix}.ml`; break;
-            case "j": fileNameInput.value = `script${suffix}.ijs`; break;
-            case "brainfuck":
-            case "bf": fileNameInput.value = `program${suffix}.bf`; break;
-            case "xslt":
-            case "xsl": fileNameInput.value = `template${suffix}.xsl`; break;
-            case "yaml":
-            case "yml":
-                fileNameInput.value = `config${suffix}.yaml`; break;
-            default: fileNameInput.value = `file${suffix}.txt`; break;
-        }
-
-        trackFileButton.onclick = async () => {
-            const fileName = fileNameInput.value;
-            await saveFile(fileName, codeBlock);
-
-            const trackFileIcon = document.createElement("i");
-            trackFileButton.parentElement.prepend(trackFileIcon)
-            trackFileIcon.classList.add("ti", "ti-check");
-
-            trackFileButton.parentElement.classList.remove("untracked-file");
-            trackFileButton.parentElement.classList.add("tracked-file");
-
-            trackFileButton.parentElement.removeChild(trackFileButton);
-        }
-
-        response.codeBlocks[i].input = fileNameInput;
-
-        allCodeBlocks.push(response.codeBlocks[i]);
+        codeBlock.input = fileNameInput;
+        allCodeBlocks.push(codeBlock);
     }
 
-    // Append the grid container to the content div
     content.appendChild(mainContainer);
-
     return codeBlocks.length > 0;
-}
+};
+

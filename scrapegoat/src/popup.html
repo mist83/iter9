@@ -7,6 +7,20 @@
     <link rel="stylesheet" href="./popup.css" />
 </head>
 <body>
+    <template id="scraped-item-template">
+        <div class="untracked-file" style="display: grid; grid-template: 1fr / auto 1fr; gap: 8px;">
+            <i class="track-file" title="Track file">
+                <i class="ti ti-cloud-up"></i>
+            </i>
+            <input type="text" placeholder="File nxxame">
+        </div>
+    </template>
+    <!--<template id="scraped-item-template">
+        <div class="input-container tracked-file-template">
+            <i id="upload-button" class="ti ti-refresh icon-button" title="Upload"></i>
+            <input id="file-name" title="File name" type="text" placeholder="File name" />
+        </div>
+    </template>-->
     <div id="splash-screen">
         <a id="splash-header" href="https://github.com/scrapegoat/null" target="_blank">ScrapeGOAT</a>
         <div id="new-pasture" class="input-container">
