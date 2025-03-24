@@ -41,6 +41,7 @@ button {
     left: 0;
     right: 0;
     top: 0;
+    margin: 12px;
     grid-template: 1fr / auto 1fr;
     gap: 8px;
     padding: 8px;
@@ -70,7 +71,7 @@ input::selection {
 
 #code-scrape-screen {
     margin: 12px;
-    margin-top: 64px;
+    margin-top: 72px;
     display: none;
 }
 

@@ -9,6 +9,7 @@ html, body {
     font-size: 16px !important;
     zoom: 1 !important;
     transform: none !important;
+    background-color: lightcoral;
 }
 
 div {
@@ -36,11 +37,12 @@ body {
 }
 
 .grid-item {
-    display: flex; /* Maintain layout */
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 100%;
+    place-items: center;
+    padding: 4px;
+    background-color: white;
+    cursor: pointer;
+    border: 2px solid black;
+    overflow-x: clip;
 }
 
     .grid-item span {
@@ -53,9 +55,9 @@ body {
 
 
     .grid-item:hover {
-        transform: scale(1.05); /* Keeps hover effect */
         background-color: var(--primary-hover-background-color); /* Maintain color change */
         color: var(--primary-hover-color);
+        border: 2px solid black;
     }
 
 

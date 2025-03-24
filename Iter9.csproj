@@ -58,4 +58,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="scrapegoat\dist\scrapegoat.zip" />
+  </ItemGroup>
+
 </Project>
