@@ -27,10 +27,21 @@ function setupSplashScreen() {
         validateInput(event.target);
     }
 
-    document.getElementById("graze-button").setAttribute("tabindex", "2");
+    const grazeButton = document.getElementById("graze-button");
+    grazeButton.setAttribute("tabindex", "2");
+    grazeButton.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            alert("TODO: Pressing enter to launch doesn't work")
+        }
+    });
 
     const randomizePastureNameButton = document.getElementById("randomize-pasture-name");
     randomizePastureNameButton.setAttribute("tabindex", "3");
+    randomizePastureNameButton.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            randomizePastureName();
+        }
+    });
 }
 
 function launchProject() {
@@ -66,13 +77,19 @@ const validateInput = (target) => {
     document.getElementById("graze-button").disabled = false;
 }
 
-document.getElementById("randomize-pasture-name").onclick = () => {
+const randomizePastureName = () => {
     const projectName = projectNames[Math.floor(Math.random() * projectNames.length)] + "/" + Math.floor(1000 + Math.random() * 9000);
     document.getElementById("project-name").value = projectName;
 
     // should always work, we just set it programmatically
     validateInput(document.getElementById("project-name"))
 }
+
+document.getElementById("randomize-pasture-name").onclick = () => {
+    randomizePastureName();
+}
+
+
 
 document.getElementById("graze-button").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "grid";
