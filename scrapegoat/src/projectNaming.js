@@ -31,7 +31,10 @@ function setupSplashScreen() {
     grazeButton.setAttribute("tabindex", "2");
     grazeButton.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
-            alert("TODO: Pressing enter to launch doesn't work")
+            const projectName = localStorage.getItem("projectName");
+            localStorage.setItem("activeProjectName", projectName);
+
+            launchProject();
         }
     });
 
