@@ -1,6 +1,6 @@
 {
-  "name": "<ITER9_APPLICATION>",
-  "short_name": "<ITER9_APP>",
+  "name": "<SCRAPEGOAT_APPLICATION>",
+  "short_name": "<SCRAPEGOAT_APP>",
   "start_url": "./",
   "display": "standalone",
   "icons": [

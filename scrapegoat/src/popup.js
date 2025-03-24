@@ -85,5 +85,5 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
 
 //const urlBase = https://localhost:7171/iter9;
 
-const urlBase = localStorage.getItem("scrapegoat:url");
+const urlBase = localStorage.getItem("url");
 document.getElementById("server-url-input").value = urlBase;

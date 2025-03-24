@@ -1,7 +1,7 @@
 const loadTrackedCodeSnippets = async () => {
     const fullProjectName = localStorage.getItem("projectName");
 
-    var base = localStorage.getItem("scrapegoat:url")
+    var base = localStorage.getItem("url")
     const url = `${urlBase}/Iter9/${fullProjectName}`;
 
     try {

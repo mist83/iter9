@@ -399,5 +399,5 @@ FodyWeavers.xsd
 .aider*
 *.db*
 scrapegoat/scrapegoat.pem
-scrapegoat/dist
 scrapegoat/build
+scrapegoat/dist/scrapegoat
