@@ -76,12 +76,6 @@ const loadTrackedCodeSnippets = async () => {
             }
 
             fileDiv.onclick = async () => {
-                const projectNameValue = document.getElementById("project-name").value;
-                const parts = projectNameValue.split('/');
-
-                const projectName = parts[0];
-                const folderName = parts[1];
-
                 // hack - not even working, just got bored/distracted and need to stop
                 const xPath = fileDiv.dataset.xPath;
 
@@ -89,12 +83,18 @@ const loadTrackedCodeSnippets = async () => {
                     action: 'scrollToElement',
                     xPath: xPath
                 });
+            }
+
+            trackFileIcon.onclick = (event) => {
+                event.stopPropagation();
+
+                const projectNameValue = document.getElementById("project-name").value;
+                const parts = projectNameValue.split('/');
+                const projectName = parts[0];
+                const folderName = parts[1];
 
                 const fileName = div.innerText;
-
-                if (launchable) {
-                    chrome.tabs.create({ url: `${urlBase}/iter9/${projectName}/${folderName}/${fileName}` });
-                }
+                navigate(`${urlBase}/iter9/${projectName}/${folderName}/${fileName}`);
             }
         }
 

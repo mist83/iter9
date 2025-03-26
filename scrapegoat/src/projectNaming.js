@@ -105,14 +105,15 @@ document.getElementById("graze-button").onclick = (sender) => {
     localStorage.setItem("activeProjectName", pastureName);
 };
 
-document.getElementById("splash-launch").onclick = (sender) => {
+const navigate = (url) => {
     const a = document.createElement("a");
-    a.href = "scoop/index.html";
+    a.href = url;
     a.target = "_blank";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-};
+
+}
 
 document.getElementById("settings-button").onclick = (sender) => {
     document.getElementById("splash-screen").style.display = "none";

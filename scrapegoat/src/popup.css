@@ -45,7 +45,7 @@ button {
     left: 0;
     right: 0;
     top: 0;
-    grid-template: 1fr / auto 1fr;
+    grid-template: 1fr / auto 1fr auto;
     gap: 8px;
     padding: 20px;
     padding-top: 8px;
@@ -93,6 +93,19 @@ input::selection {
         transform: scale(1);
     }
 
+#pasture-name {
+    color: mediumseagreen;
+}
+
+#pasture-view {
+    display: grid;
+    place-self: center;
+}
+
+    #pasture-view:hover {
+        transform: scale(1);
+    }
+
 .track-file {
     color: var(--primary-hover-background-color);
     cursor: pointer;
@@ -101,21 +114,6 @@ input::selection {
     .track-file:hover {
         color: var(--secondary-color);
     }
-
-.ti-file-type-html {
-    background-color: yellow;
-    color: black;
-}
-
-.ti-file-type-js {
-    background-color: deeppink;
-    color: black;
-}
-
-.ti-file-type-css {
-    background-color: lime;
-    color: black;
-}
 
 .untracked-file {
     border-radius: 4px;
@@ -143,6 +141,7 @@ input::selection {
 }
 
     .tracked-file:hover {
+        color: var(--scraped-item-hover-color);
         background-color: var(--scraped-item-hover-background-color);
     }
 
@@ -151,6 +150,11 @@ input::selection {
         background-color: var(--background-lightest);
         pointer-events: none;
         user-select: none;
+    }
+
+    .tracked-file:hover > input {
+        background-color: var(--primary-color);
+        color: white;
     }
 
 ::-webkit-scrollbar {

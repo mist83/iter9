@@ -4,18 +4,6 @@ const createTrackedScrapeElement = (codeBlock, suffix) => {
 
     const fileDiv = clone.querySelector(".untracked-file");
 
-    const launchButton = clone.querySelector(".ti-x");
-    launchButton.onclick = (event) => {
-        event.stopPropagation();
-        alert("TODO: untrack");
-    }
-
-    const unTrackButton = clone.querySelector(".untracked-file");
-    unTrackButton.onclick = (event) => {
-        event.stopPropagation();
-        alert("TODO: launch");
-    }
-
     const fileNameInput = fileDiv.querySelector("input");
     const trackFileButton = fileDiv.querySelector(".track-file");
 
@@ -95,7 +83,6 @@ const processHTML = async (response) => {
     console.log(`Inside ${nameof(processHTML)}`, response);
 
     const content = document.getElementById('code-scrape-screen');
-    content.innerHTML = "";
 
     if (!response || response.codeBlocks.length === 0) return;
 
