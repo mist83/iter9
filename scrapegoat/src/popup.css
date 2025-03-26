@@ -139,10 +139,11 @@ input::selection {
     color: var(--primary-color);
     padding-left: 8px;
     cursor: pointer;
+    transition: 200ms all ease-in-out;
 }
 
     .tracked-file:hover {
-        transform: scale(1.03);
+        background-color: var(--scraped-item-hover-background-color);
     }
 
     .tracked-file > input {
