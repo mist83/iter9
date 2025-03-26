@@ -1,7 +1,20 @@
 const createTrackedScrapeElement = (codeBlock, suffix) => {
     const template = document.getElementById("scraped-item-template");
     const clone = template.content.cloneNode(true);
+
     const fileDiv = clone.querySelector(".untracked-file");
+
+    const launchButton = clone.querySelector(".ti-x");
+    launchButton.onclick = (event) => {
+        event.stopPropagation();
+        alert("TODO: untrack");
+    }
+
+    const unTrackButton = clone.querySelector(".untracked-file");
+    unTrackButton.onclick = (event) => {
+        event.stopPropagation();
+        alert("TODO: launch");
+    }
 
     const fileNameInput = fileDiv.querySelector("input");
     const trackFileButton = fileDiv.querySelector(".track-file");
