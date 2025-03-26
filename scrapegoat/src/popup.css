@@ -84,6 +84,15 @@ input::selection {
     font-size: 32px;
 }
 
+#close-pasture {
+    display: grid;
+    place-self: center;
+}
+
+    #close-pasture:hover {
+        transform: scale(1);
+    }
+
 .track-file {
     color: var(--primary-hover-background-color);
     cursor: pointer;
@@ -92,6 +101,21 @@ input::selection {
     .track-file:hover {
         color: var(--secondary-color);
     }
+
+.ti-file-type-html {
+    background-color: yellow;
+    color: black;
+}
+
+.ti-file-type-js {
+    background-color: deeppink;
+    color: black;
+}
+
+.ti-file-type-css {
+    background-color: lime;
+    color: black;
+}
 
 .untracked-file {
     border-radius: 4px;

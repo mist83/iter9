@@ -57,23 +57,22 @@ const loadTrackedCodeSnippets = async () => {
             fileDiv.classList.add("tracked-file");
             filenameInput.setAttribute("tabindex", "-1");
 
+            const trackFileIcon = document.createElement("i");
+            const trackFileButton = fileDiv.children[0];
+            fileDiv.removeChild(trackFileButton);
+            fileDiv.prepend(trackFileIcon);
+
             const launchable = data[i].name.indexOf(".html") !== -1;
-            if (launchable) {
-                const trackFileButton = fileDiv.children[0];
-                fileDiv.removeChild(trackFileButton);
+            const split = data[i].name.split('.');
 
-                const trackFileIcon = document.createElement("i");
-                fileDiv.prepend(trackFileIcon);
+            const extension = split[split.length - 1].toLowerCase();
 
-                trackFileIcon.classList.add("ti", "ti-rocket");
-            } else {
-                const trackFileButton = fileDiv.children[0];
-                fileDiv.removeChild(trackFileButton);
-
-                const trackFileIcon = document.createElement("i");
-                fileDiv.prepend(trackFileIcon);
-
-                trackFileIcon.classList.add("ti", "ti-check");
+            const classes = getFileIconClasses(extension);
+            if (classes) {
+                trackFileIcon.classList.add(...classes);
+            }
+            else {
+                trackFileIcon.classList.add(getFileIconClasses("?"));
             }
 
             fileDiv.onclick = async () => {
