@@ -32,7 +32,7 @@ const getFileIconClasses = (extension) => {
         case "cpp":
             return ["ti", "ti-file-type-cpp"];
         case "cs":
-            return ["ti", "ti-file-type-cs"];
+            return ["ti", "ti-file-code"];
         case "sh":
             return ["ti", "ti-file-type-sh"];
         case "sql":

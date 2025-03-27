@@ -1,5 +1,6 @@
 console.log("Adding Chrome listener");
 
+const peepUrl = "https://localhost:7118/api/peep";
 function getXPath(element) {
     if (!element || element.nodeType !== Node.ELEMENT_NODE) return '';
 
@@ -62,6 +63,95 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             sendResponse(response);
             break;
+        case "downloadImage": {
+            chrome.downloads.download({
+                url: request.url,
+                filename: request.fileName
+            }, function (downloadId) {
+                sendResponse({
+                    success: true,
+                    downloadId: downloadId
+                });
+            });
+
+            return true;
+        }
+        case "downloadAllImages": {
+            sendResponse({ status: "Images are being downloaded" });
+            const images = Array.from(document.querySelectorAll('img')).slice(2);
+
+            images.forEach(async (img, index) => {
+                const order = index + 1;
+
+                // retrieve every time - CANNOT CACHE THIS!!!
+                const fullUrl = window.location.href;
+                const chatId = fullUrl.substring(fullUrl.lastIndexOf('/') + 1);
+
+                // download the image
+                setTimeout(() => {
+                    const src = img.src;
+                    chrome.runtime.sendMessage({
+                        action: 'downloadImage',
+                        url: src,
+                        fileName: chatId + "_" + order + ".webp"
+                    });
+                }, index * 100);
+
+                // create a record of it
+                await fetch(peepUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: chatId + "_image_" + order,
+                        chat: chatId,
+                        type: "webp",
+                        order: order,
+                        content: img.alt,
+                    })
+                });
+            });
+
+            sendResponse({ status: "Code blocks are being downloaded" });
+            const codeBlocks = Array.from(document.querySelectorAll("pre div div code"));
+            codeBlocks.forEach(async (code, index) => {
+                return;
+
+                const order = index + 1;
+
+                // retrieve every time - CANNOT CACHE THIS!!!
+                const fullUrl = window.location.href;
+                const chatId = fullUrl.substring(fullUrl.lastIndexOf('/') + 1);
+
+                let content = code.innerText;
+
+                let type = code.classList[code.classList.length - 1].split('-')[1];
+                if (type == "json") {
+                    try {
+                        content = JSON.stringify(JSON.parse(content), null, 0);
+                    } catch {
+                        type = "unknown";
+                    }
+                }
+
+                await fetch(peepUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: chatId + "_data_" + order,
+                        chat: chatId,
+                        order: order,
+                        type: type,
+                        content: content
+                    })
+                });
+            });
+
+            break;
+        }
         default:
             console.error("Unknown action: " + request.action);
             break;

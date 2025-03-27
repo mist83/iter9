@@ -86,10 +86,17 @@ input::selection {
 
 #close-pasture {
     display: grid;
-    place-self: center;
 }
 
     #close-pasture:hover {
+        transform: scale(1);
+    }
+
+#download-button {
+    place-self: center;
+}
+
+    #download-button:hover {
         transform: scale(1);
     }
 

@@ -87,3 +87,17 @@ chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
 
 const urlBase = localStorage.getItem("url");
 document.getElementById("server-url-input").value = urlBase;
+
+document.getElementById('download-button').addEventListener('click', function () {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+            action: "downloadAllImages"
+        });
+    });
+
+    const item = document.createElement("div");
+    item.style.color = "var(--text-light)";
+    item.innerText = new Date() + ": snapshot taken";
+
+    document.getElementById("snapped").prepend(item);
+});

@@ -38,7 +38,7 @@ body {
 
 .grid-item {
     place-items: center;
-    padding: 4px;
+    padding: 12px;
     background-color: white;
     cursor: pointer;
     border: 2px solid black;
@@ -96,6 +96,11 @@ a, div {
         color: var(--primary-color);
         padding: 5px;
     }
+
+svg {
+    cursor: pointer;
+}
+
 
 span {
     font-weight: bold;

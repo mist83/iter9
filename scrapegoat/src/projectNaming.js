@@ -125,6 +125,10 @@ document.getElementById("back-button").onclick = (sender) => {
     document.getElementById("settings-screen").style.display = "none";
 };
 
+document.getElementById("splash-launch").onclick = (sender) => {
+    navigate("scoop/index.html");
+};
+
 document.getElementById("close-pasture").onclick = (sender) => {
     document.getElementById("header-bar").style.display = "none";
     document.getElementById("code-scrape-screen").style.display = "none";
