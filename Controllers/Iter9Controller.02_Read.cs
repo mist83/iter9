@@ -67,7 +67,7 @@ public partial class Iter9Controller
             fileContent = manifest
                 .Replace("<SCRAPEGOAT_APPLICATION>", $"{project}/{folder}")
                 .Replace("<SCRAPEGOAT_APP>", $"{project}/{folder}")
-                .Replace("<SCRAPEGOAT_START_URL>", $"{project}/{folder}/index.html")
+                .Replace("<SCRAPEGOAT_START_URL>", "./index.html")
                 .Replace("<SCRAPEGOAT_APP_DESCRIPTION>", $"Description for {project}/{folder}")
                 ;
 
