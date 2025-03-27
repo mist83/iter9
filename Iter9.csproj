@@ -29,6 +29,7 @@
     <None Remove="Defaults\default.css" />
     <None Remove="Defaults\default.html" />
     <None Remove="Defaults\default.js" />
+    <None Remove="Resources\icon.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +40,7 @@
     <EmbeddedResource Include="Defaults\default.css" />
     <EmbeddedResource Include="Defaults\default.js" />
     <EmbeddedResource Include="Defaults\default.html" />
+    <EmbeddedResource Include="Resources\icon.png" />
     <EmbeddedResource Include="Resources\manifest.json" />
   </ItemGroup>
 

@@ -54,6 +54,30 @@ public partial class Iter9Controller
     [HttpGet("{project}/{folder}/{**fileName}")]
     public async Task<IActionResult> ReadFileAsync(string project = "*", string folder = "*", string fileName = "*")
     {
+        if (fileName == "icon.png")
+        {
+            var stream = Utility.ReadEmbeddedResourceStream("Iter9.Resources.icon.png");
+            return File(stream, "image/png");
+        }
+
+        string fileContent;
+        if (fileName == "manifest.json")
+        {
+            var manifest = Utility.ReadEmbeddedResource("Iter9.Resources.manifest.json");
+            fileContent = manifest
+                .Replace("<SCRAPEGOAT_APPLICATION>", $"{project}/{folder}")
+                .Replace("<SCRAPEGOAT_APP>", $"{project}/{folder}")
+                .Replace("<SCRAPEGOAT_START_URL>", $"{project}/{folder}/index.html")
+                .Replace("<SCRAPEGOAT_APP_DESCRIPTION>", $"Description for {project}/{folder}")
+                ;
+
+            return new ContentResult
+            {
+                ContentType = "application/manifest+json",
+                Content = fileContent
+            };
+        }
+
         var file = await iter9Service.GetFileAsync(project, folder, fileName);
 
         if (file == null)
@@ -65,8 +89,8 @@ public partial class Iter9Controller
         Response.Headers.Add("X-Folder", folder);
         Response.Headers.Add("X-Resource", file.Name);
 
-        string fileContent = file.Content;
-        var manifest = ReadEmbeddedResource("Iter9.Resources.manifest.json");
+        // Force a PWA manifest
+        fileContent = file.Content;
         if (file.Name.EndsWith(".html"))
         {
             fileContent = file.Content.Replace("<head>", "<head><link rel=\"manifest\" href=\"manifest.json\">");
@@ -77,20 +101,5 @@ public partial class Iter9Controller
             ContentType = file.ContentType,
             Content = fileContent
         };
-    }
-
-    private static string ReadEmbeddedResource(string resourceName)
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-        {
-            if (stream == null)
-                throw new FileNotFoundException($"Resource '{resourceName}' not found.");
-
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
-        }
     }
 }

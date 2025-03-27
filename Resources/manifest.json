@@ -1,8 +1,11 @@
 {
   "name": "<SCRAPEGOAT_APPLICATION>",
   "short_name": "<SCRAPEGOAT_APP>",
-  "start_url": "./",
+  "start_url": "<SCRAPEGOAT_START_URL>",
   "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "<SCRAPEGOAT_APP_DESCRIPTION>",
   "icons": [
     {
       "src": "icon.png",
