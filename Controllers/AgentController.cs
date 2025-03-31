@@ -196,7 +196,18 @@ namespace Iter9.Controllers
 
             if (existingPr != null)
             {
-                return Tuple.Create(existingPr, true); // Already exists, reuse it
+                // Update the body
+                var updatedBody = existingPr.Body + $"\n\n---\nUpdate: {DateTime.UtcNow.ToString("u")}\n{body}";
+                var prUpdate = new PullRequestUpdate { Body = updatedBody };
+                await github.PullRequest.Update(owner, repo, existingPr.Number, prUpdate);
+
+                //
+                // Also add a comment to the thread
+                var timestamp = DateTime.UtcNow.ToString("u");
+                var commentBody = $"New suggestion processed at {timestamp} UTC.\n\n_{body}_";
+                await github.Issue.Comment.Create(owner, repo, existingPr.Number, commentBody);
+
+                return Tuple.Create(existingPr, true); // true = reused
             }
 
             // 2. Create new PR
@@ -206,25 +217,28 @@ namespace Iter9.Controllers
             };
 
             var pr = await github.PullRequest.Create(owner, repo, newPr);
-            return Tuple.Create(pr, false);
+            return Tuple.Create(pr, false); // false = new PR
         }
 
         [HttpPost("test")]
         public async Task<IActionResult> TestAsync(
             [FromQuery] string filePath = "README.md",
-            [FromQuery] string comment = "added another joke",
-            [FromQuery] string proposedCode = "<<AGENT:Add a developer joke with dad-joke level humor>>"
+            [FromQuery] string commitComment = "added another joke",
+            [FromQuery] string prComment = "Added another joke",
+            [FromQuery] string proposedCode = "Add a developer joke with dad-joke level humor"
             )
         {
+            string ticket = $"[JIRA-{new Random().Next(1000, 9999)}]";
+
             var suggestion = new CodeChangeSuggestion
             {
                 FilePath = filePath,
-                Comment = DateTime.UtcNow.ToString("o") + ": " + comment,
+                Comment = commitComment,
                 ProposedCode = proposedCode,
             };
 
-            var sha = await CommitSuggestionToBotBranchAsync(suggestion);
-            var pr = await CreatePullRequestAsync(suggestion.Comment, suggestion.ProposedCode);
+            await CommitSuggestionToBotBranchAsync(suggestion);
+            var pr = await CreatePullRequestAsync(ticket, prComment);
 
             return Ok($"{(pr.Item2 ? "Updated" : "Created")} PR: {pr.Item1.HtmlUrl}");
         }
