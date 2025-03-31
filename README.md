@@ -1,4 +1,4 @@
 
 
 ---
-What did the pirate say on his 80th birthday? Aye Matey!
+Why don't eggs tell jokes? Because they'd crack up!
