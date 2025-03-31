@@ -12,6 +12,15 @@ const createTrackedScrapeElement = (codeBlock, suffix) => {
     fileNameInput.placeholder = "File name";
     fileNameInput.title = codeBlock.code;
 
+    fileDiv.onclick = async () => {
+        console.log("File div was clicked!");
+
+        await sendMessageToActiveTab({
+            action: 'scrollToElement',
+            xPath: codeBlock.xPath
+        });
+    }
+
     // Focus scroll event
     fileNameInput.addEventListener("focus", async () => {
         console.log("Input was focused!");
@@ -65,14 +74,30 @@ const createTrackedScrapeElement = (codeBlock, suffix) => {
         const fileName = fileNameInput.value;
         await saveFile(fileName, codeBlock);
 
-        const checkIcon = document.createElement("i");
-        checkIcon.classList.add("ti", "ti-check");
-        trackFileButton.parentElement.prepend(checkIcon);
+        const split = fileName.split('.');
+        const extension = split[split.length - 1].toLowerCase();
+        const classes = getFileIconClasses(extension);
+
+        const launchIcon = document.createElement("i");
+        if (classes) {
+            launchIcon.classList.add(...classes);
+        }
+        else {
+            launchIcon.classList.add(getFileIconClasses("?"));
+        }
+
+        trackFileButton.parentElement.prepend(launchIcon);
 
         fileDiv.classList.remove("untracked-file");
         fileDiv.classList.add("tracked-file");
 
         trackFileButton.remove();
+
+        /*//launchIcon.title = `Launch ${fileName} in a new tab`;*/
+        launchIcon.onclick = () => {
+            const projectNameValue = document.getElementById("project-name").value;
+            navigate(`${urlBase}/iter9/${projectNameValue}/${fileName}`);
+        }
     };
 
     // Return both DOM node and input for tracking

@@ -27,6 +27,8 @@
 }
 
 :root {
+    --inactive-icon-color: lightgray;
+    --inactive-background-color: white;
     --background-light: ghostwhite;
     --background-medium: lightgray;
     --background-lightest: white;

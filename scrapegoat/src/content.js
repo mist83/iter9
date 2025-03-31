@@ -32,8 +32,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     switch (request.action) {
         case "scrollToElement":
-            console.log("scrollToElement: " + request.xPath);
-
             const element = getElementByXPath(request.xPath);
             element.parentElement.parentElement.scrollIntoView({
                 behavior: 'smooth',

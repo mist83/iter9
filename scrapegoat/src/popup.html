@@ -8,11 +8,12 @@
 </head>
 <body>
     <template id="scraped-item-template">
-        <div class="untracked-file" style="display: grid; grid-template: 1fr / auto 1fr; gap: 8px; ">
+        <div class="untracked-file" style="display: grid; grid-template: 1fr / auto 1fr auto; gap: 8px; ">
             <i class="track-file" title="Track file">
                 <i class="ti ti-cloud-up"></i>
             </i>
             <input type="text" placeholder="File nxxame">
+            <i class="ti ti-x icon-button"></i>
         </div>
     </template>
     <div id="splash-screen">
@@ -39,20 +40,10 @@
     <div id="header-bar">
         <i id="close-pasture" title="Back" class="ti ti-arrow-back-up icon-button"></i>
         <a id="pasture-name" href="#" target="_blank" title="View scrape dashboard"></a>
-        <i id="download-button" class="ti ti-photo-search icon-button"></i>
+        <!--<i id="download-button" class="ti ti-photo-search icon-button"></i>-->
     </div>
     <div id="code-scrape-screen">
-        <!--<div style="display: grid; place-items: center; grid-auto-flow: column; margin: 12px;">
-            <i style="color: mediumseagreen; cursor: pointer;" class="ti ti-refresh icon-button" title="Refresh all (TODO)"></i>
-            <i style="color: mediumseagreen; cursor: pointer;" class="ti ti-chart-dots-3 icon-button" title=""></i>
-        </div>-->
         <div id="snapped"></div>
-
-        <!--<div style="display: grid; place-items: center; grid-auto-flow: column; margin: 12px;">
-            <i style="color: mediumseagreen; cursor: pointer;" class="ti ti-file-type-html icon-button" title=""></i>
-            <i style="color: mediumseagreen; cursor: pointer;" class="ti ti-file-type-js icon-button" title=""></i>
-            <i style="color: mediumseagreen; cursor: pointer;" class="ti ti-file-type-css icon-button" title=""></i>
-        </div>-->
     </div>
 
     <!--<script src="scoop/app/framework/alert.js"></script>-->
