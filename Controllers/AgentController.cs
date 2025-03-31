@@ -198,7 +198,7 @@ namespace Iter9.Controllers
             if (existingPr != null)
             {
                 // Update the body
-                var updatedBody = existingPr.Body + $"\n\n---\nUpdate: {DateTime.UtcNow.ToString("u")}\n{body}";
+                var updatedBody = existingPr.Body + $"\n\n---\nUpdate: {DateTime.UtcNow.ToString("u")}\n\n_{body}_";
                 var prUpdate = new PullRequestUpdate { Body = updatedBody };
                 await github.PullRequest.Update(owner, repo, existingPr.Number, prUpdate);
 
@@ -222,19 +222,28 @@ namespace Iter9.Controllers
         }
 
         [HttpPost("test")]
-        [HttpGet("test")] // just to make it easier
         public async Task<IActionResult> TestAsync(
             [FromQuery] string filePath = "README.md",
             [FromQuery] string commitComment = "change joke",
             [FromQuery] string prComment = "Changed the joke",
-            [FromQuery] string proposedCode = "<DAD_JOKE>"
+            [FromQuery] string proposedCode = "<DAD_JOKE+>"
             )
         {
             string ticket = $"[JIRA-{new Random().Next(1000, 9999)}]";
 
-            if (proposedCode == "<DAD_JOKE>")
+            if (proposedCode == "<DAD_JOKE+>")
             {
-                proposedCode = await new HttpClient().GetStringAsync("https://dvdkztg43tluo5mndqsnvzrt5y0zsmms.lambda-url.us-west-2.on.aws/Test?prompt=Give%20me%20a%20dad%20joke%20one%20liner%20question%20and%20answer%20all%20on%20one%20line&formatString=%20");
+                var joke = await new HttpClient().GetStringAsync("https://dvdkztg43tluo5mndqsnvzrt5y0zsmms.lambda-url.us-west-2.on.aws/Test?prompt=Give%20me%20a%20dad%20joke%20one%20liner%20question%20and%20answer%20all%20on%20one%20line&formatString=%20");
+
+                var existingReadme = await GetRawFileContentAsync(filePath, "bot/suggestions");
+                if (existingReadme != null)
+                {
+                    proposedCode = (existingReadme + "\n---\n" + joke).Trim('-').Trim() + "\n";
+                }
+                else
+                {
+                    proposedCode = "# README\n\n" + joke.Trim(); // fallback if README doesn't exist
+                }
             }
 
             var suggestion = new CodeChangeSuggestion
@@ -255,6 +264,29 @@ namespace Iter9.Controllers
         {
             await Task.CompletedTask;
             return BadRequest();
+        }
+
+        private async Task<string?> GetRawFileContentAsync(string path, string branch = "master")
+        {
+            var owner = "mist83";
+            var repo = "iter9";
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("CSharpApp");
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("token", gitHubPat);
+
+            var url = $"https://api.github.com/repos/{owner}/{repo}/contents/{Uri.EscapeDataString(path)}?ref={branch}";
+            var response = await client.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                return null; // You may want to throw or log
+            }
+
+            var json = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var base64 = json.RootElement.GetProperty("content").GetString();
+            var bytes = Convert.FromBase64String(base64.Replace("\n", ""));
+            return System.Text.Encoding.UTF8.GetString(bytes);
         }
     }
 }
