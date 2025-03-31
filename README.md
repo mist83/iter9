@@ -1,1 +1,1 @@
-What did the grape say when it got stepped on? Nothing, it just let out a little wine!
+Why don't eggs tell jokes? Because they'd crack up!
