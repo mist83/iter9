@@ -8,6 +8,7 @@ using ProductHeaderValue = Octokit.ProductHeaderValue;
 using Credentials = Octokit.Credentials;
 using EncodingType = Octokit.EncodingType;
 using Reference = Octokit.Reference;
+using Amazon.S3.Model;
 
 namespace Iter9.Controllers
 {
@@ -221,14 +222,20 @@ namespace Iter9.Controllers
         }
 
         [HttpPost("test")]
+        [HttpGet("test")] // just to make it easier
         public async Task<IActionResult> TestAsync(
             [FromQuery] string filePath = "README.md",
-            [FromQuery] string commitComment = "added another joke",
-            [FromQuery] string prComment = "Added another joke",
-            [FromQuery] string proposedCode = "Add a developer joke with dad-joke level humor"
+            [FromQuery] string commitComment = "change joke",
+            [FromQuery] string prComment = "Changed the joke",
+            [FromQuery] string proposedCode = "<DAD_JOKE>"
             )
         {
             string ticket = $"[JIRA-{new Random().Next(1000, 9999)}]";
+
+            if (proposedCode == "<DAD_JOKE>")
+            {
+                proposedCode = await new HttpClient().GetStringAsync("https://dvdkztg43tluo5mndqsnvzrt5y0zsmms.lambda-url.us-west-2.on.aws/Test?prompt=Give%20me%20a%20dad%20joke%20one%20liner%20question%20and%20answer%20all%20on%20one%20line&formatString=%20");
+            }
 
             var suggestion = new CodeChangeSuggestion
             {
@@ -241,6 +248,13 @@ namespace Iter9.Controllers
             var pr = await CreatePullRequestAsync(ticket, prComment);
 
             return Ok($"{(pr.Item2 ? "Updated" : "Created")} PR: {pr.Item1.HtmlUrl}");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAiResponse(string query)
+        {
+            await Task.CompletedTask;
+            return BadRequest();
         }
     }
 }
