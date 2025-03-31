@@ -22,6 +22,10 @@ if (Debugger.IsAttached)
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true)
+    .AddUserSecrets<Program>();
+
 // Add services to the container.
 
 builder.Services.AddAWSLambdaHosting(LambdaEventSource.HttpApi);

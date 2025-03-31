@@ -25,17 +25,27 @@ const loadTrackedCodeSnippets = async () => {
         const inputs = [...document.getElementsByTagName("input")];
         console.log("ALL INPUTS", inputs);
 
-        for (let i = 0; i < data.length; i++) {
-            const div = document.createElement("div");
-            div.className = "tracked-file";
-            div.innerText = data[i].name;
+        const showBackups = false;
 
-            if (data[i].name.indexOf(".backup.") !== -1) {
+        const counters = {
+
+        };
+
+        for (let i = 0; i < data.length; i++) {
+            if (!showBackups && data[i].name.indexOf(".backup.") !== -1) {
                 continue;
             }
 
             // .title is where we store the actual code, so we can use it doubly for matching
-            const filenameInput = inputs.filter(x => x.title == data[i].content)[0];
+            const filenameInputs = inputs.filter(x => x.title == data[i].content);
+            const key = data[i].content;
+            if (!counters[key]) {
+                counters[key] = 0;
+            }
+
+            const filenameInput = filenameInputs[counters[key]];
+            counters[key]++;
+
             if (!filenameInput) {
                 // The fact that we got here means that one of the items is tracked, just not with one of the auto-generated file names on the screen
                 const warning = document.createElement("h2");
@@ -68,12 +78,7 @@ const loadTrackedCodeSnippets = async () => {
             const extension = split[split.length - 1].toLowerCase();
 
             const classes = getFileIconClasses(extension);
-            if (classes) {
-                trackFileIcon.classList.add(...classes);
-            }
-            else {
-                trackFileIcon.classList.add(getFileIconClasses("?"));
-            }
+            trackFileIcon.classList.add(...classes);
 
             fileDiv.onclick = async () => {
                 // hack - not even working, just got bored/distracted and need to stop
@@ -93,7 +98,7 @@ const loadTrackedCodeSnippets = async () => {
                 const projectName = parts[0];
                 const folderName = parts[1];
 
-                const fileName = div.innerText;
+                const fileName = data[i].name;
                 navigate(`${urlBase}/iter9/${projectName}/${folderName}/${fileName}`);
             }
         }

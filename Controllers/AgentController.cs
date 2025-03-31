@@ -1,0 +1,232 @@
+﻿using Amazon.S3;
+using Amazon.SecurityToken.Model;
+using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
+using System.Security.Cryptography.Xml;
+using Octokit;
+using ProductHeaderValue = Octokit.ProductHeaderValue;
+using Credentials = Octokit.Credentials;
+using EncodingType = Octokit.EncodingType;
+using Reference = Octokit.Reference;
+
+namespace Iter9.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public partial class AgentController : ControllerBase
+    {
+        private readonly string gitHubPat;
+
+        public AgentController(IConfiguration config)
+        {
+            gitHubPat = config["GitHub:Pat"];
+        }
+
+        [HttpGet("list")]
+        public async Task<IActionResult> ListFilesAsync()
+        {
+            var files = new List<string>();
+            var owner = "mist83";
+            var repo = "iter9";
+            var branch = "master";
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("CSharpApp");
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("token", gitHubPat);
+
+            // Step 1: Get the SHA of the branch
+            var branchUrl = $"https://api.github.com/repos/{owner}/{repo}/branches/{branch}";
+            var branchResponse = await client.GetAsync(branchUrl);
+            if (!branchResponse.IsSuccessStatusCode)
+            {
+                return StatusCode((int)branchResponse.StatusCode, await branchResponse.Content.ReadAsStringAsync());
+            }
+
+            var branchJson = System.Text.Json.JsonDocument.Parse(await branchResponse.Content.ReadAsStringAsync());
+            var sha = branchJson.RootElement.GetProperty("commit").GetProperty("sha").GetString();
+
+            // Step 2: Get the full tree recursively
+            var treeUrl = $"https://api.github.com/repos/{owner}/{repo}/git/trees/{sha}?recursive=1";
+            var treeResponse = await client.GetAsync(treeUrl);
+            if (!treeResponse.IsSuccessStatusCode)
+            {
+                return StatusCode((int)treeResponse.StatusCode, await treeResponse.Content.ReadAsStringAsync());
+            }
+
+            var treeJson = System.Text.Json.JsonDocument.Parse(await treeResponse.Content.ReadAsStringAsync());
+            foreach (var item in treeJson.RootElement.GetProperty("tree").EnumerateArray())
+            {
+                if (item.GetProperty("type").GetString() == "blob")
+                {
+                    var path = item.GetProperty("path").GetString();
+                    files.Add(path);
+                }
+            }
+
+            return Ok(files);
+        }
+
+        [HttpGet("file")]
+        public async Task<IActionResult> GetFileContentAsync([FromQuery] string path)
+        {
+            var owner = "mist83";
+            var repo = "iter9";
+            var branch = "master";
+
+            if (string.IsNullOrWhiteSpace(path))
+                return BadRequest("File path is required.");
+
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("CSharpApp");
+            client.DefaultRequestHeaders.Authorization =
+                new System.Net.Http.Headers.AuthenticationHeaderValue("token", gitHubPat);
+
+            var url = $"https://api.github.com/repos/{owner}/{repo}/contents/{Uri.EscapeDataString(path)}?ref={branch}";
+            var response = await client.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+            }
+
+            var contentJson = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+            var base64 = contentJson.RootElement.GetProperty("content").GetString();
+            var bytes = Convert.FromBase64String(base64.Replace("\n", ""));
+            var text = System.Text.Encoding.UTF8.GetString(bytes);
+
+            return Content(text, "text/plain");
+        }
+
+        [HttpPost("suggestion")]
+        public IActionResult SubmitSuggestion([FromBody] CodeChangeSuggestion suggestion)
+        {
+            if (string.IsNullOrWhiteSpace(suggestion.FilePath))
+                return BadRequest("FilePath is required.");
+
+            // Here, you'd normally persist this, or route it to GitHub/etc.
+            return Ok(new
+            {
+                Message = "Suggestion received.",
+                Timestamp = DateTime.UtcNow,
+                Suggestion = suggestion
+            });
+        }
+
+        [HttpPost("commit")]
+        public async Task<string> CommitSuggestionToBotBranchAsync(CodeChangeSuggestion suggestion)
+        {
+            var owner = "mist83";
+            var repo = "iter9";
+            var botBranch = "bot/suggestions";
+            var baseBranch = "master";
+
+            var github = new GitHubClient(new ProductHeaderValue("SuggestionBot"))
+            {
+                Credentials = new Credentials(gitHubPat)
+            };
+
+            // 1. Get the base commit (from master)
+            var masterRef = await github.Git.Reference.Get(owner, repo, $"heads/{baseBranch}");
+            var masterSha = masterRef.Object.Sha;
+            var masterCommit = await github.Git.Commit.Get(owner, repo, masterSha);
+
+            // 2. Ensure bot/suggestions branch exists
+            Reference botRef;
+            try
+            {
+                botRef = await github.Git.Reference.Get(owner, repo, $"heads/{botBranch}");
+            }
+            catch (NotFoundException)
+            {
+                botRef = await github.Git.Reference.Create(owner, repo, new NewReference($"refs/heads/{botBranch}", masterSha));
+            }
+
+            // 3. Create blob (file content)
+            var blob = new NewBlob
+            {
+                Content = suggestion.ProposedCode ?? "",
+                Encoding = EncodingType.Utf8
+            };
+            var blobResult = await github.Git.Blob.Create(owner, repo, blob);
+
+            // 4. Create a tree
+            var newTree = new NewTree { BaseTree = masterCommit.Tree.Sha };
+            newTree.Tree.Add(new NewTreeItem
+            {
+                Path = suggestion.NewFilePath ?? suggestion.FilePath,
+                Mode = "100644",
+                Type = TreeType.Blob,
+                Sha = blobResult.Sha
+            });
+            var treeResult = await github.Git.Tree.Create(owner, repo, newTree);
+
+            // 5. Create a commit
+            var newCommit = new NewCommit(suggestion.Comment, treeResult.Sha, botRef.Object.Sha);
+            var commitResult = await github.Git.Commit.Create(owner, repo, newCommit);
+
+            // 6. Update the bot branch ref
+            await github.Git.Reference.Update(owner, repo, $"heads/{botBranch}", new ReferenceUpdate(commitResult.Sha));
+
+            return commitResult.Sha;
+        }
+
+        [HttpPost("pr")]
+        public async Task<Tuple<PullRequest, bool>> CreatePullRequestAsync(string comment, string body)
+        {
+            var owner = "mist83";
+            var repo = "iter9";
+            var sourceBranch = "bot/suggestions";
+            var targetBranch = "master";
+
+            var github = new GitHubClient(new ProductHeaderValue("SuggestionBot"))
+            {
+                Credentials = new Credentials(gitHubPat)
+            };
+
+            // 1. Check for existing open PR from sourceBranch
+            var prRequest = new PullRequestRequest
+            {
+                State = ItemStateFilter.Open,
+                Head = $"{owner}:{sourceBranch}",
+                Base = targetBranch
+            };
+
+            var existing = await github.PullRequest.GetAllForRepository(owner, repo, prRequest);
+            var existingPr = existing.FirstOrDefault();
+
+            if (existingPr != null)
+            {
+                return Tuple.Create(existingPr, true); // Already exists, reuse it
+            }
+
+            // 2. Create new PR
+            var newPr = new NewPullRequest(comment, sourceBranch, targetBranch)
+            {
+                Body = body
+            };
+
+            var pr = await github.PullRequest.Create(owner, repo, newPr);
+            return Tuple.Create(pr, false);
+        }
+
+        [HttpPost("test")]
+        public async Task<IActionResult> TestAsync(
+            [FromQuery] string filePath = "README.md",
+            [FromQuery] string comment = "added another joke",
+            [FromQuery] string proposedCode = "<<AGENT:Add a developer joke with dad-joke level humor>>"
+            )
+        {
+            var suggestion = new CodeChangeSuggestion
+            {
+                FilePath = filePath,
+                Comment = comment,
+                ProposedCode = proposedCode,
+            };
+
+            var sha = await CommitSuggestionToBotBranchAsync(suggestion);
+            var pr = await CreatePullRequestAsync(suggestion.Comment, suggestion.ProposedCode);
+
+            return Ok($"{(pr.Item2 ? "Updated" : "Created")} PR: {pr.Item1.HtmlUrl}");
+        }
+    }
+}

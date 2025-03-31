@@ -2,10 +2,6 @@
     user-select: none;
 }
 
-i {
-    transition: all 200ms ease-in-out;
-}
-
 html {
     background-color: var(--background-color);
 }
@@ -54,25 +50,29 @@ button {
     background-color: var(--background-color);
 }
 
-input[type="text"] {
+input {
     font-size: 24px;
     color: var(--text-light);
     border: none;
-    background-color: var(--input-background-color);
     width: 100%;
     box-sizing: border-box; /* Ensures padding does not break the layout */
     overflow: hidden;
     outline: none;
 }
 
-    input[type="text"]:focus {
+    input:focus {
+        color: var(--primary-color);
+        background-color: var(--input-background-color);
+    }
+
+    input:hover {
         color: var(--primary-color);
     }
 
-input::selection {
-    background: var(--primary-color);
-    color: var(--input-background-color);
-}
+    input:: selection {
+        background: var(--primary-color);
+        color: var(--input-background-color);
+    }
 
 #code-scrape-screen {
     margin: 12px;
@@ -113,6 +113,13 @@ input::selection {
         transform: scale(1);
     }
 
+#snapped {
+    display: grid;
+    grid-template: 1fr / 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
 .track-file {
     color: var(--primary-hover-background-color);
     cursor: pointer;
@@ -124,13 +131,19 @@ input::selection {
 
 .untracked-file {
     border-radius: 4px;
-    background-color: var(--background-lightest);
+    color: darkgray;
+    background-color: var(--inactive-background-color);
     padding: 4px;
     padding-left: 8px;
+    opacity: 0.6;
 }
 
+    .untracked-file:hover {
+        opacity: 1;
+    }
+
     .untracked-file i {
-        color: var(--background-medium);
+        color: var(--inactive-icon-color);
     }
 
         .untracked-file i:hover {
@@ -144,7 +157,6 @@ input::selection {
     color: var(--primary-color);
     padding-left: 8px;
     cursor: pointer;
-    transition: 200ms all ease-in-out;
 }
 
     .tracked-file:hover {
@@ -174,14 +186,12 @@ input::selection {
 }
 
 ::-webkit-scrollbar-thumb {
-    /*background: linear-gradient(180deg, var(--background-color), var(--background-medium));*/
     background-color: var(--background-medium);
     border-radius: 10px;
 }
 
     ::-webkit-scrollbar-thumb:hover {
-        /*background: linear-gradient(180deg, var(--background-color), var(--background-medium));*/
-        background-color: var(--background-lightest);
+        background-color: var(--primary-color);
     }
 
 #splash-screen {
